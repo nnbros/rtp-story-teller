@@ -1,0 +1,76 @@
+#####
+# Main Spring settings
+#####
+spring:
+    application.name: storyteller
+    config:
+        import: "classpath:/config/include.yml"
+
+#####
+# Gateway connection settings
+#####
+    cloud.openfeign.client.config:
+        default:
+            loggerLevel: basic
+        gateway:
+            url: "http://gateway:8080"
+            path: "/api/v1/"
+
+#####
+# Data source configuration
+#####
+    datasource:
+        hikari:
+            data-source-properties:
+                stringtype: unspecified
+        url: jdbc:postgresql://localhost:5432/rtp
+        username: ${STORYTELLER_DB_USER}
+        password: ${STORYTELLER_DB_PASSWORD}
+        driver-class-name: org.postgresql.Driver
+
+    jpa:
+        hibernate:
+            ddl-auto: validate
+        show-sql: false
+        properties:
+            hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+
+    liquibase:
+        liquibase-schema: storyteller
+        change-log: liquibase/db.changelog-master.yaml
+        url: ${spring.datasource.url}
+        user: ${spring.datasource.username}
+        password: ${spring.datasource.password}
+        show-summary-output: all
+        ui-service: LOGGER
+
+#####
+# Network settings
+#####
+server.port: 8085
+
+#####
+# Main StoryTeller settings
+#####
+storyteller:
+    action-processor-thread-pool:
+        min: 10
+        max: 30
+        queue: 10000
+        await-termination-timeout: 5m
+        thread-name-prefix: ActionPipeline-
+    api:
+        base-url: "/api/v1"
+        actions-endpoint-prefix: "/actions"
+        cache-endpoint-prefix: "/cache"
+    rtp-bot.token: ${RTP_BOT_TOKEN}
+    character-name-pattern: "^[A-Za-zА-Яа-я0-9_]{4,32}$"
+
+#####
+# Logging settings
+#####
+logging:
+    level.org.springframework.boot.autoconfigure: ERROR
+    file.name: /var/log/rtp/storyteller/storyteller.log
+    spring.output.ansi.enabled: ALWAYS
+    pattern.console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr([%t]){faint} %clr(%-40.40logger{39}){cyan} : %X{charId} %X{updateId} %m%n%wEx"

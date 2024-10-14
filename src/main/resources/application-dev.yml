@@ -1,0 +1,35 @@
+spring:
+    datasource:
+        url:
+        username:
+        password:
+        driver-class-name: org.postgresql.Driver
+    liquibase:
+        drop-first: false
+    jpa:
+        show-sql: true
+
+# Feign settings
+    cloud.openfeign.client.config:
+        default:
+            loggerLevel: full
+        gateway:
+            url:
+            path: "/api/v1/"
+
+# Logging settings
+debug: true
+storyteller:
+    action-processor-thread-pool:
+        min: 5
+        max: 15
+        await-termination-timeout: 10s
+logging:
+    level:
+        feign: DEBUG
+        root: INFO
+        web: DEBUG
+        com.github.nnbros.rtp: DEBUG
+    file:
+        path: 
+        name: 

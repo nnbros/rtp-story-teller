@@ -1,0 +1,22 @@
+databaseChangeLog:
+    -   include:
+            file: init.sql
+            relativeToChangelogFile: true
+    -   include:
+            file: character_dictionary.sql
+            relativeToChangelogFile: true
+    -   include:
+            file: skill_dictionary.sql
+            relativeToChangelogFile: true
+    -   include:
+            file: character.sql
+            relativeToChangelogFile: true
+    -   include:
+            file: character_class.sql
+            relativeToChangelogFile: true
+    -   include:
+            file: data/classes.sql
+            relativeToChangelogFile: true
+    -   include:
+            file: data/skills.sql
+            relativeToChangelogFile: true
