@@ -31,7 +31,7 @@ public class ActionService {
 	private Map<String, ActionPipeline> actionPipelines;
 
 	@PostConstruct
-	private void init() {
+	void init() {
 		log.trace("Starting to register action pipelines...");
 		Map<String, ActionPipeline> tmpActionPipelines = new HashMap<>();
 		actionRegistrars.forEach(actionRegistrar -> actionRegistrar.register(tmpActionPipelines));
@@ -40,6 +40,7 @@ public class ActionService {
 	}
 
 	public void process(String action, Update update, String data) throws StoryTellerException {
+
 		Integer updateId = update.getUpdateId();
 		log.info("New update for action [{}] has been received, update id is {}", action, updateId);
 		log.trace("Update:\n{}", update);
@@ -49,20 +50,27 @@ public class ActionService {
 		Long userId = getUserId(update, updateType);
 		log.info("User id is [{}]", userId);
 
-		Instant startProcessingTimestamp = Instant.now();
-		ActionContext actionContext = new ActionContext(action, userId, updateType, update, data);
-		Optional.ofNullable(actionPipelines.get(action))
-				.map(actionPipeline -> (Runnable) () -> actionPipeline.execute(actionContext))
-				.map(actionPipelineExecutor::submitCompletable)
-				.orElseThrow(() -> new ActionNotFoundException(action))
-				.whenCompleteAsync((result, error) -> executePostActionProcessing(action, userId, error, startProcessingTimestamp), actionPipelineExecutor);
-		log.info("The action has been successfully sent to the action pipeline");
+		try {
+			Instant startProcessingTimestamp = Instant.now();
+			ActionContext actionContext = new ActionContext(action, userId, updateType, update, data);
+			Optional.ofNullable(actionPipelines.get(action))
+					.map(actionPipeline -> (Runnable) () -> actionPipeline.execute(actionContext))
+					.map(actionPipelineExecutor::submitCompletable)
+					.orElseThrow(() -> new ActionNotFoundException(action))
+					.whenCompleteAsync((result, error) -> executePostActionProcessing(action, userId, error, startProcessingTimestamp), actionPipelineExecutor);
+			log.info("The action has been successfully sent to the action pipeline");
+		} catch (Exception e) {
+			gatewayClient.releaseUserLock(userId);
+			throw e;
+		}
 	}
 
 	private void executePostActionProcessing(String action, long userId, Throwable error, Instant start) {
 		try {
 			if (error != null) {
-				errorProcessor.process(action, userId, error);
+				Throwable cause = error.getCause();
+				log.warn("Error occurred during processing", cause);
+				errorProcessor.process(action, userId, cause);
 			}
 		} catch (Exception e) {
 			log.error("Failed to complete post-action steps, for action [{}]", action, e);

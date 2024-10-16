@@ -44,6 +44,8 @@ public class StoryTellerProperties {
 		private String baseUrl = "/api/v1";
 		@URL
 		private String actionsEndpointPrefix = "/actions";
+		@URL
+		private String cacheEndpointPrefix = "/cache";
 	}
 
 	@Setter

@@ -8,6 +8,7 @@ import com.github.nnbros.rtp.storyteller.jpa.character.CharacterService;
 import com.github.nnbros.rtp.storyteller.configuration.StoryTellerProperties;
 import com.github.nnbros.rtp.storyteller.exception.CharacterNotFoundException;
 import com.github.nnbros.rtp.storyteller.exception.StoryTellerRuntimeException;
+import com.github.nnbros.rtp.storyteller.jpa.character.ClassService;
 import com.github.nnbros.rtp.storyteller.telegram.UpdateType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import java.util.*;
 public class RegistrationService {
 	private final CharacterService characterService;
 	private final StoryTellerProperties properties;
+	private final ClassService classService;
 	private final Map<Long, CharacterRequest> characterCache = new HashMap<>();
 
 	public void createCharacter(ActionContext actionContext) {
@@ -76,7 +78,8 @@ public class RegistrationService {
 		CharacterRequest characterRequest = getCharacterRequest(userId);
 
 		String className = Optional.ofNullable(actionContext.data())
-				.orElseThrow(() -> new StoryTellerRuntimeException("Character class cannot be empty"));
+				.filter(classService::containsByName)
+				.orElseThrow(() -> new StoryTellerRuntimeException("Character class cannot be empty and must exist"));
 		characterRequest.setClassName(className);
 		log.debug("Class {} has been added successfully", className);
 		return characterRequest;

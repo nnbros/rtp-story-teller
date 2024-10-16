@@ -42,4 +42,8 @@ public class ClassService {
 		return classDictionaryRepository.findIdByName(name)
 				.orElseThrow(() -> new StoryTellerRuntimeException("Unable to find class id by name [%s]", name));
 	}
+
+	public boolean containsByName(String className) {
+		return classDictionaryRepository.findIdByName(className).isPresent();
+	}
 }

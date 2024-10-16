@@ -11,7 +11,7 @@
     <groupId>com.github.nnbros.rtp</groupId>
     <artifactId>story-teller</artifactId>
     <version>0.0.2-SNAPSHOT</version>
-    <name>gateway</name>
+    <name>StoryTeller</name>
     <description>A Storyteller service for Rise to Power</description>
 
     <properties>
@@ -73,6 +73,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

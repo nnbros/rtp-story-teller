@@ -22,7 +22,7 @@ public class ActionController {
 	private final ActionService actionService;
 
 	@PostMapping("/{action}")
-	public ResponseEntity<?> startCharacterCreation(@NotNull @PathVariable String action,
+	public ResponseEntity<?> processAction(@NotNull @PathVariable String action,
 													@Valid @RequestBody Update update,
 													@RequestParam(required = false) String data) {
 		try {
