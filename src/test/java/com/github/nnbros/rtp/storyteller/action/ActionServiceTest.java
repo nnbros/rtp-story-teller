@@ -9,7 +9,6 @@ import com.github.nnbros.rtp.storyteller.gateway.GatewayClient;
 import com.github.nnbros.rtp.storyteller.registration.RegistrationService;
 import com.github.nnbros.rtp.storyteller.registration.RegistrationTelegramClient;
 import com.github.nnbros.rtp.storyteller.telegram.UpdateType;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,6 +18,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import static com.github.nnbros.rtp.storyteller.BotTestUtils.TEST_USER_ID;
 import static com.github.nnbros.rtp.storyteller.BotTestUtils.createTestCallbackQueryUpdate;
@@ -42,11 +42,6 @@ public class ActionServiceTest extends StorytellerSpringBootTest {
 
 	@Autowired
 	private ActionService actionService;
-
-	@BeforeEach
-	public void clear() {
-		clearInvocations(gatewayClient, registrationService, registrationTelegramClient, errorProcessor);
-	}
 
 	@Test
 	public void initActionPipelines() {
@@ -81,14 +76,20 @@ public class ActionServiceTest extends StorytellerSpringBootTest {
 	}
 
 	@Test
-	public void processErrorThrownByActionPipeline() throws StoryTellerException {
+	public void processErrorThrownByActionPipeline() throws StoryTellerException, InterruptedException {
 		String actionName = CharacterAction.CREATE_START.getActionName();
 		Update update = createTestCallbackQueryUpdate();
 		ActionContext actionContext = new ActionContext(actionName, TEST_USER_ID, UpdateType.CALLBACK_QUERY, update, TEST_ACTION_DATA);
 		StoryTellerRuntimeException testException = new StoryTellerRuntimeException("Test exception");
-		doThrow(testException).when(registrationService).createCharacter(actionContext);
+
+		CountDownLatch countDownLatch = new CountDownLatch(1);
+		doAnswer(invocation -> {
+			countDownLatch.countDown();
+			throw testException;
+		}).when(registrationService).createCharacter(actionContext);
 
 		actionService.process(actionName, update, TEST_ACTION_DATA);
+		countDownLatch.await();
 
 		verify(actionPipelineExecutor, times(1)).submitCompletable(any(Runnable.class));
 		verify(errorProcessor, timeout(50L).times(1)).process(actionName, TEST_USER_ID, testException);
