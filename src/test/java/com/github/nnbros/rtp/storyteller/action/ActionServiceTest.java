@@ -43,11 +43,6 @@ public class ActionServiceTest extends StorytellerSpringBootTest {
 	@Autowired
 	private ActionService actionService;
 
-	@BeforeEach
-	public void clear() {
-		clearInvocations(gatewayClient, registrationService, registrationTelegramClient, errorProcessor);
-	}
-
 	@Test
 	public void initActionPipelines() {
 		Object actionPipelines = ReflectionTestUtils.getField(actionService, "actionPipelines");
