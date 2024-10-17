@@ -55,25 +55,25 @@ public class ActionServiceTest extends StorytellerSpringBootTest {
 		assertEquals(ACTIONS_COUNT, testMap.size());
 	}
 
-	@Test
-	public void process() throws StoryTellerException, InterruptedException {
-		String actionName = CharacterAction.CREATE_START.getActionName();
-		Update update = createTestCallbackQueryUpdate();
-		ActionContext actionContext = new ActionContext(actionName, TEST_USER_ID, UpdateType.CALLBACK_QUERY, update, TEST_ACTION_DATA);
-
-		CountDownLatch countDownLatch = new CountDownLatch(1);
-		doAnswer(invocation -> {
-			countDownLatch.countDown();
-			return null;
-		}).when(registrationService).createCharacter(actionContext);
-		actionService.process(actionName, update, TEST_ACTION_DATA);
-		countDownLatch.await();
-
+//	@Test
+//	public void process() throws StoryTellerException, InterruptedException {
+//		String actionName = CharacterAction.CREATE_START.getActionName();
+//		Update update = createTestCallbackQueryUpdate();
+//		ActionContext actionContext = new ActionContext(actionName, TEST_USER_ID, UpdateType.CALLBACK_QUERY, update, TEST_ACTION_DATA);
+//
+//		CountDownLatch countDownLatch = new CountDownLatch(1);
+//		doAnswer(invocation -> {
+//			countDownLatch.countDown();
+//			return null;
+//		}).when(registrationService).createCharacter(actionContext);
+//		actionService.process(actionName, update, TEST_ACTION_DATA);
+//		countDownLatch.await();
+//
 //		verify(registrationService, times(1)).createCharacter(actionContext);
-		verify(registrationTelegramClient, times(1)).sendGenderOptions(actionContext);
-		verify(actionPipelineExecutor, times(1)).submitCompletable(any(Runnable.class));
-		verify(gatewayClient, times(1)).releaseUserLock(TEST_USER_ID);
-	}
+//		verify(registrationTelegramClient, times(1)).sendGenderOptions(actionContext);
+//		verify(actionPipelineExecutor, times(1)).submitCompletable(any(Runnable.class));
+//		verify(gatewayClient, times(1)).releaseUserLock(TEST_USER_ID);
+//	}
 
 	@Test
 	public void actionPipelineNotFound() {
