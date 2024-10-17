@@ -56,13 +56,19 @@ public class ActionServiceTest extends StorytellerSpringBootTest {
 	}
 
 	@Test
-	public void process() throws StoryTellerException {
+	public void process() throws StoryTellerException, InterruptedException {
 		String actionName = CharacterAction.CREATE_START.getActionName();
 		Update update = createTestCallbackQueryUpdate();
-
-		actionService.process(actionName, update, TEST_ACTION_DATA);
-
 		ActionContext actionContext = new ActionContext(actionName, TEST_USER_ID, UpdateType.CALLBACK_QUERY, update, TEST_ACTION_DATA);
+
+		CountDownLatch countDownLatch = new CountDownLatch(1);
+		doAnswer(invocation -> {
+			countDownLatch.countDown();
+			return null;
+		}).when(registrationService).createCharacter(actionContext);
+		actionService.process(actionName, update, TEST_ACTION_DATA);
+		countDownLatch.await();
+
 		verify(registrationService, times(1)).createCharacter(actionContext);
 		verify(registrationTelegramClient, times(1)).sendGenderOptions(actionContext);
 		verify(actionPipelineExecutor, times(1)).submitCompletable(any(Runnable.class));
