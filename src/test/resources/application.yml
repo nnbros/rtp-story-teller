@@ -23,8 +23,8 @@ spring:
 
 storyteller:
     action-processor-thread-pool:
-        min: 5
-        max: 10
+        min: 1
+        max: 1
         queue: 100
         thread-name-prefix: ActionPipeline-
     api:
