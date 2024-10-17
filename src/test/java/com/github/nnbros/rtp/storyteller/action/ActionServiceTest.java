@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -25,6 +26,7 @@ import static com.github.nnbros.rtp.storyteller.BotTestUtils.createTestCallbackQ
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ActionServiceTest extends StorytellerSpringBootTest {
 	private static final int ACTIONS_COUNT = 6;
 	private static final String TEST_ACTION_DATA = "testActionData";
