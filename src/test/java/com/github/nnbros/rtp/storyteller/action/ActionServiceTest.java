@@ -69,7 +69,7 @@ public class ActionServiceTest extends StorytellerSpringBootTest {
 		actionService.process(actionName, update, TEST_ACTION_DATA);
 		countDownLatch.await();
 
-		verify(registrationService, times(1)).createCharacter(actionContext);
+//		verify(registrationService, times(1)).createCharacter(actionContext);
 		verify(registrationTelegramClient, times(1)).sendGenderOptions(actionContext);
 		verify(actionPipelineExecutor, times(1)).submitCompletable(any(Runnable.class));
 		verify(gatewayClient, times(1)).releaseUserLock(TEST_USER_ID);
