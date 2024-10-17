@@ -1,0 +1,18 @@
+ui:
+    registration_buttons:
+        text: "✅Регистрация"
+        id: "storyteller_create_char_registration"
+        cancel:
+            id: "storyteller_create_char_cancel"
+            text: "❌Изменить выбор"
+        character:
+            gender:
+                male.id: "storyteller_create_char_gender:male"
+                female.id: "storyteller_create_char_gender:female"
+            class:
+                id: "storyteller_create_char_class_selection:%s"
+                confirmation:
+                    emoji: "✅"
+                    button:
+                        text: "Подтвердить выбор"
+                        id: "storyteller_create_char_class_confirmation"
