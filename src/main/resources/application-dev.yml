@@ -1,6 +1,6 @@
 spring:
     datasource:
-        url: jdbc:postgresql://93.120.241.248:8543/rtp
+        url: jdbc:postgresql://213.177.120.46:2219/rtp
         username: storyteller
         password: q8YG5lxNz6bRGPH9iBFK
         driver-class-name: org.postgresql.Driver
@@ -14,8 +14,8 @@ spring:
         default:
             loggerLevel: full
         gateway:
-            url: "http://192.168.0.106:8080"
-            path: "/api/v1/"
+            url: http://localhost:8080
+            path: /api/v1/
 
 # Logging settings
 debug: true

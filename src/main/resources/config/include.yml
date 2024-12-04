@@ -1,6 +1,0 @@
-spring:
-    config:
-        import:
-        - "classpath:/config/ui/elements/RU_registration_buttons.yml"
-        - "classpath:/config/ui/messages/RU_registration.yml"
-        - "classpath:/config/ui/messages/RU_general.yml"

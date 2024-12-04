@@ -16,10 +16,10 @@ spring:
         gateway:
             url: "http://localhost"
             path: "/test"
-    config:
-        import: "classpath:/config/include.yml"
     autoconfigure.exclude:
     - org.springframework.cloud.openfeign.FeignAutoConfiguration
+
+elements.working-directory: "classpath:/config/ui/test"
 
 storyteller:
     action-processor-thread-pool:

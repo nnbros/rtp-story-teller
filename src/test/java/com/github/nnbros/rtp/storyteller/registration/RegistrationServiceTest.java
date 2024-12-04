@@ -73,7 +73,7 @@ public class RegistrationServiceTest extends StorytellerTest {
 	@MethodSource("provideGenders")
 	public void addGender(String gender, Gender expectedGender) {
 		ActionContext testActionContext = new ActionContext(CharacterAction.CREATE_GENDER.getActionName(),
-				TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), gender);
+				TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_MESSAGE_ID, gender);
 
 		registrationService.createCharacter(testActionContext);
 		registrationService.addGender(testActionContext);
@@ -87,7 +87,7 @@ public class RegistrationServiceTest extends StorytellerTest {
 	@Test
 	public void addEmptyGender() {
 		ActionContext testActionContext = new ActionContext(CharacterAction.CREATE_GENDER.getActionName(),
-				TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), null);
+				TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_MESSAGE_ID, null);
 
 		registrationService.createCharacter(testActionContext);
 		assertThrows(StoryTellerRuntimeException.class, () -> registrationService.addGender(testActionContext));
@@ -105,7 +105,7 @@ public class RegistrationServiceTest extends StorytellerTest {
 	public void addValidName(String name) {
 		Update update = createTestMessageUpdate(createTestMessage(name));
 		ActionContext testActionContext = new ActionContext(CharacterAction.CREATE_NAME.getActionName(),
-				TEST_USER_ID, UpdateType.MESSAGE, update, null);
+				TEST_USER_ID, UpdateType.MESSAGE, update, TEST_MESSAGE_ID, null);
 		when(properties.getCharacterNamePattern()).thenReturn(CHARACTER_NAME_PATTERN);
 
 		registrationService.createCharacter(testActionContext);
@@ -132,7 +132,7 @@ public class RegistrationServiceTest extends StorytellerTest {
 	public void addIllegalName(String name) {
 		Update update = createTestMessageUpdate(createTestMessage(name));
 		ActionContext testActionContext = new ActionContext(CharacterAction.CREATE_NAME.getActionName(),
-				TEST_USER_ID, UpdateType.MESSAGE, update, null);
+				TEST_USER_ID, UpdateType.MESSAGE, update, TEST_MESSAGE_ID, null);
 		when(properties.getCharacterNamePattern()).thenReturn(CHARACTER_NAME_PATTERN);
 
 		registrationService.createCharacter(testActionContext);
@@ -149,7 +149,7 @@ public class RegistrationServiceTest extends StorytellerTest {
 	@EnumSource(value = UpdateType.class, names = {"MESSAGE", "EDITED_MESSAGE"}, mode = EnumSource.Mode.EXCLUDE)
 	public void addNameWithWrongUpdateType(UpdateType updateType) {
 		ActionContext testActionContext = new ActionContext(CharacterAction.CREATE_NAME.getActionName(),
-				TEST_USER_ID, updateType, createTestEmptyUpdate(), null);
+				TEST_USER_ID, updateType, createTestEmptyUpdate(), TEST_MESSAGE_ID, null);
 
 		registrationService.createCharacter(testActionContext);
 		assertThrows(StoryTellerRuntimeException.class, () -> registrationService.addName(testActionContext));
@@ -158,7 +158,7 @@ public class RegistrationServiceTest extends StorytellerTest {
 	@Test
 	public void addClass() {
 		ActionContext testActionContext = new ActionContext(CharacterAction.CLASS_SELECTION.getActionName(),
-				TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_CLASS);
+				TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_MESSAGE_ID, TEST_CLASS);
 		when(classService.containsByName(TEST_CLASS)).thenReturn(true);
 
 		registrationService.createCharacter(testActionContext);
@@ -173,7 +173,7 @@ public class RegistrationServiceTest extends StorytellerTest {
 	@Test
 	public void addNotExistingClass() {
 		ActionContext testActionContext = new ActionContext(CharacterAction.CLASS_SELECTION.getActionName(),
-				TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_CLASS);
+				TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_MESSAGE_ID, TEST_CLASS);
 		when(classService.containsByName(TEST_CLASS)).thenReturn(false);
 
 		registrationService.createCharacter(testActionContext);
@@ -183,7 +183,7 @@ public class RegistrationServiceTest extends StorytellerTest {
 	@Test
 	public void addEmptyClass() {
 		ActionContext testActionContext = new ActionContext(CharacterAction.CLASS_SELECTION.getActionName(),
-				TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), null);
+				TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_MESSAGE_ID, null);
 
 		registrationService.createCharacter(testActionContext);
 		assertThrows(StoryTellerRuntimeException.class, () -> registrationService.addClass(testActionContext));
@@ -192,7 +192,7 @@ public class RegistrationServiceTest extends StorytellerTest {
 	@Test
 	public void register() {
 		ActionContext testActionContext = new ActionContext(CharacterAction.REGISTRATION.getActionName(),
-				TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), null);
+				TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_MESSAGE_ID, null);
 
 		registrationService.createCharacter(testActionContext);
 		registrationService.register(testActionContext);
@@ -205,11 +205,11 @@ public class RegistrationServiceTest extends StorytellerTest {
 	@Test
 	public void clearCache() {
 		ActionContext testActionContext1 = new ActionContext(CharacterAction.CREATE_START.getActionName(),
-				1L, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), null);
+				1L, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_MESSAGE_ID, null);
 		ActionContext testActionContext2 = new ActionContext(CharacterAction.CREATE_START.getActionName(),
-				2L, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), null);
+				2L, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_MESSAGE_ID, null);
 		ActionContext testActionContext3 = new ActionContext(CharacterAction.CREATE_START.getActionName(),
-				3L, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), null);
+				3L, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_MESSAGE_ID, null);
 
 		registrationService.createCharacter(testActionContext1);
 		registrationService.createCharacter(testActionContext2);

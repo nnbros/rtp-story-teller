@@ -5,6 +5,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 
+//TODO move to common lib?
 public class BotUtils {
 
 	public static Long getUserId(Update update, UpdateType updateType) throws IllegalUpdateException {
@@ -14,6 +15,15 @@ public class BotUtils {
 			case CALLBACK_QUERY -> getUserId(update.getCallbackQuery());
 			case UNKNOWN ->
 					throw new IllegalUpdateException("Unable to get the user id from update %s", update.getUpdateId());
+		};
+	}
+
+	public static Integer getMessageId(Update update, UpdateType updateType) {
+		return switch (updateType) {
+			case MESSAGE, COMMAND -> update.getMessage().getMessageId();
+			case EDITED_MESSAGE, EDITED_COMMAND -> update.getEditedMessage().getMessageId();
+			case CALLBACK_QUERY -> update.getCallbackQuery().getMessage().getMessageId();
+			default -> null;
 		};
 	}
 

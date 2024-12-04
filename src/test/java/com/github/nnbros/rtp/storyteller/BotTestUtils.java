@@ -19,6 +19,7 @@ public class BotTestUtils {
 	public static final int TEST_UPDATE_ID = 456;
 	public static final String TEST_TEXT = "util";
 	public static final long TEST_USER_ID = 123L;
+	public static final int TEST_MESSAGE_ID = 12345;
 	public static final String CHAT_PRIVATE_TYPE = "private";
 	public static final String COMMAND_MESSAGE_TYPE = "bot_command";
 	public static final String TEST_CALLBACK_DATA = "test_data";
@@ -47,6 +48,7 @@ public class BotTestUtils {
 				.text(text)
 				.chat(chat)
 				.from(from)
+				.messageId(TEST_MESSAGE_ID)
 				.build();
 	}
 
@@ -65,6 +67,7 @@ public class BotTestUtils {
 		CallbackQuery callbackQuery = new CallbackQuery();
 		callbackQuery.setFrom(createTestUser());
 		callbackQuery.setData(data);
+		callbackQuery.setMessage(createTestMessage());
 		return callbackQuery;
 	}
 
@@ -110,7 +113,7 @@ public class BotTestUtils {
 	}
 
 	public static ActionContext createTestActionContext() {
-		return new ActionContext(TEST_ACTION_NAME, TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_ACTION_DATA);
+		return new ActionContext(TEST_ACTION_NAME, TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_MESSAGE_ID, TEST_ACTION_DATA);
 	}
 
 	public static CharacterRequest createTestCharacterRequest() {
@@ -118,6 +121,7 @@ public class BotTestUtils {
 		characterRequest.setName(TEST_CHARACTER_NAME);
 		characterRequest.setGender(Gender.MALE);
 		characterRequest.setClassName(TEST_CLASS_NAME);
+		characterRequest.setLastMessageId(TEST_MESSAGE_ID);
 		return characterRequest;
 	}
 }

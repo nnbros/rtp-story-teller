@@ -23,6 +23,7 @@
         <postgresql.jdbc.version>42.7.4</postgresql.jdbc.version>
         <lombok-mapstruct-binding.version>0.0.2</lombok-mapstruct-binding.version>
         <liquibase.version>4.29.2</liquibase.version>
+        <telegram-bot-elements.version>0.0.2</telegram-bot-elements.version>
     </properties>
     <dependencies>
         <dependency>
@@ -59,6 +60,11 @@
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots-client</artifactId>
             <version>${telegrambots.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.guronas</groupId>
+            <artifactId>telegram-bot-elements-springboot-starter</artifactId>
+            <version>${telegram-bot-elements.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
