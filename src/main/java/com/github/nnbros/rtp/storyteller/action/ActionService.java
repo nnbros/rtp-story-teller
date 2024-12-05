@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.github.nnbros.rtp.storyteller.telegram.BotUtils.getMessageId;
 import static com.github.nnbros.rtp.storyteller.telegram.BotUtils.getUserId;
 
 @Slf4j
@@ -52,7 +53,8 @@ public class ActionService {
 
 		try {
 			Instant startProcessingTimestamp = Instant.now();
-			ActionContext actionContext = new ActionContext(action, userId, updateType, update, data);
+			Integer messageId = getMessageId(update, updateType);
+			ActionContext actionContext = new ActionContext(action, userId, updateType, update, messageId, data);
 			Optional.ofNullable(actionPipelines.get(action))
 					.map(actionPipeline -> (Runnable) () -> actionPipeline.execute(actionContext))
 					.map(actionPipelineExecutor::submitCompletable)

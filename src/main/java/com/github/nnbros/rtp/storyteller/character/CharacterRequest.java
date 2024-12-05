@@ -10,4 +10,5 @@ public class CharacterRequest {
 	private Gender gender;
 	private String name;
 	private String className;
+	private Integer lastMessageId;
 }

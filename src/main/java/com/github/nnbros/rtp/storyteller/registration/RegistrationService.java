@@ -40,7 +40,7 @@ public class RegistrationService {
 	public CharacterRequest addGender(ActionContext actionContext) {
 		Long userId = actionContext.userId();
 		log.debug("Add gender request has been received for the user [{}]", userId);
-		CharacterRequest characterRequest = getCharacterRequest(userId);
+		CharacterRequest characterRequest = getCharacterRequest(userId, actionContext.messageId());
 
 		Gender gender = Optional.ofNullable(actionContext.data())
 				.map(String::toUpperCase)
@@ -55,7 +55,7 @@ public class RegistrationService {
 	public ActionResult<CharacterRequest> addName(ActionContext actionContext) {
 		Long userId = actionContext.userId();
 		log.debug("Add name request has been received for the user [{}]", userId);
-		CharacterRequest characterRequest = getCharacterRequest(userId);
+		CharacterRequest characterRequest = getCharacterRequest(userId, actionContext.messageId());
 		UpdateType updateType = actionContext.updateType();
 		if (!(updateType == UpdateType.MESSAGE || updateType == UpdateType.EDITED_MESSAGE)) {
 			throw new StoryTellerRuntimeException("Wrong update type: [%s]", updateType);
@@ -75,7 +75,7 @@ public class RegistrationService {
 	public CharacterRequest addClass(ActionContext actionContext) {
 		Long userId = actionContext.userId();
 		log.debug("Add class request has been received for the user [{}]", userId);
-		CharacterRequest characterRequest = getCharacterRequest(userId);
+		CharacterRequest characterRequest = getCharacterRequest(userId, actionContext.messageId());
 
 		String className = Optional.ofNullable(actionContext.data())
 				.filter(classService::containsByName)
@@ -88,14 +88,14 @@ public class RegistrationService {
 	public void register(ActionContext actionContext) {
 		Long userId = actionContext.userId();
 		log.info("Registration request has been received for the user [{}]", userId);
-		CharacterRequest characterRequest = getCharacterRequest(userId);
+		CharacterRequest characterRequest = getCharacterRequest(userId, actionContext.messageId());
 		characterService.register(characterRequest);
 		log.info("Character [{}] has been registered successfully", characterRequest);
 	}
 
 	public CharacterRequest getCharacterRequest(ActionContext actionContext) {
 		Long userId = actionContext.userId();
-		return getCharacterRequest(userId);
+		return getCharacterRequest(userId, actionContext.messageId());
 	}
 
 	public void clearCharacterCache(Set<Long> userIds) {
@@ -108,9 +108,11 @@ public class RegistrationService {
 		log.debug("Character cache has been cleared successfully");
 	}
 
-	private CharacterRequest getCharacterRequest(long userId) {
-		return Optional.ofNullable(characterCache.get(userId))
+	private CharacterRequest getCharacterRequest(long userId, Integer lastMessageId) {
+		CharacterRequest characterRequest = Optional.ofNullable(characterCache.get(userId))
 				.orElseThrow(() -> new CharacterNotFoundException(userId));
+		characterRequest.setLastMessageId(lastMessageId);
+		return characterRequest;
 	}
 
 	private boolean isCharacterNameValid(String name) {

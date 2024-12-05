@@ -3,8 +3,6 @@
 #####
 spring:
     application.name: storyteller
-    config:
-        import: "classpath:/config/include.yml"
 
 #####
 # Gateway connection settings
@@ -65,6 +63,8 @@ storyteller:
         cache-endpoint-prefix: "/cache"
     rtp-bot.token: ${RTP_BOT_TOKEN}
     character-name-pattern: "^[A-Za-zА-Яа-я0-9_]{4,32}$"
+
+elements.working-directory: "classpath:/config/ui/elements"
 
 #####
 # Logging settings

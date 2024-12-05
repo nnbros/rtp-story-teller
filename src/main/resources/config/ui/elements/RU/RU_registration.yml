@@ -1,0 +1,102 @@
+registration:
+    -   id: genderText
+        text: "Пол персонажа: ${charGender}"
+    -   id: maleGenderText
+        text: "Мужской"
+    -   id: femaleGenderText
+        text: "Женский"
+    -   id: charNameText
+        text: "Имя персонажа: ${charName}"
+    -   id: charClassText
+        text: "Выбранный класс: ${charClass}"
+    -   id: invalidCharNameText
+        text: "Введенное имя не соответствует требованиям."
+    -   id: createCharNameText
+        text: "Введите имя персонажа.\nТребования к нику: от 4 до 16 символов, без пробелов, состоит из латинских, кирилических символов и цифр.
+            Является уникальным, не содержит оскорбления, не имитирует административный аккаунт, не нарушает законы РФ."
+    -   id: startingSkillsText
+        text: "Стартовые умения:"
+    -   id: warriorClassText
+        text: "Воин"
+    -   id: rogueClassText
+        text: "Плут"
+    -   id: confirmationEmoji
+        text: "✅"
+    -   id: createCharGender
+        message:
+            action: CREATE
+            text: "Выберите пол вашего персонажа"
+            replyKeyboard:
+                inlineKeyboard:
+                    rows:
+                        -   inlineKeyboardRow:
+                                -   inlineKeyboardButton:
+                                        text: "Мужской"
+                                        callbackData: "storyteller_create_char_gender:male"
+                                -   inlineKeyboardButton:
+                                        text: "Женский"
+                                        callbackData: "storyteller_create_char_gender:female"
+    -   id: createCharName
+        message:
+            action: EDIT
+            text: "${genderText}\n\n${createCharNameText}"
+    -   id: invalidCharName
+        message:
+            action: CREATE
+            text: "${genderText}\n\n${invalidCharNameText}\n\n${createCharNameText}"
+    -   id: charClassSelection
+        message:
+            action: CREATE
+            text: "${genderText}\n${charNameText}\n\nВыберите стартовый класс. 
+            В дальнейшем вы сможете открыть любое количество новых классов.\n${classesDescription}"
+            replyKeyboard:
+                inlineKeyboard:
+                    rows:
+                        -   inlineKeyboardRow:
+                                -   inlineKeyboardButton:
+                                        text: "${warriorClassText}"
+                                        callbackData: "storyteller_create_char_class_selection:Воин"
+                                -   inlineKeyboardButton:
+                                        text: "${rogueClassText}"
+                                        callbackData: "storyteller_create_char_class_selection:Плут"
+                        -   inlineKeyboardRow:
+                                -   inlineKeyboardButton:
+                                        text: "Подтвердить выбор"
+                                        callbackData: "storyteller_create_char_class_confirmation"
+    -   id: charClassConfirmation
+        message:
+            action: EDIT
+            text: "${genderText}\n${charNameText}\n${charClassText}\n\n${startingSkillsText}\n${skillsDescription}"
+            replyKeyboard:
+                inlineKeyboard:
+                    rows:
+                        -   inlineKeyboardRow:
+                                -   inlineKeyboardButton:
+                                        text: "${warriorClassText}"
+                                        callbackData: "storyteller_create_char_class_selection:Воин"
+                                -   inlineKeyboardButton:
+                                        text: "${rogueClassText}"
+                                        callbackData: "storyteller_create_char_class_selection:Плут"
+                        -   inlineKeyboardRow:
+                                -   inlineKeyboardButton:
+                                        text: "Подтвердить выбор"
+                                        callbackData: "storyteller_create_char_class_confirmation"
+    -   id: charRegistration
+        message:
+            action: EDIT
+            text: "${genderText}\n${charNameText}\n${charClassText}\n\n
+            Готовы ли Вы начать путешествие или хотите что-то изменить?"
+            replyKeyboard:
+                inlineKeyboard:
+                    rows:
+                        -   inlineKeyboardRow:
+                                -   inlineKeyboardButton:
+                                        text: "✅Регистрация"
+                                        callbackData: "storyteller_create_char_registration"
+                                -   inlineKeyboardButton:
+                                        text: "❌Изменить выбор"
+                                        callbackData: "storyteller_create_char_cancel"
+    -   id: registrationComplete
+        message:
+            action: EDIT
+            text: "Поздравлем, вы успешно зарегистрировались!"

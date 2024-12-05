@@ -21,8 +21,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-import static com.github.nnbros.rtp.storyteller.BotTestUtils.TEST_USER_ID;
-import static com.github.nnbros.rtp.storyteller.BotTestUtils.createTestCallbackQueryUpdate;
+import static com.github.nnbros.rtp.storyteller.BotTestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -87,7 +86,7 @@ public class ActionServiceTest extends StorytellerSpringBootTest {
 	public void processErrorThrownByActionPipeline() throws StoryTellerException, InterruptedException {
 		String actionName = CharacterAction.CREATE_START.getActionName();
 		Update update = createTestCallbackQueryUpdate();
-		ActionContext actionContext = new ActionContext(actionName, TEST_USER_ID, UpdateType.CALLBACK_QUERY, update, TEST_ACTION_DATA);
+		ActionContext actionContext = new ActionContext(actionName, TEST_USER_ID, UpdateType.CALLBACK_QUERY, update, TEST_MESSAGE_ID, TEST_ACTION_DATA);
 		StoryTellerRuntimeException testException = new StoryTellerRuntimeException("Test exception");
 
 		CountDownLatch countDownLatch = new CountDownLatch(1);

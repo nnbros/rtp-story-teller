@@ -10,6 +10,7 @@ public record ActionContext(
 		@NonNull Long userId,
 		@NonNull UpdateType updateType,
 		@NonNull Update update,
+		@Nullable Integer messageId,
 		@Nullable String data
 ) {
 }
