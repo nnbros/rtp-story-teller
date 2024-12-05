@@ -100,6 +100,14 @@
         </dependencies>
     </dependencyManagement>
 
+    <repositories>
+        <repository>
+            <id>github</id>
+            <name>GitHub Guronas Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/Guronas/telegram-bot-elements</url>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <plugin>
