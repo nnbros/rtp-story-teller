@@ -1,0 +1,9 @@
+<settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <servers>
+    <server>
+      <id>github</id>
+      <username>${env.USERNAMEVAR}</username>
+      <password>${env.PASSWORDVAR}</password>
+    </server>
+  </servers>
+</settings>
