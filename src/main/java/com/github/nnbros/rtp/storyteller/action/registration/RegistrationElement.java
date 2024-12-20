@@ -1,4 +1,4 @@
-package com.github.nnbros.rtp.storyteller.registration;
+package com.github.nnbros.rtp.storyteller.action.registration;
 
 import com.github.nnbros.rtp.storyteller.telegram.ui.Element;
 

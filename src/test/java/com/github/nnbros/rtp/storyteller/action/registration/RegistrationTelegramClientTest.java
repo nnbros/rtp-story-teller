@@ -1,17 +1,14 @@
-package com.github.nnbros.rtp.storyteller.registration;
+package com.github.nnbros.rtp.storyteller.action.registration;
 
 import com.github.guronas.telegram.bot.elements.TelegramElementRegistry;
 import com.github.guronas.telegram.bot.elements.exception.ElementNotFoundException;
+import com.github.guronas.telegram.bot.elements.parameter.Parameter;
+import com.github.guronas.telegram.bot.elements.parameter.Parameters;
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
-import com.github.nnbros.rtp.storyteller.character.CharacterRequest;
-import com.github.nnbros.rtp.storyteller.character.ClassDictionary;
-import com.github.nnbros.rtp.storyteller.character.Gender;
-import com.github.nnbros.rtp.storyteller.character.SkillDictionary;
-import com.github.nnbros.rtp.storyteller.jpa.character.ClassService;
+import com.github.nnbros.rtp.storyteller.action.mainmenu.MainMenuTelegramClient;
+import com.github.nnbros.rtp.storyteller.character.*;
 import com.github.nnbros.rtp.storyteller.telegram.ui.DefaultParameter;
-import com.github.nnbros.rtp.storyteller.telegram.ui.Parameter;
-import com.github.nnbros.rtp.storyteller.telegram.ui.ParametersBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -24,7 +21,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 import java.util.*;
 
 import static com.github.nnbros.rtp.storyteller.BotTestUtils.*;
-import static com.github.nnbros.rtp.storyteller.registration.RegistrationElement.*;
+import static com.github.nnbros.rtp.storyteller.action.registration.RegistrationElement.*;
 import static org.mockito.Mockito.*;
 
 public class RegistrationTelegramClientTest extends StorytellerTest {
@@ -43,7 +40,8 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 	private ClassService classService;
 	@Mock
 	private TelegramClient telegramClient;
-	private final ParametersBuilder parametersBuilder = new ParametersBuilder();
+	@Mock
+	private MainMenuTelegramClient mainMenuTelegramClient;
 
 	@InjectMocks
 	private RegistrationTelegramClient registrationTelegramClient;
@@ -135,7 +133,7 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 	public void sendRegistrationConfirmation() throws TelegramApiException, ElementNotFoundException {
 		ActionContext actionContext = createTestActionContext();
 		SendMessage mockMessage = mock(SendMessage.class);
-		Map<String, String> params = parametersBuilder.buildParameters(
+		Map<String, String> params = Parameters.buildParameters(
 				Parameter.of(DefaultParameter.CHAT_ID, actionContext.userId()),
 				Parameter.of(DefaultParameter.MESSAGE_ID, actionContext.messageId())
 		);
@@ -144,15 +142,16 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 		registrationTelegramClient.sendRegistrationConfirmation(actionContext);
 
 		verify(telegramClient, times(1)).execute(mockMessage);
+		verify(mainMenuTelegramClient, times(1)).sendMainMenu(actionContext);
 	}
 
 	@Test
 	public void resendCharacterNameRequest() throws TelegramApiException, ElementNotFoundException {
 		CharacterRequest characterRequest = createTestCharacterRequest();
 		SendMessage mockMessage = mock(SendMessage.class);
-		Map<String, String> params = parametersBuilder.buildParameters(
+		Map<String, String> params = Parameters.buildParameters(
 				Parameter.of(DefaultParameter.CHAT_ID, characterRequest.getUserId()),
-				Parameter.of(RegistrationParameter.CHAR_GENDER, TEST_GENDER)
+				Parameter.of(CharacterParameter.CHAR_GENDER, TEST_GENDER)
 		);
 		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(invalidCharName.getGroupName(), invalidCharName.name(), params);
 
@@ -165,11 +164,11 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 		ArrayList<Parameter> params = new ArrayList<>();
 		params.add(Parameter.of(DefaultParameter.CHAT_ID, characterRequest.getUserId()));
 		params.add(Parameter.of(DefaultParameter.MESSAGE_ID, characterRequest.getLastMessageId()));
-		params.add(Parameter.of(RegistrationParameter.CHAR_GENDER, TEST_GENDER));
-		params.add(Parameter.of(RegistrationParameter.CHAR_NAME, characterRequest.getName()));
-		params.add(Parameter.of(RegistrationParameter.CHAR_CLASS, characterRequest.getClassName()));
+		params.add(Parameter.of(CharacterParameter.CHAR_GENDER, TEST_GENDER));
+		params.add(Parameter.of(CharacterParameter.CHAR_NAME, characterRequest.getName()));
+		params.add(Parameter.of(CharacterParameter.CHAR_CLASS, characterRequest.getClassName()));
 		params.addAll(Arrays.asList(additionalParams));
 
-		return parametersBuilder.buildParameters(params);
+		return Parameters.buildParameters(params);
 	}
 }

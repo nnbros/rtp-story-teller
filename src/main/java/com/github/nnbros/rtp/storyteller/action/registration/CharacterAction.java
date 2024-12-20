@@ -1,4 +1,4 @@
-package com.github.nnbros.rtp.storyteller.character;
+package com.github.nnbros.rtp.storyteller.action.registration;
 
 import com.github.nnbros.rtp.storyteller.action.Action;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum CharacterAction implements Action<CharacterAction> {
+public enum CharacterAction implements Action {
 	CREATE_START("storyteller_create_char_start"),
 	CREATE_GENDER("storyteller_create_char_gender"),
 	CREATE_NAME("storyteller_create_char_name"),
@@ -15,9 +15,4 @@ public enum CharacterAction implements Action<CharacterAction> {
 	REGISTRATION("storyteller_create_char_registration");
 
 	private final String actionName;
-
-	@Override
-	public CharacterAction getAction() {
-		return this;
-	}
 }

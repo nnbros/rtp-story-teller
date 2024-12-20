@@ -1,22 +1,20 @@
-package com.github.nnbros.rtp.storyteller.character;
+package com.github.nnbros.rtp.storyteller.action.registration;
 
 import com.github.nnbros.rtp.storyteller.action.ActionPipeline;
 import com.github.nnbros.rtp.storyteller.action.ActionRegistrar;
-import com.github.nnbros.rtp.storyteller.registration.RegistrationService;
-import com.github.nnbros.rtp.storyteller.registration.RegistrationTelegramClient;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 import static com.github.nnbros.rtp.storyteller.action.ActionPipelines.*;
-import static com.github.nnbros.rtp.storyteller.character.CharacterAction.*;
+import static com.github.nnbros.rtp.storyteller.action.registration.CharacterAction.*;
 
 @Component
-public class CharacterActionRegistrar implements ActionRegistrar {
+public class RegistrationActionRegistrar implements ActionRegistrar {
 	private final Map<String, ActionPipeline> actionPipelines;
 
-	public CharacterActionRegistrar(RegistrationService registrationService,
-									RegistrationTelegramClient telegramClient) {
+	public RegistrationActionRegistrar(RegistrationService registrationService,
+									   RegistrationTelegramClient telegramClient) {
 		actionPipelines = initPipelines(registrationService, telegramClient);
 	}
 

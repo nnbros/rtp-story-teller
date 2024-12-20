@@ -1,8 +1,6 @@
 package com.github.nnbros.rtp.storyteller.action;
 
-public interface Action<T extends Action<T>> {
+public interface Action {
 
 	String getActionName();
-
-	T getAction();
 }

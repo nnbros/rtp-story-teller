@@ -1,7 +1,10 @@
 package com.github.nnbros.rtp.storyteller;
 
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
-import com.github.nnbros.rtp.storyteller.character.CharacterRequest;
+import com.github.nnbros.rtp.storyteller.action.registration.CharacterRequest;
+import com.github.nnbros.rtp.storyteller.character.Character;
+import com.github.nnbros.rtp.storyteller.character.CharacterClass;
+import com.github.nnbros.rtp.storyteller.character.ClassDictionary;
 import com.github.nnbros.rtp.storyteller.character.Gender;
 import com.github.nnbros.rtp.storyteller.telegram.UpdateType;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -25,6 +28,7 @@ public class BotTestUtils {
 	public static final String TEST_CALLBACK_DATA = "test_data";
 	public static final String TEST_CHARACTER_NAME = "testCharacterName";
 	public static final String TEST_CLASS_NAME = "testClassName";
+	public static final String TEST_DESCRIPTION = "testDescription1";
 
 	public static User createTestUser() {
 		return User.builder()
@@ -123,5 +127,17 @@ public class BotTestUtils {
 		characterRequest.setClassName(TEST_CLASS_NAME);
 		characterRequest.setLastMessageId(TEST_MESSAGE_ID);
 		return characterRequest;
+	}
+
+	public static ClassDictionary createTestClassDictionary() {
+		return new ClassDictionary(1, TEST_CLASS_NAME, TEST_DESCRIPTION, 1, 1, 1);
+	}
+
+	public static CharacterClass createTestCharClass() {
+		return new CharacterClass(createTestClassDictionary(), 0L);
+	}
+
+	public static Character createTestCharacter() {
+		return new Character(TEST_CHARACTER_NAME, Gender.MALE, createTestCharClass());
 	}
 }

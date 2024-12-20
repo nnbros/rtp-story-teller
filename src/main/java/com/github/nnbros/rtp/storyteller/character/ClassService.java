@@ -1,8 +1,9 @@
-package com.github.nnbros.rtp.storyteller.jpa.character;
+package com.github.nnbros.rtp.storyteller.character;
 
-import com.github.nnbros.rtp.storyteller.character.ClassDictionary;
-import com.github.nnbros.rtp.storyteller.character.SkillDictionary;
 import com.github.nnbros.rtp.storyteller.exception.StoryTellerRuntimeException;
+import com.github.nnbros.rtp.storyteller.jpa.character.ClassDictionaryEntity;
+import com.github.nnbros.rtp.storyteller.jpa.character.ClassDictionaryMapper;
+import com.github.nnbros.rtp.storyteller.jpa.character.SkillDictionaryMapper;
 import com.github.nnbros.rtp.storyteller.repository.ClassDictionaryRepository;
 import com.github.nnbros.rtp.storyteller.repository.SkillDictionaryRepository;
 import lombok.RequiredArgsConstructor;

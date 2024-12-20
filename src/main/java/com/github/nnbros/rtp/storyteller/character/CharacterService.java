@@ -1,6 +1,11 @@
-package com.github.nnbros.rtp.storyteller.jpa.character;
+package com.github.nnbros.rtp.storyteller.character;
 
-import com.github.nnbros.rtp.storyteller.character.CharacterRequest;
+import com.github.nnbros.rtp.storyteller.action.ActionContext;
+import com.github.nnbros.rtp.storyteller.action.registration.CharacterRequest;
+import com.github.nnbros.rtp.storyteller.exception.CharacterNotFoundException;
+import com.github.nnbros.rtp.storyteller.jpa.character.CharacterClassEntity;
+import com.github.nnbros.rtp.storyteller.jpa.character.CharacterEntity;
+import com.github.nnbros.rtp.storyteller.jpa.character.CharacterMapper;
 import com.github.nnbros.rtp.storyteller.repository.CharacterClassRepository;
 import com.github.nnbros.rtp.storyteller.repository.CharacterRepository;
 import jakarta.transaction.Transactional;
@@ -15,9 +20,24 @@ public class CharacterService {
 	private final CharacterRepository characterRepository;
 	private final CharacterClassRepository characterClassRepository;
 	private final ClassService classService;
+	private final CharacterMapper characterMapper;
+
+	@Transactional
+	public Character getByUserId(long userId) {
+		return characterRepository.findByUserId(userId)
+				.map(characterMapper::toCharacter)
+				.orElseThrow(() -> new CharacterNotFoundException(userId));
+	}
 
 	public boolean containsByUser(long userId) {
 		return characterRepository.findByUserId(userId).isPresent();
+	}
+
+	public void validateCharacter(ActionContext actionContext) {
+		long userId = actionContext.userId();
+		if (!containsByUser(userId)) {
+			throw new CharacterNotFoundException(userId);
+		}
 	}
 
 	@Transactional

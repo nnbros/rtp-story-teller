@@ -1,16 +1,14 @@
-package com.github.nnbros.rtp.storyteller.registration;
+package com.github.nnbros.rtp.storyteller.action.registration;
 
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
 import com.github.nnbros.rtp.storyteller.action.ActionResult;
-import com.github.nnbros.rtp.storyteller.character.CharacterAction;
-import com.github.nnbros.rtp.storyteller.character.CharacterRequest;
 import com.github.nnbros.rtp.storyteller.character.Gender;
 import com.github.nnbros.rtp.storyteller.configuration.StoryTellerProperties;
 import com.github.nnbros.rtp.storyteller.exception.CharacterNotFoundException;
 import com.github.nnbros.rtp.storyteller.exception.StoryTellerRuntimeException;
-import com.github.nnbros.rtp.storyteller.jpa.character.CharacterService;
-import com.github.nnbros.rtp.storyteller.jpa.character.ClassService;
+import com.github.nnbros.rtp.storyteller.character.CharacterService;
+import com.github.nnbros.rtp.storyteller.character.ClassService;
 import com.github.nnbros.rtp.storyteller.telegram.UpdateType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

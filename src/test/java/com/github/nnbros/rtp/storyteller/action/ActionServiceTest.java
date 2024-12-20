@@ -1,13 +1,13 @@
 package com.github.nnbros.rtp.storyteller.action;
 
 import com.github.nnbros.rtp.storyteller.StorytellerSpringBootTest;
-import com.github.nnbros.rtp.storyteller.character.CharacterAction;
+import com.github.nnbros.rtp.storyteller.action.registration.CharacterAction;
 import com.github.nnbros.rtp.storyteller.exception.ActionNotFoundException;
 import com.github.nnbros.rtp.storyteller.exception.StoryTellerException;
 import com.github.nnbros.rtp.storyteller.exception.StoryTellerRuntimeException;
 import com.github.nnbros.rtp.storyteller.gateway.GatewayClient;
-import com.github.nnbros.rtp.storyteller.registration.RegistrationService;
-import com.github.nnbros.rtp.storyteller.registration.RegistrationTelegramClient;
+import com.github.nnbros.rtp.storyteller.action.registration.RegistrationService;
+import com.github.nnbros.rtp.storyteller.action.registration.RegistrationTelegramClient;
 import com.github.nnbros.rtp.storyteller.telegram.UpdateType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ActionServiceTest extends StorytellerSpringBootTest {
-	private static final int ACTIONS_COUNT = 6;
+	private static final int ACTIONS_COUNT = 11;
 	private static final String TEST_ACTION_DATA = "testActionData";
 
 	@MockBean
