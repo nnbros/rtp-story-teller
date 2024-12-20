@@ -1,4 +1,6 @@
 package com.github.nnbros.rtp.storyteller.character;
 
-public record Character(String name, Gender gender, CharacterClass characterClass) {
+import java.util.List;
+
+public record Character(String name, Gender gender, List<CharacterClass> characterClasses, ClassDictionary activeClassDictionary) {
 }

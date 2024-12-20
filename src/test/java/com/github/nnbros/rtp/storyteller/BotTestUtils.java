@@ -133,11 +133,14 @@ public class BotTestUtils {
 		return new ClassDictionary(1, TEST_CLASS_NAME, TEST_DESCRIPTION, 1, 1, 1);
 	}
 
-	public static CharacterClass createTestCharClass() {
-		return new CharacterClass(createTestClassDictionary(), 0L);
+	public static List<CharacterClass> createTestCharClasses() {
+		return List.of(
+				new CharacterClass(createTestClassDictionary(), 0L),
+				new CharacterClass(createTestClassDictionary(), 0L)
+				);
 	}
 
 	public static Character createTestCharacter() {
-		return new Character(TEST_CHARACTER_NAME, Gender.MALE, createTestCharClass());
+		return new Character(TEST_CHARACTER_NAME, Gender.MALE, createTestCharClasses(), createTestClassDictionary());
 	}
 }

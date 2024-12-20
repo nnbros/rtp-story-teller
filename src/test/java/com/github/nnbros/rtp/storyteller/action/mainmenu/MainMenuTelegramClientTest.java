@@ -71,7 +71,7 @@ public class MainMenuTelegramClientTest extends StorytellerTest {
 		return Parameters.buildParameters(
 				Parameter.of(DefaultParameter.CHAT_ID, actionContext.userId()),
 				Parameter.of(CharacterParameter.CHAR_NAME, MainMenuTelegramClientTest.TEST_CHARACTER.name()),
-				Parameter.of(CharacterParameter.CHAR_CLASS, MainMenuTelegramClientTest.TEST_CHARACTER.characterClass().classDictionary().name())
+				Parameter.of(CharacterParameter.CHAR_CLASS, MainMenuTelegramClientTest.TEST_CHARACTER.activeClassDictionary().name())
 		);
 	}
 }

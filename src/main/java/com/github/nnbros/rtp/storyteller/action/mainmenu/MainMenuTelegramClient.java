@@ -5,8 +5,10 @@ import com.github.guronas.telegram.bot.elements.parameter.Parameter;
 import com.github.guronas.telegram.bot.elements.parameter.Parameters;
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
 import com.github.nnbros.rtp.storyteller.character.Character;
+import com.github.nnbros.rtp.storyteller.character.CharacterClass;
 import com.github.nnbros.rtp.storyteller.character.CharacterParameter;
 import com.github.nnbros.rtp.storyteller.character.CharacterService;
+import com.github.nnbros.rtp.storyteller.exception.StoryTellerRuntimeException;
 import com.github.nnbros.rtp.storyteller.telegram.AbstractTelegramClient;
 import com.github.nnbros.rtp.storyteller.telegram.ui.DefaultParameter;
 import lombok.extern.slf4j.Slf4j;
@@ -61,7 +63,7 @@ public class MainMenuTelegramClient extends AbstractTelegramClient {
 		return Parameters.buildParameters(
 				Parameter.of(DefaultParameter.CHAT_ID, actionContext.userId()),
 				Parameter.of(CharacterParameter.CHAR_NAME, character.name()),
-				Parameter.of(CharacterParameter.CHAR_CLASS, character.characterClass().classDictionary().name())
+				Parameter.of(CharacterParameter.CHAR_CLASS, character.activeClassDictionary().name())
 		);
 	}
 }
