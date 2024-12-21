@@ -41,9 +41,6 @@ public class CharacterEntity {
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "character_id", referencedColumnName = "id")
-	private List<CharacterClassEntity> characterClasses;
-
-	@OneToMany(mappedBy = "character", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CharacterClassEntity> classes;
 }
 

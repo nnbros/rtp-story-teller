@@ -27,7 +27,8 @@ public class BotTestUtils {
 	public static final String COMMAND_MESSAGE_TYPE = "bot_command";
 	public static final String TEST_CALLBACK_DATA = "test_data";
 	public static final String TEST_CHARACTER_NAME = "testCharacterName";
-	public static final String TEST_CLASS_NAME = "testClassName";
+	public static final String TEST_CLASS_NAME_1 = "testClassName1";
+	public static final String TEST_CLASS_NAME_2 = "testClassName2";
 	public static final String TEST_DESCRIPTION = "testDescription1";
 
 	public static User createTestUser() {
@@ -124,20 +125,24 @@ public class BotTestUtils {
 		CharacterRequest characterRequest = new CharacterRequest(TEST_USER_ID);
 		characterRequest.setName(TEST_CHARACTER_NAME);
 		characterRequest.setGender(Gender.MALE);
-		characterRequest.setClassName(TEST_CLASS_NAME);
+		characterRequest.setClassName(TEST_CLASS_NAME_1);
 		characterRequest.setLastMessageId(TEST_MESSAGE_ID);
 		return characterRequest;
 	}
 
 	public static ClassDictionary createTestClassDictionary() {
-		return new ClassDictionary(1, TEST_CLASS_NAME, TEST_DESCRIPTION, 1, 1, 1);
+		return createTestClassDictionary(TEST_CLASS_NAME_1);
+	}
+
+	public static ClassDictionary createTestClassDictionary(String className) {
+		return new ClassDictionary(1, className, TEST_DESCRIPTION, 1, 1, 1);
 	}
 
 	public static List<CharacterClass> createTestCharClasses() {
 		return List.of(
-				new CharacterClass(createTestClassDictionary(), 0L),
-				new CharacterClass(createTestClassDictionary(), 0L)
-				);
+				new CharacterClass(createTestClassDictionary(TEST_CLASS_NAME_1), 0L),
+				new CharacterClass(createTestClassDictionary(TEST_CLASS_NAME_2), 0L)
+		);
 	}
 
 	public static Character createTestCharacter() {

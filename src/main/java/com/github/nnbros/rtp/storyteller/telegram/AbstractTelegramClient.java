@@ -2,6 +2,7 @@ package com.github.nnbros.rtp.storyteller.telegram;
 
 import com.github.guronas.telegram.bot.elements.TelegramElementRegistry;
 import com.github.guronas.telegram.bot.elements.exception.ElementNotFoundException;
+import com.github.guronas.telegram.bot.elements.parameter.Parameter;
 import com.github.nnbros.rtp.storyteller.exception.StoryTellerRuntimeException;
 import com.github.nnbros.rtp.storyteller.telegram.ui.Element;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -48,6 +50,10 @@ public abstract class AbstractTelegramClient {
 		return buildElement(element.getGroupName(), element.name(), params, elementType);
 	}
 
+	protected <T> T buildElement(Element element, List<Parameter> params, Class<T> elementType) {
+		return buildElement(element.getGroupName(), element.name(), params, elementType);
+	}
+
 	protected String buildText(Element element, Map<String, String> params) {
 		return buildElement(element.getGroupName(), element.name(), params, String.class);
 	}
@@ -77,6 +83,14 @@ public abstract class AbstractTelegramClient {
 	}
 
 	protected <T> T buildElement(String groupName, String elementName, Map<String, String> params, Class<T> elementType) {
+		try {
+			return elementRegistry.buildElement(groupName, elementName, params, elementType);
+		} catch (ElementNotFoundException e) {
+			throw new StoryTellerRuntimeException(e);
+		}
+	}
+
+	protected <T> T buildElement(String groupName, String elementName, List<Parameter> params, Class<T> elementType) {
 		try {
 			return elementRegistry.buildElement(groupName, elementName, params, elementType);
 		} catch (ElementNotFoundException e) {

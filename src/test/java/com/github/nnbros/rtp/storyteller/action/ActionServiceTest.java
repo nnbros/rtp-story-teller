@@ -54,6 +54,7 @@ public class ActionServiceTest extends StorytellerSpringBootTest {
 		assertEquals(ACTIONS_COUNT, testMap.size());
 	}
 
+	//TODO fix it
 //	@Test
 //	public void process() throws StoryTellerException, InterruptedException {
 //		String actionName = CharacterAction.CREATE_START.getActionName();
