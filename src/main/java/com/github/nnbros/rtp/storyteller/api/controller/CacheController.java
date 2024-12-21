@@ -1,7 +1,7 @@
 package com.github.nnbros.rtp.storyteller.api.controller;
 
 import com.github.nnbros.rtp.storyteller.api.model.ErrorResponse;
-import com.github.nnbros.rtp.storyteller.registration.RegistrationService;
+import com.github.nnbros.rtp.storyteller.action.registration.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

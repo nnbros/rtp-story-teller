@@ -1,11 +1,9 @@
-package com.github.nnbros.rtp.storyteller.character;
+package com.github.nnbros.rtp.storyteller.action.registration;
 
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
 import com.github.nnbros.rtp.storyteller.action.ActionPipeline;
 import com.github.nnbros.rtp.storyteller.action.ActionResult;
-import com.github.nnbros.rtp.storyteller.registration.RegistrationService;
-import com.github.nnbros.rtp.storyteller.registration.RegistrationTelegramClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,14 +17,14 @@ import static com.github.nnbros.rtp.storyteller.BotTestUtils.createTestActionCon
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
-public class CharacterActionRegistrarTest extends StorytellerTest {
+public class RegistrationActionRegistrarTest extends StorytellerTest {
 	@Mock
 	private RegistrationService registrationService;
 	@Mock
 	private RegistrationTelegramClient telegramClient;
 
 	@InjectMocks
-	private CharacterActionRegistrar registrar;
+	private RegistrationActionRegistrar registrar;
 
 	private final HashMap<String, ActionPipeline> actionPipelines = new HashMap<>();
 

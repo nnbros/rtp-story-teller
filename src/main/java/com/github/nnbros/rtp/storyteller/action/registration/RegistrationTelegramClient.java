@@ -1,15 +1,16 @@
-package com.github.nnbros.rtp.storyteller.registration;
+package com.github.nnbros.rtp.storyteller.action.registration;
 
 import com.github.guronas.telegram.bot.elements.TelegramElementRegistry;
+import com.github.guronas.telegram.bot.elements.parameter.Parameter;
+import com.github.guronas.telegram.bot.elements.parameter.Parameters;
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
-import com.github.nnbros.rtp.storyteller.character.CharacterRequest;
+import com.github.nnbros.rtp.storyteller.action.mainmenu.MainMenuTelegramClient;
+import com.github.nnbros.rtp.storyteller.character.CharacterParameter;
 import com.github.nnbros.rtp.storyteller.character.ClassDictionary;
 import com.github.nnbros.rtp.storyteller.character.SkillDictionary;
-import com.github.nnbros.rtp.storyteller.jpa.character.ClassService;
+import com.github.nnbros.rtp.storyteller.character.ClassService;
 import com.github.nnbros.rtp.storyteller.telegram.AbstractTelegramClient;
 import com.github.nnbros.rtp.storyteller.telegram.ui.DefaultParameter;
-import com.github.nnbros.rtp.storyteller.telegram.ui.Parameter;
-import com.github.nnbros.rtp.storyteller.telegram.ui.ParametersBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethod;
@@ -17,7 +18,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.util.*;
 
-import static com.github.nnbros.rtp.storyteller.registration.RegistrationElement.*;
+import static com.github.nnbros.rtp.storyteller.action.registration.RegistrationElement.*;
 
 @Slf4j
 @Service
@@ -26,11 +27,15 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 	public static final String CONFIRMED_CLASS_TEMPLATE = "%s%s";
 
 	private final ClassService classService;
-	private final ParametersBuilder parametersBuilder = new ParametersBuilder();
+	private final MainMenuTelegramClient mainMenuTelegramClient;
 
-	public RegistrationTelegramClient(TelegramClient telegramClient, ClassService classService, TelegramElementRegistry elementRegistry) {
+	public RegistrationTelegramClient(TelegramClient telegramClient,
+									  ClassService classService,
+									  TelegramElementRegistry elementRegistry,
+									  MainMenuTelegramClient mainMenuTelegramClient) {
 		super(telegramClient, elementRegistry);
 		this.classService = classService;
+		this.mainMenuTelegramClient = mainMenuTelegramClient;
 	}
 
 	public void sendGenderOptions(ActionContext actionContext) {
@@ -99,21 +104,22 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 
 	public void sendRegistrationConfirmation(ActionContext actionContext) {
 		log.debug("Sending isSuccessful registration message to the user [{}]...", actionContext.userId());
-		Map<String, String> params = parametersBuilder.buildParameters(
+		Map<String, String> params = Parameters.buildParameters(
 				Parameter.of(DefaultParameter.CHAT_ID, actionContext.userId()),
 				Parameter.of(DefaultParameter.MESSAGE_ID, actionContext.messageId())
 		);
 		BotApiMethod<?> registrationRequestMessage = buildBotApiMethod(registrationComplete, params);
 		execute(registrationRequestMessage);
+		mainMenuTelegramClient.sendMainMenu(actionContext);
 		log.debug("Character registration confirmation message has been sent successfully");
 	}
 
 	public void resendCharacterNameRequest(CharacterRequest characterRequest) {
 		log.debug("Resending character name request to user [{}] due to invalid name received.", characterRequest.getUserId());
 		String gender = buildGender(characterRequest);
-		Map<String, String> parameters = parametersBuilder.buildParameters(
+		Map<String, String> parameters = Parameters.buildParameters(
 				Parameter.of(DefaultParameter.CHAT_ID, characterRequest.getUserId()),
-				Parameter.of(RegistrationParameter.CHAR_GENDER, gender)
+				Parameter.of(CharacterParameter.CHAR_GENDER, gender)
 		);
 		BotApiMethod<?> nameMessage = buildBotApiMethod(REGISTRATION_GROUP_NAME, invalidCharName.name(), parameters);
 
@@ -126,16 +132,16 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 		parameters.add(Parameter.of(DefaultParameter.CHAT_ID, characterRequest.getUserId()));
 		parameters.add(Parameter.of(DefaultParameter.MESSAGE_ID, characterRequest.getLastMessageId()));
 		if (Objects.nonNull(characterRequest.getGender())) {
-			parameters.add(Parameter.of(RegistrationParameter.CHAR_GENDER, buildGender(characterRequest)));
+			parameters.add(Parameter.of(CharacterParameter.CHAR_GENDER, buildGender(characterRequest)));
 		}
 		if (Objects.nonNull(characterRequest.getName())) {
-			parameters.add(Parameter.of(RegistrationParameter.CHAR_NAME, characterRequest.getName()));
+			parameters.add(Parameter.of(CharacterParameter.CHAR_NAME, characterRequest.getName()));
 		}
 		if (Objects.nonNull(characterRequest.getClassName())) {
-			parameters.add(Parameter.of(RegistrationParameter.CHAR_CLASS, characterRequest.getClassName()));
+			parameters.add(Parameter.of(CharacterParameter.CHAR_CLASS, characterRequest.getClassName()));
 		}
 		parameters.addAll(Arrays.asList(additionalParams));
-		return parametersBuilder.buildParameters(parameters);
+		return Parameters.buildParameters(parameters);
 	}
 
 	private String buildGender(CharacterRequest characterRequest) {

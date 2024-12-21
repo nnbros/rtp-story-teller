@@ -1,7 +1,10 @@
 package com.github.nnbros.rtp.storyteller;
 
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
-import com.github.nnbros.rtp.storyteller.character.CharacterRequest;
+import com.github.nnbros.rtp.storyteller.action.registration.CharacterRequest;
+import com.github.nnbros.rtp.storyteller.character.Character;
+import com.github.nnbros.rtp.storyteller.character.CharacterClass;
+import com.github.nnbros.rtp.storyteller.character.ClassDictionary;
 import com.github.nnbros.rtp.storyteller.character.Gender;
 import com.github.nnbros.rtp.storyteller.telegram.UpdateType;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -24,7 +27,9 @@ public class BotTestUtils {
 	public static final String COMMAND_MESSAGE_TYPE = "bot_command";
 	public static final String TEST_CALLBACK_DATA = "test_data";
 	public static final String TEST_CHARACTER_NAME = "testCharacterName";
-	public static final String TEST_CLASS_NAME = "testClassName";
+	public static final String TEST_CLASS_NAME_1 = "testClassName1";
+	public static final String TEST_CLASS_NAME_2 = "testClassName2";
+	public static final String TEST_DESCRIPTION = "testDescription1";
 
 	public static User createTestUser() {
 		return User.builder()
@@ -120,8 +125,27 @@ public class BotTestUtils {
 		CharacterRequest characterRequest = new CharacterRequest(TEST_USER_ID);
 		characterRequest.setName(TEST_CHARACTER_NAME);
 		characterRequest.setGender(Gender.MALE);
-		characterRequest.setClassName(TEST_CLASS_NAME);
+		characterRequest.setClassName(TEST_CLASS_NAME_1);
 		characterRequest.setLastMessageId(TEST_MESSAGE_ID);
 		return characterRequest;
+	}
+
+	public static ClassDictionary createTestClassDictionary() {
+		return createTestClassDictionary(TEST_CLASS_NAME_1);
+	}
+
+	public static ClassDictionary createTestClassDictionary(String className) {
+		return new ClassDictionary(1, className, TEST_DESCRIPTION, 1, 1, 1);
+	}
+
+	public static List<CharacterClass> createTestCharClasses() {
+		return List.of(
+				new CharacterClass(createTestClassDictionary(TEST_CLASS_NAME_1), 0L),
+				new CharacterClass(createTestClassDictionary(TEST_CLASS_NAME_2), 0L)
+		);
+	}
+
+	public static Character createTestCharacter() {
+		return new Character(TEST_CHARACTER_NAME, Gender.MALE, createTestCharClasses(), createTestClassDictionary());
 	}
 }

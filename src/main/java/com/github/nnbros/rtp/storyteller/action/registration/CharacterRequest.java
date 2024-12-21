@@ -1,5 +1,6 @@
-package com.github.nnbros.rtp.storyteller.character;
+package com.github.nnbros.rtp.storyteller.action.registration;
 
+import com.github.nnbros.rtp.storyteller.character.Gender;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 

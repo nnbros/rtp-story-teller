@@ -1,10 +1,10 @@
-main_menu:
-    - id: "char_base_info"
-      text: "${name} [${account_level}]\nКласс: ${active_class} [${active_class_level}]\nВойска: ${active_army}"
+mainMenu:
+    - id: "charBaseInfo"
+      text: "${charName} [${accountLevel}]\nКласс: ${charClass} [${charClassLevel}]\nВойска: ${charArmy}"
     - id: "main"
       message:
           action: CREATE
-          text: "${char_base_info}\n\nВы находитесь в Лагере."
+          text: "${charBaseInfo}\n\nВы находитесь в Лагере."
           replyKeyboard:
               replyKeyboardMarkup:
                   resizeKeyboard: true
@@ -27,17 +27,17 @@ main_menu:
                       - keyboardRow:
                             - keyboardButton:
                                   text: "🚧Параметры"
-    - id: "hero"
+    - id: "character"
       message:
           action: CREATE
-          text: "${char_base_info}"
+          text: "${charBaseInfo}"
           replyKeyboard:
               replyKeyboardMarkup:
                   resizeKeyboard: true
                   rows:
                       - keyboardRow:
                             - keyboardButton:
-                                  text: "🚧Характеристики"
+                                  text: "Характеристики"
                             - keyboardButton:
                                   text: "Умения"
                       - keyboardRow:

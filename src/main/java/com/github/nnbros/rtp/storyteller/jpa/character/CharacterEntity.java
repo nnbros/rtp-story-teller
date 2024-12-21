@@ -39,15 +39,8 @@ public class CharacterEntity {
 	@JoinColumn(name = "active_class_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
 	private ClassDictionaryEntity activeClassDictionary;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinTable(
-			name = "character_class",
-			joinColumns = @JoinColumn(name = "character_id"),
-			inverseJoinColumns = @JoinColumn(name = "class_id")
-	)
-	private CharacterClassEntity characterClass;
-
-	@OneToMany(mappedBy = "character", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "character_id", referencedColumnName = "id")
 	private List<CharacterClassEntity> classes;
 }
 
