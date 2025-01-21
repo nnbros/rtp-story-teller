@@ -98,12 +98,24 @@ public class RegistrationActionRegistrarTest extends StorytellerTest {
 		ActionPipeline actionPipeline = actionPipelines.get(CharacterAction.CLASS_SELECTION.getActionName());
 		ActionContext testActionContext = createTestActionContext();
 		CharacterRequest characterRequest = new CharacterRequest(TEST_USER_ID);
-		when(registrationService.addClass(testActionContext)).thenReturn(characterRequest);
+		when(registrationService.addClass(testActionContext)).thenReturn(new ActionResult<>(characterRequest, true));
 
 		actionPipeline.execute(testActionContext);
 
 		verify(registrationService, times(1)).addClass(testActionContext);
 		verify(telegramClient, times(1)).sendClassDescription(characterRequest);
+	}
+
+	@Test
+	public void executeClassSelectionPipelineAlternativeAction() {
+		ActionPipeline actionPipeline = actionPipelines.get(CharacterAction.CLASS_SELECTION.getActionName());
+		ActionContext testActionContext = createTestActionContext();
+		when(registrationService.addClass(testActionContext)).thenReturn(new ActionResult<>(null, false));
+
+		actionPipeline.execute(testActionContext);
+
+		verify(registrationService, times(1)).addClass(testActionContext);
+		verifyNoInteractions(telegramClient);
 	}
 
 	@Test

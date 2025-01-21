@@ -71,7 +71,7 @@ public class RegistrationService {
 		return new ActionResult<>(characterRequest, characterNameValid);
 	}
 
-	public CharacterRequest addClass(ActionContext actionContext) {
+	public ActionResult<CharacterRequest> addClass(ActionContext actionContext) {
 		Long userId = actionContext.userId();
 		log.debug("Add class request has been received for the user [{}]", userId);
 		CharacterRequest characterRequest = getCharacterRequest(userId, actionContext.messageId());
@@ -79,9 +79,14 @@ public class RegistrationService {
 		String className = Optional.ofNullable(actionContext.data())
 				.filter(classService::containsByName)
 				.orElseThrow(() -> new StoryTellerRuntimeException("Character class cannot be empty and must exist"));
-		characterRequest.setClassName(className);
-		log.debug("Class {} has been added successfully", className);
-		return characterRequest;
+		if (className.equals(characterRequest.getClassName())) {
+			log.debug("The same class name has been received. This action will be ignored.");
+			return new ActionResult<>(characterRequest, false);
+		} else {
+			characterRequest.setClassName(className);
+			log.debug("Class {} has been added successfully", className);
+			return new ActionResult<>(characterRequest, true);
+		}
 	}
 
 	public void register(ActionContext actionContext) {
