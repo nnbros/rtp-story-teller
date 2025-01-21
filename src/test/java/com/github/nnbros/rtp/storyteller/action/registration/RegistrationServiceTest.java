@@ -74,9 +74,10 @@ public class RegistrationServiceTest extends StorytellerTest {
 				TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_MESSAGE_ID, gender);
 
 		registrationService.createCharacter(testActionContext);
-		registrationService.addGender(testActionContext);
+		CharacterRequest result = registrationService.addGender(testActionContext);
 
 		CharacterRequest characterRequest = registrationService.getCharacterRequest(testActionContext);
+		assertEquals(result, characterRequest);
 		assertNotNull(characterRequest);
 		assertEquals(TEST_USER_ID, characterRequest.getUserId());
 		assertEquals(expectedGender, characterRequest.getGender());
@@ -160,9 +161,11 @@ public class RegistrationServiceTest extends StorytellerTest {
 		when(classService.containsByName(TEST_CLASS)).thenReturn(true);
 
 		registrationService.createCharacter(testActionContext);
-		registrationService.addClass(testActionContext);
+		ActionResult<CharacterRequest> result = registrationService.addClass(testActionContext);
 
+		assertTrue(result.isSuccessful());
 		CharacterRequest characterRequest = registrationService.getCharacterRequest(testActionContext);
+		assertEquals(result.value(), characterRequest);
 		assertNotNull(characterRequest);
 		assertEquals(TEST_USER_ID, characterRequest.getUserId());
 		assertEquals(TEST_CLASS, characterRequest.getClassName());
@@ -185,6 +188,23 @@ public class RegistrationServiceTest extends StorytellerTest {
 
 		registrationService.createCharacter(testActionContext);
 		assertThrows(StoryTellerRuntimeException.class, () -> registrationService.addClass(testActionContext));
+	}
+
+	@Test
+	public void addSameClass() {
+		ActionContext testActionContext = new ActionContext(CharacterAction.CLASS_SELECTION.getActionName(),
+				TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_MESSAGE_ID, TEST_CLASS);
+		when(classService.containsByName(TEST_CLASS)).thenReturn(true);
+
+		registrationService.createCharacter(testActionContext);
+		registrationService.addClass(testActionContext);
+		ActionResult<CharacterRequest> result = registrationService.addClass(testActionContext);
+
+		assertFalse(result.isSuccessful());
+		CharacterRequest characterRequest = registrationService.getCharacterRequest(testActionContext);
+		assertNotNull(characterRequest);
+		assertEquals(TEST_USER_ID, characterRequest.getUserId());
+		assertEquals(TEST_CLASS, characterRequest.getClassName());
 	}
 
 	@Test

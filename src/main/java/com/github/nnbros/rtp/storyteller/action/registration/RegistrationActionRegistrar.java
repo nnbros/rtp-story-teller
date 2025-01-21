@@ -8,6 +8,7 @@ import java.util.Map;
 
 import static com.github.nnbros.rtp.storyteller.action.ActionPipelines.*;
 import static com.github.nnbros.rtp.storyteller.action.registration.CharacterAction.*;
+import static com.github.nnbros.rtp.storyteller.util.StorytellerUtils.emptyConsumer;
 
 @Component
 public class RegistrationActionRegistrar implements ActionRegistrar {
@@ -23,7 +24,7 @@ public class RegistrationActionRegistrar implements ActionRegistrar {
 				CREATE_START.getActionName(), create(registrationService::createCharacter, telegramClient::sendGenderOptions),
 				CREATE_GENDER.getActionName(), create(registrationService::addGender, telegramClient::requestName),
 				CREATE_NAME.getActionName(), create(registrationService::addName, telegramClient::sendClassOptions, telegramClient::resendCharacterNameRequest),
-				CLASS_SELECTION.getActionName(), create(registrationService::addClass, telegramClient::sendClassDescription),
+				CLASS_SELECTION.getActionName(), create(registrationService::addClass, telegramClient::sendClassDescription, emptyConsumer()),
 				CLASS_CONFIRMATION.getActionName(), create(registrationService::getCharacterRequest, telegramClient::sendRegistrationRequest),
 				REGISTRATION.getActionName(), create(registrationService::register, telegramClient::sendRegistrationConfirmation)
 		);
