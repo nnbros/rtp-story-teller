@@ -48,3 +48,27 @@ mainMenu:
                       - keyboardRow:
                             - keyboardButton:
                                   text: "Назад"
+    - id: "army"
+      message:
+          action: CREATE
+          text: "${name} [${account_level}]\nВойска: ${active_army} [${active_army_level}]\n\nВыберите войска:"
+          replyKeyboard:
+              inlineKeyboard:
+                  dynamicRows:
+                      id: armies
+                      maxButtonsPerRow: 1
+                  rows:
+                      - inlineKeyboardRow:
+                            - inlineKeyboardButton:
+                                  text: "${ifArmyTier0} Тир 0"
+                                  callbackData: "armyList_t0"
+                            - inlineKeyboardButton:
+                                  text: "${ifArmyTier1} Тир 1"
+                                  callbackData: "armyList_t1"
+                            - inlineKeyboardButton:
+                                  text: "${ifArmyTier2} Тир 2"
+                                  callbackData: "armyList_t2"
+                      - inlineKeyboardRow:
+                            - inlineKeyboardButton:
+                                  text: "Назад"
+                                  callbackData: "armyList_back"
