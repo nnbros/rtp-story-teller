@@ -48,3 +48,17 @@ mainMenu:
                       - keyboardRow:
                             - keyboardButton:
                                   text: "Назад"
+    - id: "class"
+      message:
+          action: CREATE
+          text: "${name} [${account_level}]\n Класс: ${active_class} [${active_class_level}]\n\nВыберите класс:"
+          replyKeyboard:
+              inlineKeyboard:
+                  dynamicRows:
+                      id: classes
+                      maxButtonsPerRow: 1
+                  rows:
+                      - inlineKeyboardRow:
+                            - inlineKeyboardButton:
+                                  text: "Назад"
+                                  callbackData: "classList_back"
