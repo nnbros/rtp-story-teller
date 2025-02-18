@@ -51,7 +51,7 @@ mainMenu:
     - id: "army"
       message:
           action: CREATE
-          text: "${name} [${account_level}]\nВойска: ${active_army} [${active_army_level}]\n\nВыберите войска:"
+          text: "${name} [${account_level}]\nВойска: ${charArmy} [${charArmy_level}]\nТип: ${charArmy_type}\nОсобенность:${charArmy_effect}\nУмения:\n${charArmy_skills}\nЗдоровье:${charArmy_hp} x${charArmy_count}\nАтака: ${charArmy_atk}\nЗащита: ${charArmy_def}\n\nВыберите войска:"
           replyKeyboard:
               inlineKeyboard:
                   dynamicRows:
