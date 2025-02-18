@@ -51,7 +51,7 @@ mainMenu:
     - id: "class"
       message:
           action: CREATE
-          text: "${name} [${account_level}]\n Класс: ${active_class} [${active_class_level}]\n\nВыберите класс:"
+          text: "${name} [${accountLevel}]\n Класс: ${charClass} [${charClassLevel}]\n${charClassDescription}\nВыберите класс:"
           replyKeyboard:
               inlineKeyboard:
                   dynamicRows:
