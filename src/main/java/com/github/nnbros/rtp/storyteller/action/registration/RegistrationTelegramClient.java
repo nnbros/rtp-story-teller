@@ -9,6 +9,7 @@ import com.github.nnbros.rtp.storyteller.character.CharacterParameter;
 import com.github.nnbros.rtp.storyteller.character.ClassDictionary;
 import com.github.nnbros.rtp.storyteller.character.SkillDictionary;
 import com.github.nnbros.rtp.storyteller.character.ClassService;
+import com.github.nnbros.rtp.storyteller.configuration.Localization;
 import com.github.nnbros.rtp.storyteller.telegram.AbstractTelegramClient;
 import com.github.nnbros.rtp.storyteller.telegram.ui.DefaultParameter;
 import lombok.extern.slf4j.Slf4j;
@@ -28,14 +29,16 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 
 	private final ClassService classService;
 	private final MainMenuTelegramClient mainMenuTelegramClient;
+	private final Localization localization;
 
 	public RegistrationTelegramClient(TelegramClient telegramClient,
 									  ClassService classService,
 									  TelegramElementRegistry elementRegistry,
-									  MainMenuTelegramClient mainMenuTelegramClient) {
+									  MainMenuTelegramClient mainMenuTelegramClient, Localization localization) {
 		super(telegramClient, elementRegistry);
 		this.classService = classService;
 		this.mainMenuTelegramClient = mainMenuTelegramClient;
+		this.localization = localization;
 	}
 
 	public void sendGenderOptions(ActionContext actionContext) {
@@ -58,10 +61,25 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 		log.debug("Sending character class options to the user [{}]...", characterRequest.getUserId());
 		Collection<ClassDictionary> classes = classService.getAllClasses();
 		StringBuilder classesDescription = new StringBuilder();
-		classes.forEach(classDictionary ->
-				classesDescription.append(DESCRIPTION_TEMPLATE.formatted(classDictionary.name(), classDictionary.description())));
+		Map<String, Localization.Clazz> localizedClasses = localization.getClasses();
+		classes.stream()
+				.map(ClassDictionary::name)
+				.map(localizedClasses::get)
+				.forEach(clazz ->
+						classesDescription.append(DESCRIPTION_TEMPLATE.formatted(clazz.getName(), clazz.getDescription())));
 		Parameter classesDescriptionParameter = Parameter.of(RegistrationParameter.CLASSES_DESCRIPTION, classesDescription);
-		Map<String, String> parameters = buildRegistrationParameters(characterRequest, classesDescriptionParameter);
+
+		//TODO remove after dynamic params are implemented
+		String warriorLocalizedClassName = localizedClasses.get(RegistrationParameter.WARRIOR.getKey()).getName();
+		Parameter warriorClassParameter = Parameter.of(RegistrationParameter.WARRIOR_CLASS_TEXT, warriorLocalizedClassName);
+		String rogueLocalizedClassName = localizedClasses.get(RegistrationParameter.ROGUE.getKey()).getName();
+		Parameter rogueClassParameter = Parameter.of(RegistrationParameter.ROGUE_CLASS_TEXT, rogueLocalizedClassName);
+
+		Map<String, String> parameters = buildRegistrationParameters(
+				characterRequest,
+				classesDescriptionParameter,
+				warriorClassParameter,
+				rogueClassParameter);
 
 		BotApiMethod<?> classOptionsMessage = buildBotApiMethod(charClassSelection, parameters);
 		execute(classOptionsMessage);
@@ -73,21 +91,29 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 		String className = characterRequest.getClassName();
 		String confirmationEmojiText = buildText(confirmationEmoji);
 
-		//TODO remove after dynamic button generation is implemented and class description is moved to configs
-		Parameter confirmedClass;
-		String confirmedClassButtonText = CONFIRMED_CLASS_TEMPLATE.formatted(confirmationEmojiText, className);
-		if (className.equals(CharClass.WARRIOR.getClassName())) {
-			confirmedClass = Parameter.of(RegistrationParameter.CONFIRMATION_WARRIOR, confirmedClassButtonText);
+		//TODO remove after dynamic params are implemented
+		Map<String, Localization.Clazz> localizedClasses = localization.getClasses();
+		String warriorLocalizedClassName = localizedClasses.get(RegistrationParameter.WARRIOR.getKey()).getName();
+		Parameter warriorClassParameter = Parameter.of(RegistrationParameter.WARRIOR_CLASS_TEXT, warriorLocalizedClassName);
+		String rogueLocalizedClassName = localizedClasses.get(RegistrationParameter.ROGUE.getKey()).getName();
+		Parameter rogueClassParameter = Parameter.of(RegistrationParameter.ROGUE_CLASS_TEXT, rogueLocalizedClassName);
+		String localizedClassName = localizedClasses.get(className).getName();
+		String confirmedClassButtonText = CONFIRMED_CLASS_TEMPLATE.formatted(confirmationEmojiText, localizedClassName);
+		if (className.equals(RegistrationParameter.WARRIOR.getKey())) {
+			warriorClassParameter = Parameter.of(RegistrationParameter.WARRIOR_CLASS_TEXT, confirmedClassButtonText);
 		} else {
-			confirmedClass = Parameter.of(RegistrationParameter.CONFIRMATION_ROUGE, confirmedClassButtonText);
+			rogueClassParameter = Parameter.of(RegistrationParameter.ROGUE_CLASS_TEXT, confirmedClassButtonText);
 		}
 
 		int classId = classService.getClassIdByName(className);
 		Collection<SkillDictionary> skills = classService.getAllSkillsByClassId(classId);
 		StringBuilder classDescriptionsText = new StringBuilder();
-		skills.forEach(skill -> classDescriptionsText.append(DESCRIPTION_TEMPLATE.formatted(skill.name(), skill.description())));
+		skills.stream()
+				.map(SkillDictionary::name)
+				.map(skill -> localization.getSkills().get(skill))
+				.forEach(skill -> classDescriptionsText.append(DESCRIPTION_TEMPLATE.formatted(skill.getName(), skill.getDescription())));
 		Parameter classesDescriptionParameter = Parameter.of(RegistrationParameter.SKILLS_DESCRIPTION, classDescriptionsText);
-		Map<String, String> parameters = buildRegistrationParameters(characterRequest, classesDescriptionParameter, confirmedClass);
+		Map<String, String> parameters = buildRegistrationParameters(characterRequest, classesDescriptionParameter, warriorClassParameter, rogueClassParameter);
 
 		BotApiMethod<?> classDescriptionMessage = buildBotApiMethod(REGISTRATION_GROUP_NAME, charClassConfirmation.name(), parameters);
 		execute(classDescriptionMessage);
@@ -137,8 +163,12 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 		if (Objects.nonNull(characterRequest.getName())) {
 			parameters.add(Parameter.of(CharacterParameter.CHAR_NAME, characterRequest.getName()));
 		}
-		if (Objects.nonNull(characterRequest.getClassName())) {
-			parameters.add(Parameter.of(CharacterParameter.CHAR_CLASS, characterRequest.getClassName()));
+		String className = characterRequest.getClassName();
+		if (Objects.nonNull(className)) {
+			String localizedClassName = localization.getClasses()
+					.get(className)
+					.getName();
+			parameters.add(Parameter.of(CharacterParameter.CHAR_CLASS, localizedClassName));
 		}
 		parameters.addAll(Arrays.asList(additionalParams));
 		return Parameters.buildParameters(parameters);

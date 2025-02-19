@@ -39,6 +39,13 @@ public class ClassService {
 				.toList();
 	}
 
+	public Collection<SkillDictionary> getAllSkills() {
+		return skillDictionaryRepository.findAll()
+				.stream()
+				.map(skillDictionaryMapper::toSkillDictionary)
+				.toList();
+	}
+
 	public int getClassIdByName(String name) {
 		return classDictionaryRepository.findIdByName(name)
 				.orElseThrow(() -> new StoryTellerRuntimeException("Unable to find class id by name [%s]", name));

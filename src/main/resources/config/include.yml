@@ -1,0 +1,5 @@
+spring:
+    config:
+        import:
+            - "classpath:config/localization/dictionary/RU/RU_class.yml"
+            - "classpath:config/localization/dictionary/RU/RU_skill.yml"

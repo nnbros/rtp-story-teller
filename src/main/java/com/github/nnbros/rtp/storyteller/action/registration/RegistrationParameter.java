@@ -9,8 +9,12 @@ import lombok.RequiredArgsConstructor;
 public enum RegistrationParameter implements ParameterKey {
 	CLASSES_DESCRIPTION("classesDescription"),
 	SKILLS_DESCRIPTION("skillsDescription"),
-	CONFIRMATION_WARRIOR("warriorClassText"),
-	CONFIRMATION_ROUGE("rogueClassText");
+	WARRIOR_CLASS_TEXT("warriorClassText"),
+	ROGUE_CLASS_TEXT("rogueClassText"),
+
+	//TODO remove after dynamic params are implemented
+	WARRIOR("warrior"),
+	ROGUE("rogue");
 
 	private final String key;
 }

@@ -2,7 +2,11 @@
 # Main Spring settings
 #####
 spring:
+    profiles:
+        active: prod
     application.name: storyteller
+    config:
+        import: "classpath:/config/include.yml"
 
 #####
 # Gateway connection settings
@@ -30,8 +34,6 @@ spring:
         hibernate:
             ddl-auto: validate
         show-sql: false
-        properties:
-            hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
 
     liquibase:
         liquibase-schema: storyteller

@@ -1,0 +1,8 @@
+localization.classes:
+    rogue:
+        name: "Плут"
+        description: "Мастер подлых трюков"
+
+    warrior:
+        name: "Воин"
+        description: "Сильный боец ближнего боя"
