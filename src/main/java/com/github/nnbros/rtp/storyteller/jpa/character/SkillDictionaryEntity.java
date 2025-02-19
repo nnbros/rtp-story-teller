@@ -9,16 +9,13 @@ import lombok.Setter;
 @Entity
 @Table(name = "skill_dictionary", schema = "storyteller")
 public class SkillDictionaryEntity {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", insertable = false, updatable = false)
+	@Column(name = "id", updatable = false)
 	private Integer id;
 
 	@Column(name = "name", nullable = false, unique = true, length = 32, insertable = false, updatable = false)
 	private String name;
-
-	@Column(name = "description", nullable = false, insertable = false, updatable = false)
-	private String description;
 
 	@Column(name = "class_id", nullable = false, insertable = false, updatable = false)
 	private Integer classId;

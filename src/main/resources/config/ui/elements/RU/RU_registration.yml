@@ -16,10 +16,6 @@ registration:
             Является уникальным, не содержит оскорбления, не имитирует административный аккаунт, не нарушает законы РФ."
     -   id: startingSkillsText
         text: "Стартовые умения:"
-    -   id: warriorClassText
-        text: "Воин"
-    -   id: rogueClassText
-        text: "Плут"
     -   id: confirmationEmoji
         text: "✅"
     -   id: createCharGender
@@ -55,10 +51,10 @@ registration:
                         -   inlineKeyboardRow:
                                 -   inlineKeyboardButton:
                                         text: "${warriorClassText}"
-                                        callbackData: "storyteller_create_char_class_selection:Воин"
+                                        callbackData: "storyteller_create_char_class_selection:warrior"
                                 -   inlineKeyboardButton:
                                         text: "${rogueClassText}"
-                                        callbackData: "storyteller_create_char_class_selection:Плут"
+                                        callbackData: "storyteller_create_char_class_selection:rogue"
                         -   inlineKeyboardRow:
                                 -   inlineKeyboardButton:
                                         text: "Подтвердить выбор"
@@ -73,10 +69,10 @@ registration:
                         -   inlineKeyboardRow:
                                 -   inlineKeyboardButton:
                                         text: "${warriorClassText}"
-                                        callbackData: "storyteller_create_char_class_selection:Воин"
+                                        callbackData: "storyteller_create_char_class_selection:warrior"
                                 -   inlineKeyboardButton:
                                         text: "${rogueClassText}"
-                                        callbackData: "storyteller_create_char_class_selection:Плут"
+                                        callbackData: "storyteller_create_char_class_selection:rogue"
                         -   inlineKeyboardRow:
                                 -   inlineKeyboardButton:
                                         text: "Подтвердить выбор"
