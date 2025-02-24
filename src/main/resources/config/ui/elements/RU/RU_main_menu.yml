@@ -42,7 +42,7 @@ mainMenu:
                                   text: "Умения"
                       - keyboardRow:
                             - keyboardButton:
-                                  text: "🚧Класс"
+                                  text: "Класс"
                             - keyboardButton:
                                   text: "🚧Экипировка"
                       - keyboardRow:
@@ -71,4 +71,4 @@ mainMenu:
                       - inlineKeyboardRow:
                             - inlineKeyboardButton:
                                   text: "Назад"
-                                  callbackData: "armyList_back"
+                                  callbackData: "storyteller_main_menu"
