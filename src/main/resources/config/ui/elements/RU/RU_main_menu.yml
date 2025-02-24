@@ -61,4 +61,4 @@ mainMenu:
                       - inlineKeyboardRow:
                             - inlineKeyboardButton:
                                   text: "Назад"
-                                  callbackData: "classList_back"
+                                  callbackData: "storyteller_main_menu"
