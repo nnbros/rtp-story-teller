@@ -48,3 +48,17 @@ mainMenu:
                       - keyboardRow:
                             - keyboardButton:
                                   text: "Назад"
+    - id: "class"
+      message:
+          action: CREATE
+          text: "${name} [${accountLevel}]\n Класс: ${charClass} [${charClassLevel}]\n${charClassDescription}\nВыберите класс:"
+          replyKeyboard:
+              inlineKeyboard:
+                  dynamicRows:
+                      id: classes
+                      maxButtonsPerRow: 1
+                  rows:
+                      - inlineKeyboardRow:
+                            - inlineKeyboardButton:
+                                  text: "Назад"
+                                  callbackData: "storyteller_character"
