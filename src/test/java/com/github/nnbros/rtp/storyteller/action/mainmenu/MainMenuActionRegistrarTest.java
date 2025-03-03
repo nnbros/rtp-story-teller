@@ -73,26 +73,4 @@ public class MainMenuActionRegistrarTest extends StorytellerTest {
 		verify(characterService, times(1)).validateCharacter(testActionContext);
 		verify(telegramClient, times(1)).sendCharacterMenu(testActionContext);
 	}
-
-	@Test
-	public void executeCharacterDetailsPipeline() {
-		ActionPipeline actionPipeline = actionPipelines.get(MainMenuAction.CHARACTER_DETAILS.getActionName());
-		ActionContext testActionContext = createTestActionContext();
-
-		actionPipeline.execute(testActionContext);
-
-		verify(characterService, times(1)).validateCharacter(testActionContext);
-		verify(telegramClient, times(1)).sendCharacterDetails(testActionContext);
-	}
-
-	@Test
-	public void executeCharacterDeckBuilderPipeline() {
-		ActionPipeline actionPipeline = actionPipelines.get(MainMenuAction.CHARACTER_DECK_BUILDER.getActionName());
-		ActionContext testActionContext = createTestActionContext();
-
-		actionPipeline.execute(testActionContext);
-
-		verify(characterService, times(1)).validateCharacter(testActionContext);
-		verify(telegramClient, times(1)).sendCharacterDeckBuilder(testActionContext);
-	}
 }

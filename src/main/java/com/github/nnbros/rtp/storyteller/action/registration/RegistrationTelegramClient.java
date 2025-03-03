@@ -25,7 +25,6 @@ import static com.github.nnbros.rtp.storyteller.action.registration.Registration
 @Service
 public class RegistrationTelegramClient extends AbstractTelegramClient {
 	public static final String DESCRIPTION_TEMPLATE = "%s: %s\n";
-	public static final String CONFIRMED_CLASS_TEMPLATE = "%s%s";
 
 	private final ClassService classService;
 	private final MainMenuTelegramClient mainMenuTelegramClient;
@@ -98,7 +97,7 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 		String rogueLocalizedClassName = localizedClasses.get(RegistrationParameter.ROGUE.getKey()).getName();
 		Parameter rogueClassParameter = Parameter.of(RegistrationParameter.ROGUE_CLASS_TEXT, rogueLocalizedClassName);
 		String localizedClassName = localizedClasses.get(className).getName();
-		String confirmedClassButtonText = CONFIRMED_CLASS_TEMPLATE.formatted(confirmationEmojiText, localizedClassName);
+		String confirmedClassButtonText = CONFIRMED_OPTION_TEMPLATE.formatted(confirmationEmojiText, localizedClassName);
 		if (className.equals(RegistrationParameter.WARRIOR.getKey())) {
 			warriorClassParameter = Parameter.of(RegistrationParameter.WARRIOR_CLASS_TEXT, confirmedClassButtonText);
 		} else {

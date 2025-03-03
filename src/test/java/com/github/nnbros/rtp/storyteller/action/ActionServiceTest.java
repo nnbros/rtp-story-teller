@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ActionServiceTest extends StorytellerSpringBootTest {
-	private static final int ACTIONS_COUNT = 11;
+	private static final int ACTIONS_COUNT = 12;
 	private static final String TEST_ACTION_DATA = "testActionData";
 
 	@MockBean

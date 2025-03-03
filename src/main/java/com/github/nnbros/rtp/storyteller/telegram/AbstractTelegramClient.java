@@ -2,6 +2,7 @@ package com.github.nnbros.rtp.storyteller.telegram;
 
 import com.github.guronas.telegram.bot.elements.TelegramElementRegistry;
 import com.github.guronas.telegram.bot.elements.exception.ElementNotFoundException;
+import com.github.guronas.telegram.bot.elements.parameter.DynamicParameters;
 import com.github.guronas.telegram.bot.elements.parameter.Parameter;
 import com.github.nnbros.rtp.storyteller.exception.StoryTellerRuntimeException;
 import com.github.nnbros.rtp.storyteller.telegram.ui.Element;
@@ -18,6 +19,9 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 public abstract class AbstractTelegramClient {
+	public static final String CONFIRMED_OPTION_TEMPLATE = "%s%s";
+	public static final String CALLBACK_DATA_TEMPLATE = "%s:%s";
+
 	private final TelegramClient telegramClient;
 	protected final TelegramElementRegistry elementRegistry;
 
@@ -69,6 +73,17 @@ public abstract class AbstractTelegramClient {
 	protected BotApiMethod<?> buildBotApiMethod(String groupName, String elementName, Map<String, String> params) {
 		try {
 			return elementRegistry.buildBotApiMethod(groupName, elementName, params);
+		} catch (ElementNotFoundException e) {
+			throw new StoryTellerRuntimeException(e);
+		}
+	}
+
+	protected BotApiMethod<?> buildBotApiMethod(String groupName,
+												String elementName,
+												Map<String, String> params,
+												Map<String, DynamicParameters> dynamicParams) {
+		try {
+			return elementRegistry.buildBotApiMethod(groupName, elementName, params, dynamicParams);
 		} catch (ElementNotFoundException e) {
 			throw new StoryTellerRuntimeException(e);
 		}
