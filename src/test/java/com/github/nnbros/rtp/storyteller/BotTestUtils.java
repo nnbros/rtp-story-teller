@@ -1,13 +1,14 @@
 package com.github.nnbros.rtp.storyteller;
 
+import com.github.guronas.telegram.bot.elements.parameter.Parameter;
+import com.github.guronas.telegram.bot.elements.parameter.Parameters;
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
 import com.github.nnbros.rtp.storyteller.action.registration.CharacterRequest;
+import com.github.nnbros.rtp.storyteller.character.*;
 import com.github.nnbros.rtp.storyteller.character.Character;
-import com.github.nnbros.rtp.storyteller.character.CharacterClass;
-import com.github.nnbros.rtp.storyteller.character.ClassDictionary;
-import com.github.nnbros.rtp.storyteller.character.Gender;
 import com.github.nnbros.rtp.storyteller.configuration.Localization;
 import com.github.nnbros.rtp.storyteller.telegram.UpdateType;
+import com.github.nnbros.rtp.storyteller.telegram.ui.DefaultParameter;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -15,6 +16,8 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.chat.Chat;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +51,12 @@ public class BotTestUtils {
 	public static final String TEST_SKILL_NAME_1 = "testSkillName1";
 	public static final String TEST_SKILL_NAME_2 = "testSkillName2";
 	public static final String TEST_SKILL_NAME_3 = "testSkillName3";
+	public static final ClassDictionary TEST_CLASS_POJO_1 = new ClassDictionary(1, TEST_CLASS_1, 1, 1, 1);
+	public static final ClassDictionary TEST_CLASS_POJO_2 = new ClassDictionary(2, TEST_CLASS_2, 2, 2, 2);
+	public static final ClassDictionary TEST_CLASS_POJO_3 = new ClassDictionary(3, TEST_CLASS_3, 3, 3, 3);
+
+	public static final String TEST_CONFIRMATION_EMOJI = ":)";
+	public static final String TEST_CONFIRMATION_CLASS_PARAM = TEST_CONFIRMATION_EMOJI + "testClassName1";
 
 	public static User createTestUser() {
 		return User.builder()
@@ -136,7 +145,11 @@ public class BotTestUtils {
 	}
 
 	public static ActionContext createTestActionContext() {
-		return new ActionContext(TEST_ACTION_NAME, TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_MESSAGE_ID, TEST_ACTION_DATA);
+		return createTestActionContext(TEST_ACTION_DATA);
+	}
+
+	public static ActionContext createTestActionContext(String data) {
+		return new ActionContext(TEST_ACTION_NAME, TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_MESSAGE_ID, data);
 	}
 
 	public static CharacterRequest createTestCharacterRequest() {
@@ -164,7 +177,7 @@ public class BotTestUtils {
 	}
 
 	public static Character createTestCharacter() {
-		return new Character(TEST_CHARACTER_NAME, Gender.MALE, createTestCharClasses(), createTestClassDictionary());
+		return new Character(TEST_CHARACTER_NAME, Gender.MALE, createTestCharClasses(), TEST_CLASS_POJO_1);
 	}
 
 	public static Localization createTestLocalization() {
@@ -184,5 +197,14 @@ public class BotTestUtils {
 				)
 		);
 		return localization;
+	}
+
+	public static Map<String, String> createTestCharacterBaseParameters(Parameter... additionalParams) {
+		List<Parameter> parameters = new ArrayList<>();
+		parameters.add(Parameter.of(DefaultParameter.CHAT_ID,TEST_USER_ID));
+		parameters.add(Parameter.of(CharacterParameter.CHAR_NAME, TEST_CHARACTER_NAME));
+		parameters.add(Parameter.of(CharacterParameter.CHAR_CLASS, TEST_CLASS_NAME_1));
+		parameters.addAll(Arrays.asList(additionalParams));
+		return Parameters.buildParameters(parameters);
 	}
 }

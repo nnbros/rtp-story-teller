@@ -2,6 +2,7 @@ package com.github.nnbros.rtp.storyteller.action.registration;
 
 import com.github.nnbros.rtp.storyteller.action.ActionPipeline;
 import com.github.nnbros.rtp.storyteller.action.ActionRegistrar;
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -10,6 +11,7 @@ import static com.github.nnbros.rtp.storyteller.action.ActionPipelines.*;
 import static com.github.nnbros.rtp.storyteller.action.registration.CharacterAction.*;
 import static com.github.nnbros.rtp.storyteller.util.StorytellerUtils.emptyConsumer;
 
+@Getter
 @Component
 public class RegistrationActionRegistrar implements ActionRegistrar {
 	private final Map<String, ActionPipeline> actionPipelines;
@@ -28,10 +30,5 @@ public class RegistrationActionRegistrar implements ActionRegistrar {
 				CLASS_CONFIRMATION.getActionName(), create(registrationService::getCharacterRequest, telegramClient::sendRegistrationRequest),
 				REGISTRATION.getActionName(), create(registrationService::register, telegramClient::sendRegistrationConfirmation)
 		);
-	}
-
-	@Override
-	public void register(Map<String, ActionPipeline> actionPipelines) {
-		actionPipelines.putAll(this.actionPipelines);
 	}
 }

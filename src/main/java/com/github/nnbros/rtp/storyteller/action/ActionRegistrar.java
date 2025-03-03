@@ -4,5 +4,9 @@ import java.util.Map;
 
 public interface ActionRegistrar {
 
-	void register(Map<String, ActionPipeline> actionPipelines);
+	Map<String, ActionPipeline> getActionPipelines();
+
+	default void register(Map<String, ActionPipeline> actionPipelines) {
+		actionPipelines.putAll(getActionPipelines());
+	}
 }

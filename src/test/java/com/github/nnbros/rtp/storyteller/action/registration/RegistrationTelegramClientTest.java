@@ -4,7 +4,6 @@ import com.github.guronas.telegram.bot.elements.TelegramElementRegistry;
 import com.github.guronas.telegram.bot.elements.exception.ElementNotFoundException;
 import com.github.guronas.telegram.bot.elements.parameter.Parameter;
 import com.github.guronas.telegram.bot.elements.parameter.Parameters;
-import com.github.nnbros.rtp.storyteller.BotTestUtils;
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
 import com.github.nnbros.rtp.storyteller.action.mainmenu.MainMenuTelegramClient;
@@ -28,14 +27,9 @@ import static com.github.nnbros.rtp.storyteller.action.registration.Registration
 import static org.mockito.Mockito.*;
 
 public class RegistrationTelegramClientTest extends StorytellerTest {
-	public static final ClassDictionary TEST_CLASS_1 = new ClassDictionary(1, BotTestUtils.TEST_CLASS_1, 1, 1, 1);
-	public static final ClassDictionary TEST_CLASS_2 = new ClassDictionary(2, BotTestUtils.TEST_CLASS_2, 2, 2, 2);
-	public static final ClassDictionary TEST_CLASS_3 = new ClassDictionary(3, BotTestUtils.TEST_CLASS_3, 3, 3, 3);
 	public static final String TEST_GENDER = "testGender";
 	public static final String TEST_CLASSES_DESCRIPTION = "testClassName1: testDescription1\ntestClassName2: testDescription2\ntestClassName3: testDescription3\n";
 	public static final String TEST_SKILLS_DESCRIPTION = "testSkillName1: testDescription4\ntestSkillName2: testDescription5\n";
-	public static final String CONFIRMATION_EMOJI = ":)";
-	public static final String CONFIRMATION_CLASS_PARAM = CONFIRMATION_EMOJI + "testClassName1";
 
 	@Mock
 	private TelegramElementRegistry elementRegistry;
@@ -84,7 +78,7 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 	@Test
 	public void sendClassOptions() throws TelegramApiException, ElementNotFoundException {
 		CharacterRequest characterRequest = createTestCharacterRequest();
-		List<ClassDictionary> classes = List.of(TEST_CLASS_1, TEST_CLASS_2, TEST_CLASS_3);
+		List<ClassDictionary> classes = List.of(TEST_CLASS_POJO_1, TEST_CLASS_POJO_2, TEST_CLASS_POJO_3);
 		when(classService.getAllClasses()).thenReturn(classes);
 		SendMessage mockMessage = mock(SendMessage.class);
 		Parameter classesDescription = Parameter.of(RegistrationParameter.CLASSES_DESCRIPTION, TEST_CLASSES_DESCRIPTION);
@@ -101,24 +95,24 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 	@Test
 	public void sendClassDescription() throws TelegramApiException, ElementNotFoundException {
 		CharacterRequest characterRequest = createTestCharacterRequest();
-		characterRequest.setClassName(TEST_CLASS_1.name());
-		List<ClassDictionary> classes = List.of(TEST_CLASS_1, TEST_CLASS_2, TEST_CLASS_3);
+		characterRequest.setClassName(TEST_CLASS_POJO_1.name());
+		List<ClassDictionary> classes = List.of(TEST_CLASS_POJO_1, TEST_CLASS_POJO_2, TEST_CLASS_POJO_3);
 		when(classService.getAllClasses()).thenReturn(classes);
-		when(classService.getClassIdByName(TEST_CLASS_1.name())).thenReturn(TEST_CLASS_1.id());
+		when(classService.getClassIdByName(TEST_CLASS_POJO_1.name())).thenReturn(TEST_CLASS_POJO_1.id());
 
 		SkillDictionary testSkill1 = new SkillDictionary("testSkill1");
 		SkillDictionary testSkill2 = new SkillDictionary("testSkill2");
 		List<SkillDictionary> skills = List.of(testSkill1, testSkill2);
-		when(classService.getAllSkillsByClassId(TEST_CLASS_1.id())).thenReturn(skills);
+		when(classService.getAllSkillsByClassId(TEST_CLASS_POJO_1.id())).thenReturn(skills);
 
 		SendMessage mockMessage = mock(SendMessage.class);
 		Parameter classDescription = Parameter.of(RegistrationParameter.SKILLS_DESCRIPTION, TEST_SKILLS_DESCRIPTION);
-		Parameter classConfirmationParam = Parameter.of(RegistrationParameter.WARRIOR_CLASS_TEXT, CONFIRMATION_CLASS_PARAM);
+		Parameter classConfirmationParam = Parameter.of(RegistrationParameter.WARRIOR_CLASS_TEXT, TEST_CONFIRMATION_CLASS_PARAM);
 		Parameter rogueClassParameter = Parameter.of(RegistrationParameter.ROGUE_CLASS_TEXT, TEST_CLASS_NAME_2);
 		Map<String, String> params = buildTestRegistrationParameters(characterRequest, classDescription, rogueClassParameter, classConfirmationParam);
 		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(charClassConfirmation.getGroupName(), charClassConfirmation.name(), params);
 		when(elementRegistry.buildElement(confirmationEmoji.getGroupName(), confirmationEmoji.name(), Collections.emptyMap(), String.class))
-				.thenReturn(CONFIRMATION_EMOJI);
+				.thenReturn(TEST_CONFIRMATION_EMOJI);
 
 		registrationTelegramClient.sendClassDescription(characterRequest);
 

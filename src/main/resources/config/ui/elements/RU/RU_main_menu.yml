@@ -18,7 +18,7 @@ mainMenu:
                             - keyboardButton:
                                   text: "Персонаж"
                             - keyboardButton:
-                                  text: "🚧Армия"
+                                  text: "Армия"
                       - keyboardRow:
                             - keyboardButton:
                                   text: "🚧Привал"
@@ -42,16 +42,16 @@ mainMenu:
                                   text: "Умения"
                       - keyboardRow:
                             - keyboardButton:
-                                  text: "🚧Класс"
+                                  text: "Класс"
                             - keyboardButton:
                                   text: "🚧Экипировка"
                       - keyboardRow:
                             - keyboardButton:
                                   text: "Назад"
-    - id: "class"
+    - id: "charClass"
       message:
           action: CREATE
-          text: "${name} [${accountLevel}]\n Класс: ${charClass} [${charClassLevel}]\n${charClassDescription}\nВыберите класс:"
+          text: "${charName} [${accountLevel}]\nКласс: ${charClass} [${charClassLevel}]\n${charClassDescription}\nВыберите класс:"
           replyKeyboard:
               inlineKeyboard:
                   dynamicRows:
@@ -61,4 +61,4 @@ mainMenu:
                       - inlineKeyboardRow:
                             - inlineKeyboardButton:
                                   text: "Назад"
-                                  callbackData: "storyteller_character"
+                                  callbackData: "storyteller_main_menu_character"
