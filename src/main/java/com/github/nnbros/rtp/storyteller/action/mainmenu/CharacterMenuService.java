@@ -13,17 +13,18 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class CharacterMenuService {
-    private final CharacterService characterService;
+	private final CharacterService characterService;
 
-    public ActionResult<ActionContext> updateActiveClass(ActionContext actionContext) {
-        String selectedClass = actionContext.data();
-        boolean showClassMenu = true;
-        if (Objects.nonNull(selectedClass)) {
-            log.debug("Updating character active class: {}", selectedClass);
-            Long userId = actionContext.userId();
-            showClassMenu = characterService.updateCharacterActiveClass(userId, selectedClass);
-            log.debug("Character active class has been updated");
-        }
-        return new ActionResult<>(actionContext, showClassMenu);
-    }
+	public ActionResult<ActionContext> updateActiveClass(ActionContext actionContext) {
+		characterService.validateCharacter(actionContext);
+		String selectedClass = actionContext.data();
+		boolean showClassMenu = true;
+		if (Objects.nonNull(selectedClass)) {
+			log.debug("Updating character active class: {}", selectedClass);
+			Long userId = actionContext.userId();
+			showClassMenu = characterService.updateCharacterActiveClass(userId, selectedClass);
+			log.debug("Character active class has been updated");
+		}
+		return new ActionResult<>(actionContext, showClassMenu);
+	}
 }

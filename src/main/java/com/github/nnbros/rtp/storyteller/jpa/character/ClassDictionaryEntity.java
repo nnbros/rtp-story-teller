@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -25,4 +27,8 @@ public class ClassDictionaryEntity {
 
 	@Column(name = "base_def", nullable = false, insertable = false, updatable = false)
 	private Integer baseDef;
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "class_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+	private List<SkillDictionaryEntity> skills;
 }

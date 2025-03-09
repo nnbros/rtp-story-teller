@@ -53,10 +53,10 @@ public class CharacterMenuTelegramClient extends AbstractTelegramClient {
 		log.debug("Sending character class menu to the user [{}]...", actionContext.userId());
 		String activeClass;
 		String data = actionContext.data();
+		Character character = characterService.getByUserId(actionContext.userId());
 		if (Objects.nonNull(data)) {
 			activeClass = data;
 		} else {
-			Character character = characterService.getByUserId(actionContext.userId());
 			activeClass = character.activeClassDictionary().name();
 		}
 
@@ -69,7 +69,7 @@ public class CharacterMenuTelegramClient extends AbstractTelegramClient {
 				.forEach(className -> addClassDynamicParameter(dynamicParams, className, activeClass, localizedClasses, confirmationEmojiText));
 
 		Parameter activeClassDescription = Parameter.of(CharacterMenuParameter.CLASS_DESCRIPTION, localizedClasses.get(activeClass).getDescription());
-		Map<String, String> params = parameterService.buildCharacterBaseParameters(actionContext, activeClassDescription);
+		Map<String, String> params = parameterService.buildCharacterBaseParameters(actionContext, character, activeClassDescription);
 		BotApiMethod<?> message = buildBotApiMethod(
 				MainMenuElement.MAIN_MENU_GROUP_NAME,
 				MainMenuElement.charClass.name(),

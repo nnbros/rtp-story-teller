@@ -35,7 +35,7 @@ public class CharacterEntity {
 	@Column(name = "active_class_id", nullable = false)
 	private Integer activeClassDictionaryId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "active_class_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
 	private ClassDictionaryEntity activeClassDictionary;
 
