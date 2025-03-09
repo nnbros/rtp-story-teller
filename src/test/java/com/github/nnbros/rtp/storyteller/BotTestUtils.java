@@ -177,7 +177,7 @@ public class BotTestUtils {
 	}
 
 	public static Character createTestCharacter() {
-		return new Character(TEST_CHARACTER_NAME, Gender.MALE, createTestCharClasses(), TEST_CLASS_POJO_1);
+		return new Character(TEST_CHARACTER_NAME, TEST_CLASS_POJO_1);
 	}
 
 	public static Localization createTestLocalization() {

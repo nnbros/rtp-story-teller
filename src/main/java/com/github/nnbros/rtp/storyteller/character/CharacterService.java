@@ -28,7 +28,7 @@ public class CharacterService {
 
 	@Transactional
 	public Character getByUserId(long userId) {
-		return characterRepository.findByUserId(userId)
+		return characterRepository.findDictionariesByUserId(userId)
 				.map(characterMapper::toCharacter)
 				.orElseThrow(() -> new CharacterNotFoundException(userId));
 	}

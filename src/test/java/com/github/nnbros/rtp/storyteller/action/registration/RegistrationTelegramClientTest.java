@@ -103,7 +103,7 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 		SkillDictionary testSkill1 = new SkillDictionary("testSkill1");
 		SkillDictionary testSkill2 = new SkillDictionary("testSkill2");
 		List<SkillDictionary> skills = List.of(testSkill1, testSkill2);
-		when(classService.getAllSkillsByClassId(TEST_CLASS_POJO_1.id())).thenReturn(skills);
+		when(classService.getAllSkillsByClassName(TEST_CLASS_POJO_1.name())).thenReturn(skills);
 
 		SendMessage mockMessage = mock(SendMessage.class);
 		Parameter classDescription = Parameter.of(RegistrationParameter.SKILLS_DESCRIPTION, TEST_SKILLS_DESCRIPTION);

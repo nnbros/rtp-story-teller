@@ -8,5 +8,4 @@ public interface CharacterMapper {
 
 	Character toCharacter(CharacterEntity source);
 
-	CharacterEntity toCharacterEntity(Character source);
 }
