@@ -28,6 +28,7 @@ import java.util.Map;
 
 import static com.github.nnbros.rtp.storyteller.BotTestUtils.*;
 import static com.github.nnbros.rtp.storyteller.action.mainmenu.CharacterMenuAction.CLASS;
+import static com.github.nnbros.rtp.storyteller.action.mainmenu.MainMenuTelegramClientTest.TEST_CHARACTER;
 import static com.github.nnbros.rtp.storyteller.action.registration.RegistrationElement.confirmationEmoji;
 import static com.github.nnbros.rtp.storyteller.telegram.AbstractTelegramClient.CALLBACK_DATA_TEMPLATE;
 import static org.mockito.Mockito.*;
@@ -67,7 +68,7 @@ public class CharacterMenuTelegramClientTest extends StorytellerTest {
 		dynamicParams.add(TEST_CLASS_NAME_3, CALLBACK_DATA_TEMPLATE.formatted(CLASS.getActionName(), TEST_CLASS_3));
 		Parameter activeClassDescription = Parameter.of(CharacterMenuParameter.CLASS_DESCRIPTION, TEST_DESCRIPTION_1);
 		Map<String, String> params = createTestCharacterBaseParameters(activeClassDescription);
-		when(parameterService.buildCharacterBaseParameters(eq(testActionContext), any())).thenReturn(params);
+		when(parameterService.buildCharacterBaseParameters(eq(testActionContext), eq(TEST_CHARACTER), any())).thenReturn(params);
 
 		SendMessage mockMessage = mock(SendMessage.class);
 		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(MainMenuElement.charClass.getGroupName(),

@@ -76,6 +76,7 @@ public class RegistrationService {
 		log.debug("Add class request has been received for the user [{}]", userId);
 		CharacterRequest characterRequest = getCharacterRequest(userId, actionContext.messageId());
 
+		//TODO caching
 		String className = Optional.ofNullable(actionContext.data())
 				.filter(classService::containsByName)
 				.orElseThrow(() -> new StoryTellerRuntimeException("Character class cannot be empty and must exist"));

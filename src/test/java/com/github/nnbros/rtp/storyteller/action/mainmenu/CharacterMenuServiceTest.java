@@ -31,6 +31,7 @@ public class CharacterMenuServiceTest extends StorytellerTest {
 
 		assertTrue(result.isSuccessful());
 		assertEquals(testActionContext, result.value());
+		verify(characterService, times(1)).validateCharacter(testActionContext);
 		verify(characterService, times(1)).updateCharacterActiveClass(TEST_USER_ID, TEST_CLASS_1);
 	}
 
@@ -42,7 +43,8 @@ public class CharacterMenuServiceTest extends StorytellerTest {
 
 		assertTrue(result.isSuccessful());
 		assertEquals(testActionContext, result.value());
-		verifyNoInteractions(characterService);
+		verify(characterService, times(1)).validateCharacter(testActionContext);
+		verifyNoMoreInteractions(characterService);
 	}
 
 	@Test
@@ -54,6 +56,7 @@ public class CharacterMenuServiceTest extends StorytellerTest {
 
 		assertFalse(result.isSuccessful());
 		assertEquals(testActionContext, result.value());
+		verify(characterService, times(1)).validateCharacter(testActionContext);
 		verify(characterService, times(1)).updateCharacterActiveClass(TEST_USER_ID, TEST_CLASS_1);
 	}
 }

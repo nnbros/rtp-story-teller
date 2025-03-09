@@ -52,7 +52,7 @@ public class MainMenuTelegramClientTest extends StorytellerTest {
 		ActionContext testActionContext = createTestActionContext();
 		SendMessage mockMessage = mock(SendMessage.class);
 		Map<String, String> parameters = buildTestCharacterBaseParameters(testActionContext);
-		when(parameterService.buildCharacterBaseParameters(testActionContext)).thenReturn(parameters);
+		when(parameterService.buildCharacterBaseParameters(testActionContext, TEST_CHARACTER)).thenReturn(parameters);
 		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(MainMenuElement.MAIN_MENU_GROUP_NAME, MainMenuElement.main.name(), parameters);
 
 		mainMenuTelegramClient.sendMainMenu(testActionContext);
@@ -65,7 +65,7 @@ public class MainMenuTelegramClientTest extends StorytellerTest {
 		ActionContext testActionContext = createTestActionContext();
 		SendMessage mockMessage = mock(SendMessage.class);
 		Map<String, String> parameters = buildTestCharacterBaseParameters(testActionContext);
-		when(parameterService.buildCharacterBaseParameters(testActionContext)).thenReturn(parameters);
+		when(parameterService.buildCharacterBaseParameters(testActionContext, TEST_CHARACTER)).thenReturn(parameters);
 		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(MainMenuElement.MAIN_MENU_GROUP_NAME, MainMenuElement.character.name(), parameters);
 
 		mainMenuTelegramClient.sendCharacterMenu(testActionContext);

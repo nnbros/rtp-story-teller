@@ -29,6 +29,6 @@ public class ClassDictionaryEntity {
 	private Integer baseDef;
 
 	@OneToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id", referencedColumnName = "class_id")
+	@JoinColumn(name = "class_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
 	private List<SkillDictionaryEntity> skills;
 }

@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,7 @@ public class CharacterService {
 
 	@Transactional
 	public Character getByUserId(long userId) {
-		return characterRepository.findDictionariesByUserId(userId)
+		return characterRepository.findWithActiveClassDictionaryByUserId(userId)
 				.map(characterMapper::toCharacter)
 				.orElseThrow(() -> new CharacterNotFoundException(userId));
 	}
@@ -37,6 +38,7 @@ public class CharacterService {
 		return characterRepository.findByUserId(userId).isPresent();
 	}
 
+	//TODO caching, can be used at the beginning of the processing
 	public void validateCharacter(ActionContext actionContext) {
 		long userId = actionContext.userId();
 		if (!containsByUser(userId)) {

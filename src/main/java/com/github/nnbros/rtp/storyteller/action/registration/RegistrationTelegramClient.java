@@ -103,6 +103,8 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 		} else {
 			rogueClassParameter = Parameter.of(RegistrationParameter.ROGUE_CLASS_TEXT, confirmedClassButtonText);
 		}
+
+		//TODO caching
 		Collection<SkillDictionary> skills = classService.getAllSkillsByClassName(className);
 		StringBuilder classDescriptionsText = new StringBuilder();
 		skills.stream()
