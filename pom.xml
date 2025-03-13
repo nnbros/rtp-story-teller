@@ -10,7 +10,7 @@
   </parent>
   <groupId>com.github.nnbros.rtp</groupId>
   <artifactId>story-teller</artifactId>
-  <version>0.2.0</version>
+  <version>0.2.4</version>
   <name>StoryTeller</name>
   <description>A Storyteller service for Rise to Power</description>
   <properties>
@@ -22,7 +22,7 @@
     <postgresql.jdbc.version>42.7.4</postgresql.jdbc.version>
     <lombok-mapstruct-binding.version>0.0.2</lombok-mapstruct-binding.version>
     <liquibase.version>4.29.2</liquibase.version>
-    <telegram-bot-elements.version>0.0.3</telegram-bot-elements.version>
+    <telegram-bot-elements.version>0.0.4</telegram-bot-elements.version>
   </properties>
   <dependencies>
     <dependency>

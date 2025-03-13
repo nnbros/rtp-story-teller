@@ -1,12 +1,14 @@
 package com.github.nnbros.rtp.storyteller;
 
+import com.github.guronas.telegram.bot.elements.parameter.Parameter;
+import com.github.guronas.telegram.bot.elements.parameter.Parameters;
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
 import com.github.nnbros.rtp.storyteller.action.registration.CharacterRequest;
+import com.github.nnbros.rtp.storyteller.character.*;
 import com.github.nnbros.rtp.storyteller.character.Character;
-import com.github.nnbros.rtp.storyteller.character.CharacterClass;
-import com.github.nnbros.rtp.storyteller.character.ClassDictionary;
-import com.github.nnbros.rtp.storyteller.character.Gender;
+import com.github.nnbros.rtp.storyteller.configuration.Localization;
 import com.github.nnbros.rtp.storyteller.telegram.UpdateType;
+import com.github.nnbros.rtp.storyteller.telegram.ui.DefaultParameter;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -14,7 +16,10 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.chat.Chat;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class BotTestUtils {
 	public static final String TEST_ACTION_NAME = "test_action";
@@ -27,9 +32,31 @@ public class BotTestUtils {
 	public static final String COMMAND_MESSAGE_TYPE = "bot_command";
 	public static final String TEST_CALLBACK_DATA = "test_data";
 	public static final String TEST_CHARACTER_NAME = "testCharacterName";
+
+	public static final String TEST_CLASS_1 = "warrior";
+	public static final String TEST_CLASS_2 = "rogue";
+	public static final String TEST_CLASS_3 = "testClass3";
 	public static final String TEST_CLASS_NAME_1 = "testClassName1";
 	public static final String TEST_CLASS_NAME_2 = "testClassName2";
-	public static final String TEST_DESCRIPTION = "testDescription1";
+	public static final String TEST_CLASS_NAME_3 = "testClassName3";
+	public static final String TEST_DESCRIPTION_1 = "testDescription1";
+	public static final String TEST_DESCRIPTION_2 = "testDescription2";
+	public static final String TEST_DESCRIPTION_3 = "testDescription3";
+	public static final String TEST_DESCRIPTION_4 = "testDescription4";
+	public static final String TEST_DESCRIPTION_5 = "testDescription5";
+	public static final String TEST_DESCRIPTION_6 = "testDescription6";
+	public static final String TEST_SKILL_1 = "testSkill1";
+	public static final String TEST_SKILL_2 = "testSkill2";
+	public static final String TEST_SKILL_3 = "testSkill3";
+	public static final String TEST_SKILL_NAME_1 = "testSkillName1";
+	public static final String TEST_SKILL_NAME_2 = "testSkillName2";
+	public static final String TEST_SKILL_NAME_3 = "testSkillName3";
+	public static final ClassDictionary TEST_CLASS_POJO_1 = new ClassDictionary(1, TEST_CLASS_1, 1, 1, 1);
+	public static final ClassDictionary TEST_CLASS_POJO_2 = new ClassDictionary(2, TEST_CLASS_2, 2, 2, 2);
+	public static final ClassDictionary TEST_CLASS_POJO_3 = new ClassDictionary(3, TEST_CLASS_3, 3, 3, 3);
+
+	public static final String TEST_CONFIRMATION_EMOJI = ":)";
+	public static final String TEST_CONFIRMATION_CLASS_PARAM = TEST_CONFIRMATION_EMOJI + "testClassName1";
 
 	public static User createTestUser() {
 		return User.builder()
@@ -118,34 +145,66 @@ public class BotTestUtils {
 	}
 
 	public static ActionContext createTestActionContext() {
-		return new ActionContext(TEST_ACTION_NAME, TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_MESSAGE_ID, TEST_ACTION_DATA);
+		return createTestActionContext(TEST_ACTION_DATA);
+	}
+
+	public static ActionContext createTestActionContext(String data) {
+		return new ActionContext(TEST_ACTION_NAME, TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_MESSAGE_ID, data);
 	}
 
 	public static CharacterRequest createTestCharacterRequest() {
 		CharacterRequest characterRequest = new CharacterRequest(TEST_USER_ID);
 		characterRequest.setName(TEST_CHARACTER_NAME);
 		characterRequest.setGender(Gender.MALE);
-		characterRequest.setClassName(TEST_CLASS_NAME_1);
+		characterRequest.setClassName(TEST_CLASS_1);
 		characterRequest.setLastMessageId(TEST_MESSAGE_ID);
 		return characterRequest;
 	}
 
 	public static ClassDictionary createTestClassDictionary() {
-		return createTestClassDictionary(TEST_CLASS_NAME_1);
+		return createTestClassDictionary(TEST_CLASS_1);
 	}
 
 	public static ClassDictionary createTestClassDictionary(String className) {
-		return new ClassDictionary(1, className, TEST_DESCRIPTION, 1, 1, 1);
+		return new ClassDictionary(1, className, 1, 1, 1);
 	}
 
 	public static List<CharacterClass> createTestCharClasses() {
 		return List.of(
-				new CharacterClass(createTestClassDictionary(TEST_CLASS_NAME_1), 0L),
-				new CharacterClass(createTestClassDictionary(TEST_CLASS_NAME_2), 0L)
+				new CharacterClass(createTestClassDictionary(TEST_CLASS_1), 0L),
+				new CharacterClass(createTestClassDictionary(TEST_CLASS_2), 0L)
 		);
 	}
 
 	public static Character createTestCharacter() {
-		return new Character(TEST_CHARACTER_NAME, Gender.MALE, createTestCharClasses(), createTestClassDictionary());
+		return new Character(TEST_CHARACTER_NAME, TEST_CLASS_POJO_1);
+	}
+
+	public static Localization createTestLocalization() {
+		Localization localization = new Localization();
+		localization.setClasses(
+				Map.of(
+						TEST_CLASS_1, new Localization.Clazz(TEST_CLASS_NAME_1, TEST_DESCRIPTION_1),
+						TEST_CLASS_2, new Localization.Clazz(TEST_CLASS_NAME_2, TEST_DESCRIPTION_2),
+						TEST_CLASS_3, new Localization.Clazz(TEST_CLASS_NAME_3, TEST_DESCRIPTION_3)
+				)
+		);
+		localization.setSkills(
+				Map.of(
+						TEST_SKILL_1, new Localization.Skill(TEST_SKILL_NAME_1, TEST_DESCRIPTION_4),
+						TEST_SKILL_2, new Localization.Skill(TEST_SKILL_NAME_2, TEST_DESCRIPTION_5),
+						TEST_SKILL_3, new Localization.Skill(TEST_SKILL_NAME_3, TEST_DESCRIPTION_6)
+				)
+		);
+		return localization;
+	}
+
+	public static Map<String, String> createTestCharacterBaseParameters(Parameter... additionalParams) {
+		List<Parameter> parameters = new ArrayList<>();
+		parameters.add(Parameter.of(DefaultParameter.CHAT_ID,TEST_USER_ID));
+		parameters.add(Parameter.of(CharacterParameter.CHAR_NAME, TEST_CHARACTER_NAME));
+		parameters.add(Parameter.of(CharacterParameter.CHAR_CLASS, TEST_CLASS_NAME_1));
+		parameters.addAll(Arrays.asList(additionalParams));
+		return Parameters.buildParameters(parameters);
 	}
 }

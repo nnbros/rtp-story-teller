@@ -10,6 +10,7 @@ import com.github.nnbros.rtp.storyteller.character.Character;
 import com.github.nnbros.rtp.storyteller.character.CharacterParameter;
 import com.github.nnbros.rtp.storyteller.character.CharacterService;
 import com.github.nnbros.rtp.storyteller.telegram.ui.DefaultParameter;
+import com.github.nnbros.rtp.storyteller.telegram.ui.ParameterService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -35,6 +36,9 @@ public class MainMenuTelegramClientTest extends StorytellerTest {
 	@Mock
 	private CharacterService characterService;
 
+	@Mock
+	private ParameterService parameterService;
+
 	@InjectMocks
 	private MainMenuTelegramClient mainMenuTelegramClient;
 
@@ -48,6 +52,7 @@ public class MainMenuTelegramClientTest extends StorytellerTest {
 		ActionContext testActionContext = createTestActionContext();
 		SendMessage mockMessage = mock(SendMessage.class);
 		Map<String, String> parameters = buildTestCharacterBaseParameters(testActionContext);
+		when(parameterService.buildCharacterBaseParameters(testActionContext, TEST_CHARACTER)).thenReturn(parameters);
 		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(MainMenuElement.MAIN_MENU_GROUP_NAME, MainMenuElement.main.name(), parameters);
 
 		mainMenuTelegramClient.sendMainMenu(testActionContext);
@@ -60,6 +65,7 @@ public class MainMenuTelegramClientTest extends StorytellerTest {
 		ActionContext testActionContext = createTestActionContext();
 		SendMessage mockMessage = mock(SendMessage.class);
 		Map<String, String> parameters = buildTestCharacterBaseParameters(testActionContext);
+		when(parameterService.buildCharacterBaseParameters(testActionContext, TEST_CHARACTER)).thenReturn(parameters);
 		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(MainMenuElement.MAIN_MENU_GROUP_NAME, MainMenuElement.character.name(), parameters);
 
 		mainMenuTelegramClient.sendCharacterMenu(testActionContext);

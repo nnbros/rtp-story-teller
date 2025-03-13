@@ -1,9 +1,9 @@
 --liquibase formatted sql
 
 --changeset guronas:init-11
-insert into skill_dictionary (name, description, class_id)
+insert into skill_dictionary (id, name, class_id)
 values
-('Раскалывание', 'повреждает броню врага', 1),
-('Контратака', 'чем сильнее атакует враг тем сильнее отвечает воин', 1),
-('Пробой', 'игнорирует броню врага', 2),
-('Уничтожение', 'фокусирует свою атаку на вражеском герое, игнорируя его армию', 2);
+(1, 'sunder', 1),
+(2, 'riposte', 1),
+(3, 'pierce', 2),
+(4, 'annihilation', 2);

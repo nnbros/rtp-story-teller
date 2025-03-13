@@ -1,0 +1,16 @@
+localization.skills:
+    annihilation:
+        name: "Уничтожение"
+        description: "фокусирует свою атаку на вражеском герое, игнорируя его армию"
+
+    pierce:
+        name: "Пробой"
+        description: "игнорирует броню врага"
+
+    riposte:
+        name: "Контратака"
+        description: "чем сильнее атакует враг тем сильнее отвечает воин"
+
+    sunder:
+        name: "Раскалывание"
+        description: "повреждает броню врага"

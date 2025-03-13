@@ -9,7 +9,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @EnableAsync
 @Configuration
-@EnableConfigurationProperties(StoryTellerProperties.class)
+@EnableConfigurationProperties({StoryTellerProperties.class, Localization.class})
 public class MainConfiguration {
 
 	@Bean(name = "actionPipelineExecutor")

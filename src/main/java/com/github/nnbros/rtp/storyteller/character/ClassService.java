@@ -26,14 +26,17 @@ public class ClassService {
 				.toList();
 	}
 
-	public ClassDictionary getClassByName(String name) {
-		ClassDictionaryEntity classDictionaryEntity = classDictionaryRepository.findByName(name)
-				.orElseThrow(() -> new StoryTellerRuntimeException("Unable to find class in class dictionary with name [%s]", name));
-		return classDictionaryMapper.toClassDictionary(classDictionaryEntity);
+	public Collection<SkillDictionary> getAllSkillsByClassName(String name) {
+		ClassDictionaryEntity entity = classDictionaryRepository.findSkillsByName(name)
+				.orElseThrow(() -> new StoryTellerRuntimeException("Unable to find class id by name [%s]", name));
+		return entity.getSkills()
+				.stream()
+				.map(skillDictionaryMapper::toSkillDictionary)
+				.toList();
 	}
 
-	public Collection<SkillDictionary> getAllSkillsByClassId(int classId) {
-		return skillDictionaryRepository.findAllByClassId(classId)
+	public Collection<SkillDictionary> getAllSkills() {
+		return skillDictionaryRepository.findAll()
 				.stream()
 				.map(skillDictionaryMapper::toSkillDictionary)
 				.toList();

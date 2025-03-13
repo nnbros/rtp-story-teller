@@ -13,6 +13,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -24,7 +29,7 @@ public class CharacterService {
 
 	@Transactional
 	public Character getByUserId(long userId) {
-		return characterRepository.findByUserId(userId)
+		return characterRepository.findWithActiveClassDictionaryByUserId(userId)
 				.map(characterMapper::toCharacter)
 				.orElseThrow(() -> new CharacterNotFoundException(userId));
 	}
@@ -33,6 +38,7 @@ public class CharacterService {
 		return characterRepository.findByUserId(userId).isPresent();
 	}
 
+	//TODO caching, can be used at the beginning of the processing
 	public void validateCharacter(ActionContext actionContext) {
 		long userId = actionContext.userId();
 		if (!containsByUser(userId)) {
@@ -44,19 +50,42 @@ public class CharacterService {
 	public void register(CharacterRequest characterRequest) {
 		log.info("Registering a new character: [{}]", characterRequest);
 		String className = characterRequest.getClassName();
-		int classId = classService.getClassIdByName(className);
+
+		//TODO Refactor when not all classes are available for selecting
+		Map<String, ClassDictionary> classes = classService.getAllClasses()
+				.stream()
+				.collect(Collectors.toMap(ClassDictionary::name, Function.identity()));
+		int activeClassId = classes.get(className).id();
 
 		CharacterEntity characterEntity = new CharacterEntity();
 		characterEntity.setName(characterRequest.getName());
 		characterEntity.setUserId(characterRequest.getUserId());
 		characterEntity.setGender(characterRequest.getGender());
-		characterEntity.setActiveClassDictionaryId(classId);
+		characterEntity.setActiveClassDictionaryId(activeClassId);
 		characterRepository.saveAndFlush(characterEntity);
 
+		classes.values()
+				.forEach(classDictionary -> saveCharacterClass(characterEntity, classDictionary.id()));
+		log.info("Character has been successfully registered");
+	}
+
+	@Transactional
+	public boolean updateCharacterActiveClass(long userId, String className) {
+		int classId = classService.getClassIdByName(className);
+		CharacterEntity characterEntity = characterRepository.findByUserId(userId)
+				.orElseThrow(() -> new CharacterNotFoundException(userId));
+		if (characterEntity.getActiveClassDictionaryId() != classId) {
+			characterEntity.setActiveClassDictionaryId(classId);
+			characterRepository.saveAndFlush(characterEntity);
+			return true;
+		}
+		return false;
+	}
+
+	private void saveCharacterClass(CharacterEntity characterEntity, int classId) {
 		CharacterClassEntity characterClassEntity = new CharacterClassEntity();
 		characterClassEntity.setCharacter(characterEntity);
 		characterClassEntity.setClassDictionaryId(classId);
 		characterClassRepository.saveAndFlush(characterClassEntity);
-		log.info("Character has been successfully registered");
 	}
 }
