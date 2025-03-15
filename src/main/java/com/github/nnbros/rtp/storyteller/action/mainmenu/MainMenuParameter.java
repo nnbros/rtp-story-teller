@@ -6,9 +6,10 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum CharacterMenuParameter implements ParameterKey {
+public enum MainMenuParameter implements ParameterKey {
 	CLASSES("classes"),
-	CLASS_DESCRIPTION("charClassDescription");
+	ARMIES("armies"),
+	ARMY_DESCRIPTION("armyDescription");
 
 	private final String key;
 }

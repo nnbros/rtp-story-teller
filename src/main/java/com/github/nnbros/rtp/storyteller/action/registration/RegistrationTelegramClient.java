@@ -4,11 +4,9 @@ import com.github.guronas.telegram.bot.elements.TelegramElementRegistry;
 import com.github.guronas.telegram.bot.elements.parameter.Parameter;
 import com.github.guronas.telegram.bot.elements.parameter.Parameters;
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
-import com.github.nnbros.rtp.storyteller.action.mainmenu.MainMenuTelegramClient;
 import com.github.nnbros.rtp.storyteller.character.CharacterParameter;
-import com.github.nnbros.rtp.storyteller.character.ClassDictionary;
-import com.github.nnbros.rtp.storyteller.character.SkillDictionary;
-import com.github.nnbros.rtp.storyteller.character.ClassService;
+import com.github.nnbros.rtp.storyteller.action.mainmenu.MainMenuTelegramClient;
+import com.github.nnbros.rtp.storyteller.character.*;
 import com.github.nnbros.rtp.storyteller.configuration.Localization;
 import com.github.nnbros.rtp.storyteller.telegram.AbstractTelegramClient;
 import com.github.nnbros.rtp.storyteller.telegram.ui.DefaultParameter;
@@ -27,15 +25,17 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 	public static final String DESCRIPTION_TEMPLATE = "%s: %s\n";
 
 	private final ClassService classService;
+	private final SkillService skillService;
 	private final MainMenuTelegramClient mainMenuTelegramClient;
 	private final Localization localization;
 
 	public RegistrationTelegramClient(TelegramClient telegramClient,
 									  ClassService classService,
-									  TelegramElementRegistry elementRegistry,
+									  TelegramElementRegistry elementRegistry, SkillService skillService,
 									  MainMenuTelegramClient mainMenuTelegramClient, Localization localization) {
 		super(telegramClient, elementRegistry);
 		this.classService = classService;
+		this.skillService = skillService;
 		this.mainMenuTelegramClient = mainMenuTelegramClient;
 		this.localization = localization;
 	}
@@ -105,7 +105,7 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 		}
 
 		//TODO caching
-		Collection<SkillDictionary> skills = classService.getAllSkillsByClassName(className);
+		Collection<SkillDictionary> skills = skillService.getAllSkillsByClassName(className);
 		StringBuilder classDescriptionsText = new StringBuilder();
 		skills.stream()
 				.map(SkillDictionary::name)

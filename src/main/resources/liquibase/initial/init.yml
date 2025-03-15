@@ -3,10 +3,13 @@ databaseChangeLog:
             file: init.sql
             relativeToChangelogFile: true
     -   include:
+            file: skill_dictionary.sql
+            relativeToChangelogFile: true
+    -   include:
             file: class_dictionary.sql
             relativeToChangelogFile: true
     -   include:
-            file: skill_dictionary.sql
+            file: army_dictionary.sql
             relativeToChangelogFile: true
     -   include:
             file: character.sql
@@ -15,8 +18,20 @@ databaseChangeLog:
             file: character_class.sql
             relativeToChangelogFile: true
     -   include:
-            file: data/classes.sql
+            file: character_army.sql
+            relativeToChangelogFile: true
+    -   include:
+            file: character_class_skill.sql
+            relativeToChangelogFile: true
+    -   include:
+            file: character_army_skill.sql
             relativeToChangelogFile: true
     -   include:
             file: data/skills.sql
+            relativeToChangelogFile: true
+    -   include:
+            file: data/classes.sql
+            relativeToChangelogFile: true
+    -   include:
+            file: data/armies.sql
             relativeToChangelogFile: true

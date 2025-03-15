@@ -3,7 +3,6 @@ package com.github.nnbros.rtp.storyteller.action.mainmenu;
 import com.github.guronas.telegram.bot.elements.TelegramElementRegistry;
 import com.github.guronas.telegram.bot.elements.exception.ElementNotFoundException;
 import com.github.guronas.telegram.bot.elements.parameter.InlineKeyboardButtonParameters;
-import com.github.guronas.telegram.bot.elements.parameter.Parameter;
 import com.github.nnbros.rtp.storyteller.BotTestUtils;
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
@@ -66,15 +65,14 @@ public class CharacterMenuTelegramClientTest extends StorytellerTest {
 		dynamicParams.add(TEST_CONFIRMATION_CLASS_PARAM, CALLBACK_DATA_TEMPLATE.formatted(CLASS.getActionName(), TEST_CLASS_1));
 		dynamicParams.add(TEST_CLASS_NAME_2, CALLBACK_DATA_TEMPLATE.formatted(CLASS.getActionName(), TEST_CLASS_2));
 		dynamicParams.add(TEST_CLASS_NAME_3, CALLBACK_DATA_TEMPLATE.formatted(CLASS.getActionName(), TEST_CLASS_3));
-		Parameter activeClassDescription = Parameter.of(CharacterMenuParameter.CLASS_DESCRIPTION, TEST_DESCRIPTION_1);
-		Map<String, String> params = createTestCharacterBaseParameters(activeClassDescription);
-		when(parameterService.buildCharacterBaseParameters(eq(testActionContext), eq(TEST_CHARACTER), any())).thenReturn(params);
+		Map<String, String> params = createTestCharacterBaseParameters();
+		when(parameterService.buildCharacterBaseParameters(eq(testActionContext), eq(TEST_CHARACTER))).thenReturn(params);
 
 		SendMessage mockMessage = mock(SendMessage.class);
 		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(MainMenuElement.charClass.getGroupName(),
 				MainMenuElement.charClass.name(),
 				params,
-				Map.of(CharacterMenuParameter.CLASSES.getKey(), dynamicParams));
+				Map.of(MainMenuParameter.CLASSES.getKey(), dynamicParams));
 
 		characterMenuTelegramClient.sendCharacterClassMenu(testActionContext);
 

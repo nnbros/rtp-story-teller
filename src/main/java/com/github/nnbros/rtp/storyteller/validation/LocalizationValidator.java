@@ -1,8 +1,6 @@
 package com.github.nnbros.rtp.storyteller.validation;
 
-import com.github.nnbros.rtp.storyteller.character.ClassDictionary;
-import com.github.nnbros.rtp.storyteller.character.ClassService;
-import com.github.nnbros.rtp.storyteller.character.SkillDictionary;
+import com.github.nnbros.rtp.storyteller.character.*;
 import com.github.nnbros.rtp.storyteller.configuration.Localization;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,15 +20,19 @@ import java.util.stream.Collectors;
 public class LocalizationValidator implements ApplicationRunner {
 	public static final String LOCALIZATION_ERROR_MSG_TEMPLATE = "Localization %s data mismatch between DB and localization files!\nDB: %s\nLocalization file: %s";
 	public static final String CLASSES = "classes";
+	public static final String ARMIES = "armies";
 	public static final String SKILLS = "skills";
 
 	private final ClassService classService;
+	private final SkillService skillService;
+	private final ArmyService armyService;
 	private final Localization localization;
 
 	@Override
 	public void run(ApplicationArguments args) {
 		log.debug("Starting to validate localization consistency...");
 		validateClasses();
+		validateArmies();
 		validateSkills();
 		log.debug("Localization consistency check passed");
 	}
@@ -49,9 +51,23 @@ public class LocalizationValidator implements ApplicationRunner {
 		}
 	}
 
+	private void validateArmies() {
+		log.debug("Validating army consistency");
+		Set<String> armies = armyService.getAllArmies()
+				.stream()
+				.map(ArmyDictionary::name)
+				.collect(Collectors.toSet());
+
+		HashSet<String> localizedArmies = new HashSet<>(localization.getArmies().keySet());
+		localizedArmies.retainAll(armies);
+		if (localizedArmies.size() != armies.size()) {
+			throw new IllegalStateException(LOCALIZATION_ERROR_MSG_TEMPLATE.formatted(ARMIES, armies, localizedArmies));
+		}
+	}
+
 	private void validateSkills() {
 		log.debug("Validating skill consistency");
-		Set<String> skills = classService.getAllSkills()
+		Set<String> skills = skillService.getAllSkills()
 				.stream()
 				.map(SkillDictionary::name)
 				.collect(Collectors.toSet());

@@ -12,7 +12,4 @@ public interface ClassDictionaryRepository extends JpaRepository<ClassDictionary
 
 	@Query("SELECT e.id FROM ClassDictionaryEntity e WHERE e.name = :name")
 	Optional<Integer> findIdByName(String name);
-
-	@Query("SELECT e FROM ClassDictionaryEntity e JOIN FETCH e.skills WHERE e.name = :name")
-	Optional<ClassDictionaryEntity> findSkillsByName(String name);
 }

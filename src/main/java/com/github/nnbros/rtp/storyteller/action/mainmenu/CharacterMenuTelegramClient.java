@@ -2,12 +2,9 @@ package com.github.nnbros.rtp.storyteller.action.mainmenu;
 
 import com.github.guronas.telegram.bot.elements.TelegramElementRegistry;
 import com.github.guronas.telegram.bot.elements.parameter.InlineKeyboardButtonParameters;
-import com.github.guronas.telegram.bot.elements.parameter.Parameter;
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
+import com.github.nnbros.rtp.storyteller.character.*;
 import com.github.nnbros.rtp.storyteller.character.Character;
-import com.github.nnbros.rtp.storyteller.character.CharacterService;
-import com.github.nnbros.rtp.storyteller.character.ClassDictionary;
-import com.github.nnbros.rtp.storyteller.character.ClassService;
 import com.github.nnbros.rtp.storyteller.configuration.Localization;
 import com.github.nnbros.rtp.storyteller.telegram.AbstractTelegramClient;
 import com.github.nnbros.rtp.storyteller.telegram.ui.ParameterService;
@@ -68,13 +65,12 @@ public class CharacterMenuTelegramClient extends AbstractTelegramClient {
 				.map(ClassDictionary::name)
 				.forEach(className -> addClassDynamicParameter(dynamicParams, className, activeClass, localizedClasses, confirmationEmojiText));
 
-		Parameter activeClassDescription = Parameter.of(CharacterMenuParameter.CLASS_DESCRIPTION, localizedClasses.get(activeClass).getDescription());
-		Map<String, String> params = parameterService.buildCharacterBaseParameters(actionContext, character, activeClassDescription);
+		Map<String, String> params = parameterService.buildCharacterBaseParameters(actionContext, character);
 		BotApiMethod<?> message = buildBotApiMethod(
 				MainMenuElement.MAIN_MENU_GROUP_NAME,
 				MainMenuElement.charClass.name(),
 				params,
-				Map.of(CharacterMenuParameter.CLASSES.getKey(), dynamicParams));
+				Map.of(MainMenuParameter.CLASSES.getKey(), dynamicParams));
 		execute(message);
 		log.debug("Character character class menu has been sent successfully");
 	}

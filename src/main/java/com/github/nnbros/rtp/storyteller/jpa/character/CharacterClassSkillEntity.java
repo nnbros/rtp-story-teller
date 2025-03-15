@@ -1,0 +1,40 @@
+package com.github.nnbros.rtp.storyteller.jpa.character;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "character_class_skill", schema = "storyteller")
+public class CharacterClassSkillEntity {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "character_class_id", referencedColumnName = "id", nullable = false)
+	private CharacterClassEntity characterClass;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "skill_id", referencedColumnName = "id", nullable = false)
+	private SkillDictionaryEntity skill;
+
+	@Column(name = "unlocked", nullable = false, insertable = false)
+	private Boolean unlocked;
+
+	@Column(name = "selected", nullable = false, insertable = false)
+	private Boolean selected;
+
+	@Column(name = "created_at", nullable = false, insertable = false, updatable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private LocalDateTime createdAt;
+
+	@Column(name = "updated_at", nullable = false, insertable = false, updatable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private LocalDateTime updatedAt;
+}

@@ -1,8 +1,7 @@
 package com.github.nnbros.rtp.storyteller.validation;
 
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
-import com.github.nnbros.rtp.storyteller.character.ClassService;
-import com.github.nnbros.rtp.storyteller.character.SkillDictionary;
+import com.github.nnbros.rtp.storyteller.character.*;
 import com.github.nnbros.rtp.storyteller.configuration.Localization;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +20,10 @@ public class LocalizationValidatorTest extends StorytellerTest {
 
 	@Mock
 	private ClassService classService;
+	@Mock
+	private ArmyService armyService;
+	@Mock
+	private SkillService skillService;
 	@Spy
 	private Localization localization = createTestLocalization();
 
@@ -31,15 +34,21 @@ public class LocalizationValidatorTest extends StorytellerTest {
 	public void provideTestData() {
 		when(classService.getAllClasses()).thenReturn(
 				Set.of(
-						createTestClassDictionary(TEST_CLASS_1),
-						createTestClassDictionary(TEST_CLASS_2),
-						createTestClassDictionary(TEST_CLASS_3))
+						TEST_CLASS_POJO_1,
+						TEST_CLASS_POJO_2,
+						TEST_CLASS_POJO_3)
 		);
-		when(classService.getAllSkills()).thenReturn(
+		when(skillService.getAllSkills()).thenReturn(
 				Set.of(
-						new SkillDictionary(TEST_SKILL_1),
-						new SkillDictionary(TEST_SKILL_2),
-						new SkillDictionary(TEST_SKILL_3))
+						TEST_SKILL_POJO_1,
+						TEST_SKILL_POJO_2,
+						TEST_SKILL_POJO_3)
+		);
+		when(armyService.getAllArmies()).thenReturn(
+				Set.of(
+						TEST_ARMY_POJO_1,
+						TEST_ARMY_POJO_2,
+						TEST_ARMY_POJO_3)
 		);
 	}
 
@@ -48,7 +57,8 @@ public class LocalizationValidatorTest extends StorytellerTest {
 		validator.run(null);
 
 		verify(classService, times(1)).getAllClasses();
-		verify(classService, times(1)).getAllSkills();
+		verify(skillService, times(1)).getAllSkills();
+		verify(armyService, times(1)).getAllArmies();
 	}
 
 	@Test
@@ -61,6 +71,13 @@ public class LocalizationValidatorTest extends StorytellerTest {
 	@Test
 	public void failSkillsValidation() {
 		when(localization.getSkills()).thenReturn(Collections.emptyMap());
+
+		assertThrows(IllegalStateException.class, () -> validator.run(null));
+	}
+
+	@Test
+	public void failArmiesValidation() {
+		when(localization.getArmies()).thenReturn(Collections.emptyMap());
 
 		assertThrows(IllegalStateException.class, () -> validator.run(null));
 	}

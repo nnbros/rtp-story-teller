@@ -51,7 +51,7 @@ mainMenu:
     - id: "army"
       message:
           action: CREATE
-          text: "${name} [${accountLevel}]\nВойска: ${charArmy} [${charArmyLevel}]\nТип: ${charArmyType}\nОсобенность:${charArmyEffect}\nУмения:\n${charArmySkills}\nЗдоровье:${charArmyHp} x${charArmyCount}\nАтака: ${charArmyAtk}\nЗащита: ${charArmyDef}\n\nВыберите войска:"
+          text: "${charName} [${accountLevel}]\nВойска: ${charArmy} [${charArmyLevel}]\nТип: ${charArmyType}\nОсобенность: ${charArmyEffect}\nУмения:\n${charArmySkills}\nЗдоровье: ${charArmyHp} x ${charArmyCount}\nАтака: ${charArmyAtk}\nЗащита: ${charArmyDef}\n\nВыберите войска:"
           replyKeyboard:
               inlineKeyboard:
                   dynamicRows:
@@ -59,18 +59,18 @@ mainMenu:
                   rows:
                       - inlineKeyboardRow:
                             - inlineKeyboardButton:
-                                  text: "${ifArmyTier0} Тир 0"
+                                  text: "Тир 0"
                                   callbackData: "armyList_t0"
                             - inlineKeyboardButton:
-                                  text: "${ifArmyTier1} Тир 1"
+                                  text: "Тир 1"
                                   callbackData: "armyList_t1"
                             - inlineKeyboardButton:
-                                  text: "${ifArmyTier2} Тир 2"
+                                  text: "Тир 2"
                                   callbackData: "armyList_t2"
                       - inlineKeyboardRow:
                             - inlineKeyboardButton:
                                   text: "Назад"
-                                  callbackData: "storyteller_main_menu_character"
+                                  callbackData: "storyteller_main_menu"
     - id: "charClass"
       message:
           action: CREATE

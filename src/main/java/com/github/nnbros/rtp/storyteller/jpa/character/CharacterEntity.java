@@ -39,8 +39,19 @@ public class CharacterEntity {
 	@JoinColumn(name = "active_class_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
 	private ClassDictionaryEntity activeClassDictionary;
 
+	@Column(name = "active_army_id", nullable = false, insertable = false)
+	private Integer activeArmyDictionaryId;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "active_army_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+	private ArmyDictionaryEntity activeArmyDictionary;
+
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "character_id", referencedColumnName = "id")
 	private List<CharacterClassEntity> classes;
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "character_id", referencedColumnName = "id")
+	private List<CharacterArmyEntity> armies;
 }
 
