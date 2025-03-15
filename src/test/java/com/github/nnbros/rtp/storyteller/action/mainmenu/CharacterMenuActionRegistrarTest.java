@@ -20,7 +20,7 @@ public class CharacterMenuActionRegistrarTest extends StorytellerTest {
 	private CharacterService characterService;
 
 	@Mock
-	CharacterMenuService characterMenuService;
+    CharacterProcessor characterProcessor;
 
 	@Mock
 	private CharacterMenuTelegramClient telegramClient;
@@ -63,11 +63,11 @@ public class CharacterMenuActionRegistrarTest extends StorytellerTest {
 		ActionPipeline actionPipeline = actionPipelines.get(CharacterMenuAction.CLASS.getActionName());
 		ActionContext testActionContext = createTestActionContext();
 		ActionResult<ActionContext> actionResult = new ActionResult<>(testActionContext, true);
-		when(characterMenuService.updateActiveClass(testActionContext)).thenReturn(actionResult);
+		when(characterProcessor.updateActiveClass(testActionContext)).thenReturn(actionResult);
 
 		actionPipeline.execute(testActionContext);
 
-		verify(characterMenuService, times(1)).updateActiveClass(testActionContext);
+		verify(characterProcessor, times(1)).updateActiveClass(testActionContext);
 		verify(telegramClient, times(1)).sendCharacterClassMenu(testActionContext);
 	}
 
@@ -76,11 +76,11 @@ public class CharacterMenuActionRegistrarTest extends StorytellerTest {
 		ActionPipeline actionPipeline = actionPipelines.get(CharacterMenuAction.CLASS.getActionName());
 		ActionContext testActionContext = createTestActionContext();
 		ActionResult<ActionContext> actionResult = new ActionResult<>(testActionContext, false);
-		when(characterMenuService.updateActiveClass(testActionContext)).thenReturn(actionResult);
+		when(characterProcessor.updateActiveClass(testActionContext)).thenReturn(actionResult);
 
 		actionPipeline.execute(testActionContext);
 
-		verify(characterMenuService, times(1)).updateActiveClass(testActionContext);
+		verify(characterProcessor, times(1)).updateActiveClass(testActionContext);
 		verifyNoInteractions(telegramClient);
 	}
 }

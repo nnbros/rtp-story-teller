@@ -1,20 +1,20 @@
 --liquibase formatted sql
 
---changeset guronas:init-11
-create table if not exists storyteller.character_class (
+--changeset guronas:init-13
+create table if not exists storyteller.character_army (
     id integer generated always as identity primary key,
     character_id integer not null,
-    class_id integer not null,
-    experience bigint not null default 0,
+    army_id integer not null,
+    level integer not null default 1,
     created_at timestamp not null default now(),
     updated_at timestamp not null default now(),
     constraint fk_character foreign key (character_id) references storyteller.character(id),
-    constraint fk_class foreign key (class_id) references storyteller.class_dictionary(id),
-    constraint unique_character_class unique (character_id, class_id)
+    constraint fk_army foreign key (army_id) references storyteller.army_dictionary(id),
+    constraint unique_character_army unique (character_id, army_id)
 );
 
---changeset guronas:init-12
+--changeset guronas:init-14
 create trigger update_timestamp_trigger
-before update on storyteller.character_class
+before update on storyteller.character_army
 for each row
 execute function update_timestamp();

@@ -25,6 +25,8 @@ public class Localization {
 	@NotNull
 	private Map<String, Clazz> classes = new HashMap<>();
 	@NotNull
+	private Map<String, Army> armies = new HashMap<>();
+	@NotNull
 	private Map<String, Skill> skills = new HashMap<>();
 
 	@Setter
@@ -36,6 +38,19 @@ public class Localization {
 		private String name;
 		@NotBlank
 		private String description;
+	}
+
+	@Setter
+	@Getter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class Army {
+		@NotBlank
+		private String name;
+		@NotBlank
+		private String description;
+		@NotBlank
+		private String type;
 	}
 
 	@Setter

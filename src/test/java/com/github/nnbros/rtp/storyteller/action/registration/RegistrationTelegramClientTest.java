@@ -6,6 +6,7 @@ import com.github.guronas.telegram.bot.elements.parameter.Parameter;
 import com.github.guronas.telegram.bot.elements.parameter.Parameters;
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
+import com.github.nnbros.rtp.storyteller.character.CharacterParameter;
 import com.github.nnbros.rtp.storyteller.action.mainmenu.MainMenuTelegramClient;
 import com.github.nnbros.rtp.storyteller.character.*;
 import com.github.nnbros.rtp.storyteller.configuration.Localization;
@@ -35,6 +36,8 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 	private TelegramElementRegistry elementRegistry;
 	@Mock
 	private ClassService classService;
+	@Mock
+	private SkillService skillService;
 	@Mock
 	private TelegramClient telegramClient;
 	@Mock
@@ -100,10 +103,10 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 		when(classService.getAllClasses()).thenReturn(classes);
 		when(classService.getClassIdByName(TEST_CLASS_POJO_1.name())).thenReturn(TEST_CLASS_POJO_1.id());
 
-		SkillDictionary testSkill1 = new SkillDictionary("testSkill1");
-		SkillDictionary testSkill2 = new SkillDictionary("testSkill2");
+		SkillDictionary testSkill1 = new SkillDictionary("testSkill1", SkillType.BASIC_CHARACTER);
+		SkillDictionary testSkill2 = new SkillDictionary("testSkill2", SkillType.BASIC_CHARACTER);
 		List<SkillDictionary> skills = List.of(testSkill1, testSkill2);
-		when(classService.getAllSkillsByClassName(TEST_CLASS_POJO_1.name())).thenReturn(skills);
+		when(skillService.getAllSkillsByClassName(TEST_CLASS_POJO_1.name())).thenReturn(skills);
 
 		SendMessage mockMessage = mock(SendMessage.class);
 		Parameter classDescription = Parameter.of(RegistrationParameter.SKILLS_DESCRIPTION, TEST_SKILLS_DESCRIPTION);

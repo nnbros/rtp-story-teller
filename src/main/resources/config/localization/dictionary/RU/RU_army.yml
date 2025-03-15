@@ -1,0 +1,15 @@
+localization.armies:
+    seekers:
+        name: "Искатели"
+        description: "Искатели кароч..."
+        type: "Мечники"
+
+    scouts:
+        name: "Разведчики"
+        description: "Разведчики кароч..."
+        type: "Кавалерия"
+
+    peasants:
+        name: "Крестьяне"
+        description: "Крестьяне кароч..."
+        type: "Копейщики"

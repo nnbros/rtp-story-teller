@@ -1,9 +1,9 @@
 --liquibase formatted sql
 
---changeset guronas:init-11
-insert into skill_dictionary (id, name, class_id)
+--changeset guronas:init-19
+insert into skill_dictionary (name, type, hero_atk, hero_def, army_atk, army_def, hero_split, army_split)
 values
-(1, 'sunder', 1),
-(2, 'riposte', 1),
-(3, 'pierce', 2),
-(4, 'annihilation', 2);
+('sunder', 'WARRIOR', 1, 1, 1, 1, 1, 1),
+('riposte', 'WARRIOR', 1, 1, 1, 1, 1, 1),
+('pierce', 'ROGUE', 1, 1, 1, 1, 1, 1),
+('annihilation', 'ROGUE', 1, 1, 1, 1, 1, 1);

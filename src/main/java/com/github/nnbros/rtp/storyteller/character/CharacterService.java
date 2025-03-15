@@ -3,9 +3,11 @@ package com.github.nnbros.rtp.storyteller.character;
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
 import com.github.nnbros.rtp.storyteller.action.registration.CharacterRequest;
 import com.github.nnbros.rtp.storyteller.exception.CharacterNotFoundException;
+import com.github.nnbros.rtp.storyteller.jpa.character.CharacterArmyEntity;
 import com.github.nnbros.rtp.storyteller.jpa.character.CharacterClassEntity;
 import com.github.nnbros.rtp.storyteller.jpa.character.CharacterEntity;
 import com.github.nnbros.rtp.storyteller.jpa.character.CharacterMapper;
+import com.github.nnbros.rtp.storyteller.repository.CharacterArmyRepository;
 import com.github.nnbros.rtp.storyteller.repository.CharacterClassRepository;
 import com.github.nnbros.rtp.storyteller.repository.CharacterRepository;
 import jakarta.transaction.Transactional;
@@ -24,7 +26,9 @@ import java.util.stream.Collectors;
 public class CharacterService {
 	private final CharacterRepository characterRepository;
 	private final CharacterClassRepository characterClassRepository;
+	private final CharacterArmyRepository characterArmyRepository;
 	private final ClassService classService;
+	private final ArmyService armyService;
 	private final CharacterMapper characterMapper;
 
 	@Transactional
@@ -51,11 +55,15 @@ public class CharacterService {
 		log.info("Registering a new character: [{}]", characterRequest);
 		String className = characterRequest.getClassName();
 
-		//TODO Refactor when not all classes are available for selecting
+		//TODO Refactor when not all classes and armies are available for selecting
 		Map<String, ClassDictionary> classes = classService.getAllClasses()
 				.stream()
 				.collect(Collectors.toMap(ClassDictionary::name, Function.identity()));
 		int activeClassId = classes.get(className).id();
+
+		Map<String, ArmyDictionary> armies = armyService.getAllArmies()
+				.stream()
+				.collect(Collectors.toMap(ArmyDictionary::name, Function.identity()));
 
 		CharacterEntity characterEntity = new CharacterEntity();
 		characterEntity.setName(characterRequest.getName());
@@ -66,6 +74,8 @@ public class CharacterService {
 
 		classes.values()
 				.forEach(classDictionary -> saveCharacterClass(characterEntity, classDictionary.id()));
+		armies.values()
+				.forEach(armyDictionary -> saveCharacterArmy(characterEntity, armyDictionary.id()));
 		log.info("Character has been successfully registered");
 	}
 
@@ -82,10 +92,30 @@ public class CharacterService {
 		return false;
 	}
 
+	@Transactional
+	public boolean updateCharacterActiveArmy(long userId, String armyName) {
+		int armyId = armyService.getArmyIdByName(armyName);
+		CharacterEntity characterEntity = characterRepository.findByUserId(userId)
+				.orElseThrow(() -> new CharacterNotFoundException(userId));
+		if (characterEntity.getActiveArmyDictionaryId() != armyId) {
+			characterEntity.setActiveArmyDictionaryId(armyId);
+			characterRepository.saveAndFlush(characterEntity);
+			return true;
+		}
+		return false;
+	}
+
 	private void saveCharacterClass(CharacterEntity characterEntity, int classId) {
 		CharacterClassEntity characterClassEntity = new CharacterClassEntity();
 		characterClassEntity.setCharacter(characterEntity);
 		characterClassEntity.setClassDictionaryId(classId);
 		characterClassRepository.saveAndFlush(characterClassEntity);
+	}
+
+	private void saveCharacterArmy(CharacterEntity characterEntity, int armyId) {
+		CharacterArmyEntity characterArmyEntity = new CharacterArmyEntity();
+		characterArmyEntity.setCharacter(characterEntity);
+		characterArmyEntity.setArmyDictionaryId(armyId);
+		characterArmyRepository.saveAndFlush(characterArmyEntity);
 	}
 }

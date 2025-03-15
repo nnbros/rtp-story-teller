@@ -18,18 +18,18 @@ public class CharacterMenuActionRegistrar implements ActionRegistrar {
 	private final Map<String, ActionPipeline> actionPipelines;
 
 	public CharacterMenuActionRegistrar(CharacterService characterService,
-										CharacterMenuService characterMenuService,
+										CharacterProcessor characterProcessor,
 										CharacterMenuTelegramClient telegramClient) {
-		actionPipelines = initPipelines(characterService, characterMenuService, telegramClient);
+		actionPipelines = initPipelines(characterService, characterProcessor, telegramClient);
 	}
 
 	private static Map<String, ActionPipeline> initPipelines(CharacterService characterService,
-															 CharacterMenuService characterMenuService,
+															 CharacterProcessor characterProcessor,
 															 CharacterMenuTelegramClient telegramClient) {
 		return Map.of(
 				CHARACTER_DETAILS.getActionName(), create(characterService::validateCharacter, telegramClient::sendCharacterDetails),
 				CHARACTER_DECK_BUILDER.getActionName(), create(characterService::validateCharacter, telegramClient::sendCharacterDeckBuilder),
-				CLASS.getActionName(), create(characterMenuService::updateActiveClass, telegramClient::sendCharacterClassMenu, emptyConsumer())
+				CLASS.getActionName(), create(characterProcessor::updateActiveClass, telegramClient::sendCharacterClassMenu, emptyConsumer())
 		);
 	}
 

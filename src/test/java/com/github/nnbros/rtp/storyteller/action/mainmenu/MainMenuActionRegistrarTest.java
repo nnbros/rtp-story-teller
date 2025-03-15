@@ -3,6 +3,7 @@ package com.github.nnbros.rtp.storyteller.action.mainmenu;
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
 import com.github.nnbros.rtp.storyteller.action.ActionPipeline;
+import com.github.nnbros.rtp.storyteller.action.ActionResult;
 import com.github.nnbros.rtp.storyteller.character.CharacterService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,9 @@ public class MainMenuActionRegistrarTest extends StorytellerTest {
 
 	@Mock
 	private MainMenuTelegramClient telegramClient;
+
+	@Mock
+	private CharacterProcessor characterProcessor;
 
 	@InjectMocks
 	private MainMenuActionRegistrar registrar;
@@ -72,5 +76,31 @@ public class MainMenuActionRegistrarTest extends StorytellerTest {
 
 		verify(characterService, times(1)).validateCharacter(testActionContext);
 		verify(telegramClient, times(1)).sendCharacterMenu(testActionContext);
+	}
+
+	@Test
+	public void executeArmyPipelineWhenActiveArmyIsUpdated() {
+		ActionPipeline actionPipeline = actionPipelines.get(MainMenuAction.ARMY.getActionName());
+		ActionContext testActionContext = createTestActionContext();
+		ActionResult<ActionContext> actionResult = new ActionResult<>(testActionContext, true);
+		when(characterProcessor.updateActiveArmy(testActionContext)).thenReturn(actionResult);
+
+		actionPipeline.execute(testActionContext);
+
+		verify(characterProcessor, times(1)).updateActiveArmy(testActionContext);
+		verify(telegramClient, times(1)).sendArmyMenu(testActionContext);
+	}
+
+	@Test
+	public void executeArmyPipelineWhenActiveArmyIsNotUpdated() {
+		ActionPipeline actionPipeline = actionPipelines.get(MainMenuAction.ARMY.getActionName());
+		ActionContext testActionContext = createTestActionContext();
+		ActionResult<ActionContext> actionResult = new ActionResult<>(testActionContext, false);
+		when(characterProcessor.updateActiveArmy(testActionContext)).thenReturn(actionResult);
+
+		actionPipeline.execute(testActionContext);
+
+		verify(characterProcessor, times(1)).updateActiveArmy(testActionContext);
+		verifyNoInteractions(telegramClient);
 	}
 }

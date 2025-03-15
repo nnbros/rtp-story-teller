@@ -14,20 +14,20 @@ import static com.github.nnbros.rtp.storyteller.BotTestUtils.TEST_USER_ID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class CharacterMenuServiceTest extends StorytellerTest {
+public class CharacterProcessorTest extends StorytellerTest {
 
 	@Mock
 	private CharacterService characterService;
 
 	@InjectMocks
-	private CharacterMenuService characterMenuService;
+	private CharacterProcessor characterProcessor;
 
 	@Test
 	void updateActiveClass() {
 		ActionContext testActionContext = BotTestUtils.createTestActionContext(TEST_CLASS_1);
 		when(characterService.updateCharacterActiveClass(TEST_USER_ID, TEST_CLASS_1)).thenReturn(true);
 
-		ActionResult<ActionContext> result = characterMenuService.updateActiveClass(testActionContext);
+		ActionResult<ActionContext> result = characterProcessor.updateActiveClass(testActionContext);
 
 		assertTrue(result.isSuccessful());
 		assertEquals(testActionContext, result.value());
@@ -39,7 +39,7 @@ public class CharacterMenuServiceTest extends StorytellerTest {
 	void updateActiveClassNoDataReceived() {
 		ActionContext testActionContext = BotTestUtils.createTestActionContext(null);
 
-		ActionResult<ActionContext> result = characterMenuService.updateActiveClass(testActionContext);
+		ActionResult<ActionContext> result = characterProcessor.updateActiveClass(testActionContext);
 
 		assertTrue(result.isSuccessful());
 		assertEquals(testActionContext, result.value());
@@ -52,7 +52,7 @@ public class CharacterMenuServiceTest extends StorytellerTest {
 		ActionContext testActionContext = BotTestUtils.createTestActionContext(TEST_CLASS_1);
 		when(characterService.updateCharacterActiveClass(TEST_USER_ID, TEST_CLASS_1)).thenReturn(false);
 
-		ActionResult<ActionContext> result = characterMenuService.updateActiveClass(testActionContext);
+		ActionResult<ActionContext> result = characterProcessor.updateActiveClass(testActionContext);
 
 		assertFalse(result.isSuccessful());
 		assertEquals(testActionContext, result.value());

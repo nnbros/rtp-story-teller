@@ -5,7 +5,8 @@ import com.github.nnbros.rtp.storyteller.telegram.ui.Element;
 public enum MainMenuElement implements Element {
 	main,
 	character,
-	charClass;
+	charClass,
+	army;
 
 	public static final String MAIN_MENU_GROUP_NAME = "mainMenu";
 
