@@ -51,7 +51,7 @@ localization.skills:
         name: "Раскопать"
         description: "⚔️🛡️🪓 Армия эффективна против копейщиков"
 
-    holdTheLine :
+    holdTheLine:
         name: "Держать строй"
         description: "⚔️🪓🪖 Армия эффективна против кавалерии"
 
