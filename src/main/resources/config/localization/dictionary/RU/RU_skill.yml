@@ -1,16 +1,60 @@
 localization.skills:
-    annihilation:
-        name: "Уничтожение"
-        description: "фокусирует свою атаку на вражеском герое, игнорируя его армию"
+    recklessAttack:
+        name: "Безрассудная Атака"
+        description: "⚔️⚔️⚔️"
 
-    pierce:
-        name: "Пробой"
-        description: "игнорирует броню врага"
+    assault:
+        name: "Атака"
+        description: "⚔️⚔️🛡️"
 
-    riposte:
-        name: "Контратака"
-        description: "чем сильнее атакует враг тем сильнее отвечает воин"
+    defense:
+        name: "Оборона"
+        description: "⚔️🛡️🛡️️"
 
-    sunder:
-        name: "Раскалывание"
-        description: "повреждает броню врага"
+    fullDefense:
+        name: "Полная Оборона"
+        description: "🛡️🛡️🛡️"
+
+    lead:
+        name: "Возглавить"
+        description: "⚔️🛡️🪓"
+
+    Duel:
+        name: "Дуэль"
+        description: "⚔️🛡️🛡️ Эффективно против копейщиков, воин фокусируется на вражеском герое"
+
+    сleave:
+        name: "Рассечение"
+        description: "⚔️⚔️🛡️ Эффективно против копейщиков, воин фокусируется на вражеской армии"
+
+    elimination:
+        name: "Устранение"
+        description: "⚔️⚔️🛡️ Плут наносит урон только во вражеского героя"
+
+    fireBomb:
+        name: "Огненная Бомба"
+        description: "⚔️⚔️🛡️ Плут фокусируется на  вражеской армии"
+
+    onslaught:
+        name: "Натиск"
+        description: "⚔️🪓🪓 Армия эффективна против мечников"
+
+    raid:
+        name: "Набег"
+        description: "⚔️⚔️🪓 Армия эффективна против мечников"
+
+    ironTide:
+        name: "Стальной натиск"
+        description: "⚔️🪓🪖 Армия эффективна против копейщиков"
+
+    unearth:
+        name: "Раскопать"
+        description: "⚔️🛡️🪓 Армия эффективна против копейщиков"
+
+    holdTheLine :
+        name: "Держать строй"
+        description: "⚔️🪓🪖 Армия эффективна против кавалерии"
+
+    makeTheWay:
+        name: "Расступись"
+        description: "⚔️🛡️🪓 Армия эффективна против кавалерии"
