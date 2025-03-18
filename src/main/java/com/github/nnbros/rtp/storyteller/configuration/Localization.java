@@ -60,7 +60,6 @@ public class Localization {
 	public static class Skill {
 		@NotBlank
 		private String name;
-		@NotBlank
 		private String description;
 	}
 }
