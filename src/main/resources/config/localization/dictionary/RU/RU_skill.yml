@@ -19,7 +19,7 @@ localization.skills:
         name: "Возглавить"
         description: "⚔️🛡️🪓"
 
-    Duel:
+    duel:
         name: "Дуэль"
         description: "⚔️🛡️🛡️ Эффективно против копейщиков, воин фокусируется на вражеском герое"
 
