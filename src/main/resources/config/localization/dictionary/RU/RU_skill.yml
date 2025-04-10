@@ -52,16 +52,3 @@ localization.skills:
     make_the_way:
         name: "⚔️⚔️🪖Расступись🔱"
         description: "Армия действует эффективно против кавалерии"
-#MONSTERS
-#-SLIME
-    slime_jab:
-        name: "⚔️🛡️Слизь толкает Вас"
-    splashing1:
-        name: "⚔️Слизь начинает бурлить"
-    splashing2:
-        name: "⚔️⚔️⚔️Слизь разливается во все стороны💣"
-    tentacle1:
-        name: "🛡️Слизь резко сжимается"
-    tentacle2:
-        name: "⚔️⚔️⚔️Слизь выстреливает тентаклем прямо в Вас🎯"
-
