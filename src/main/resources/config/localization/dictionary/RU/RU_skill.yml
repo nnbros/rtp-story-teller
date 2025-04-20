@@ -1,55 +1,54 @@
 localization.skills:
-    recklessAttack:
-        name: "Безрассудная Атака"
-
+#BASIC SKILLS
+    reckless_attack:
+        name: "⚔️⚔️⚔️Безрассудная Атака"
     assault:
-        name: "Атака"
-
+        name: "⚔️⚔️🛡️Атака"
     defense:
-        name: "Оборона"
-
-    fullDefense:
-        name: "Полная Оборона"
-
+        name: "⚔️🛡️🛡️Оборона"
+    full_defense:
+        name: "🛡️🛡️🛡️Полная Оборона"
     lead:
-        name: "Возглавить"
-
+        name: "⚔️🛡️🪓Возглавить"
+    battle_readiness:
+        name: "⚔️🛡️🪖Готовность"
+#CLASS SKILLS
+#-WARRIOR
     duel:
-        name: "Дуэль"
+        name: "⚔️🛡️🛡️Дуэль🗡🎯"
         description: "Эффективно против копейщиков, воин фокусируется на вражеском герое"
-
     сleave:
-        name: "Рассечение"
+        name: "⚔️⚔️🛡️Рассечение🗡💣"
         description: "Эффективно против копейщиков, воин фокусируется на вражеской армии"
-
+#-ROGUE
     elimination:
-        name: "Устранение"
+        name: "⚔️⚔️🛡️Устранение🎯"
         description: "Плут наносит урон только во вражеского героя"
-
-    fireBomb:
-        name: "Огненная Бомба"
+    fire_bomb:
+        name: "⚔️⚔️🛡️Огненная Бомба💣"
         description: "Плут фокусируется на  вражеской армии"
-
+#ARMY SKILLS
+#-CAVALRY
     onslaught:
-        name: "Натиск"
-        description: "Армия эффективна против мечников"
-
+        name: "⚔️⚔️🪓Натиск🏇"
+        description: "Армия действует эффективно против мечников"
+#--SCOUTS
     raid:
-        name: "Набег"
-        description: "Армия эффективна против мечников"
-
-    ironTide:
-        name: "Стальной натиск"
-        description: "Армия эффективна против копейщиков"
-
+        name: "⚔️🪓🪓Набег🏇"
+        description: "Армия действует эффективно против мечников"
+#-SWORDSMAN
+    iron_tide:
+        name: "⚔️🛡️🪓Стальной натиск🗡"
+        description: "Армия действует эффективно против копейщиков"
+#--SEEKER
     unearth:
-        name: "Раскопать"
-        description: "Армия эффективна против копейщиков"
-
-    holdTheLine:
-        name: "Держать строй"
-        description: "Армия эффективна против кавалерии"
-
-    makeTheWay:
-        name: "Расступись"
-        description: "Армия эффективна против кавалерии"
+        name: "⚔️🪓🪖Раскопать🗡"
+        description: "Армия действует эффективно против копейщиков"
+#-SPEARMAN
+    hold_the_line:
+        name: "🛡️🪖🪖Держать строй🔱"
+        description: "Армия действует эффективно против кавалерии"
+#--PEASANTS
+    make_the_way:
+        name: "⚔️⚔️🪖Расступись🔱"
+        description: "Армия действует эффективно против кавалерии"

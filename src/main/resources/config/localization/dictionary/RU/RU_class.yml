@@ -5,4 +5,4 @@ localization.classes:
 
     warrior:
         name: "Воин"
-        description: "Сильный боец ближнего боя"
+        description: "Сильный боец ближнего боя, эффективен против копейщиков"
