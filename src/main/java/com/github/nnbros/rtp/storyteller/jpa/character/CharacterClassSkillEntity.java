@@ -16,19 +16,19 @@ public class CharacterClassSkillEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
+	@Column(name = "character_class_id", nullable = false)
+	private Integer characterClassId;
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "character_class_id", referencedColumnName = "id", nullable = false)
+	@JoinColumn(name = "character_class_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
 	private CharacterClassEntity characterClass;
 
+	@Column(name = "skill_id", nullable = false)
+	private Integer skillId;
+
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "skill_id", referencedColumnName = "id", nullable = false)
+	@JoinColumn(name = "skill_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
 	private SkillDictionaryEntity skill;
-
-	@Column(name = "unlocked", nullable = false, insertable = false)
-	private Boolean unlocked;
-
-	@Column(name = "selected", nullable = false, insertable = false)
-	private Boolean selected;
 
 	@Column(name = "created_at", nullable = false, insertable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)

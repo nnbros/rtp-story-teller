@@ -35,3 +35,12 @@ databaseChangeLog:
     -   include:
             file: data/armies.sql
             relativeToChangelogFile: true
+    -   include:
+            file: view/active_character_skill_view.sql
+            relativeToChangelogFile: true
+    -   include:
+            file: view/active_character_class_view.sql
+            relativeToChangelogFile: true
+    -   include:
+            file: view/active_character_army_view.sql
+            relativeToChangelogFile: true

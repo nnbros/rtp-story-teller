@@ -3,9 +3,10 @@ package com.github.nnbros.rtp.storyteller.character;
 public record ArmyDictionary(
 		int id,
 		String name,
-		ArmyType type,
+		Archetype type,
+		Integer baseQuantity,
 		Integer baseHp,
-		Integer baseCount,
 		Integer baseAtk,
-		Integer baseDef) {
+		Integer baseDef,
+		Float advantageBonus) {
 }

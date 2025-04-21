@@ -1,6 +1,6 @@
 package com.github.nnbros.rtp.storyteller.jpa.character;
 
-import com.github.nnbros.rtp.storyteller.character.ArmyType;
+import com.github.nnbros.rtp.storyteller.character.Archetype;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +21,10 @@ public class ArmyDictionaryEntity {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "type", nullable = false, insertable = false, updatable = false)
-	private ArmyType type;
+	private Archetype type;
+
+	@Column(name = "base_quantity", nullable = false, insertable = false, updatable = false)
+	private Integer baseQuantity;
 
 	@Column(name = "base_hp", nullable = false, insertable = false, updatable = false)
 	private Integer baseHp;
@@ -37,4 +40,7 @@ public class ArmyDictionaryEntity {
 
 	@Column(name = "tier", nullable = false, insertable = false, updatable = false)
 	private Integer tier;
+
+	@Column(name = "advantage_bonus", nullable = false, insertable = false, updatable = false)
+	private Float advantageBonus;
 }

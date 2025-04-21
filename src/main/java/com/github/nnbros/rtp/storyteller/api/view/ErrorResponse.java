@@ -1,4 +1,4 @@
-package com.github.nnbros.rtp.storyteller.api.model;
+package com.github.nnbros.rtp.storyteller.api.view;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.http.HttpStatus;

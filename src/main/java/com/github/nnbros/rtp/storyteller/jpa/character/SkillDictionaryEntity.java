@@ -1,5 +1,6 @@
 package com.github.nnbros.rtp.storyteller.jpa.character;
 
+import com.github.nnbros.rtp.storyteller.character.Archetype;
 import com.github.nnbros.rtp.storyteller.character.SkillType;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,24 +24,7 @@ public class SkillDictionaryEntity {
 	@Column(name = "type", nullable = false, insertable = false, updatable = false)
 	private SkillType type;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "effective_against", insertable = false, updatable = false)
-	private Integer effectiveAgainst;
-
-	@Column(name = "hero_atk", nullable = false, insertable = false, updatable = false)
-	private Integer heroAtk;
-
-	@Column(name = "hero_def", nullable = false, insertable = false, updatable = false)
-	private Integer heroDef;
-
-	@Column(name = "army_atk", nullable = false, insertable = false, updatable = false)
-	private Integer armyAtk;
-
-	@Column(name = "army_def", nullable = false, insertable = false, updatable = false)
-	private Integer armyDef;
-
-	@Column(name = "hero_split", nullable = false, insertable = false, updatable = false)
-	private Integer heroSplit;
-
-	@Column(name = "army_split", nullable = false, insertable = false, updatable = false)
-	private Integer armySplit;
+	private Archetype effectiveAgainst;
 }

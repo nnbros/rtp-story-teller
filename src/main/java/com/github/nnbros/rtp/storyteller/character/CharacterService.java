@@ -2,6 +2,8 @@ package com.github.nnbros.rtp.storyteller.character;
 
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
 import com.github.nnbros.rtp.storyteller.action.registration.CharacterRequest;
+import com.github.nnbros.rtp.storyteller.exception.CharacterArmyNotFoundException;
+import com.github.nnbros.rtp.storyteller.exception.CharacterClassNotFoundException;
 import com.github.nnbros.rtp.storyteller.exception.CharacterNotFoundException;
 import com.github.nnbros.rtp.storyteller.jpa.character.CharacterArmyEntity;
 import com.github.nnbros.rtp.storyteller.jpa.character.CharacterClassEntity;
@@ -16,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -24,17 +25,28 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CharacterService {
+	//TODO remove when army is selected during registration process
+	public static final int DEFAULT_ACTIVE_ARMY_ID = 1;
+
 	private final CharacterRepository characterRepository;
 	private final CharacterClassRepository characterClassRepository;
 	private final CharacterArmyRepository characterArmyRepository;
 	private final ClassService classService;
 	private final ArmyService armyService;
+	private final SkillService skillService;
 	private final CharacterMapper characterMapper;
 
 	@Transactional
-	public Character getByUserId(long userId) {
-		return characterRepository.findWithActiveClassDictionaryByUserId(userId)
-				.map(characterMapper::toCharacter)
+	public DetailedCharacterView getDetailedCharacterViewByUserId(long userId) {
+		return characterRepository.findWithActiveClassAndArmyByUserId(userId)
+				.map(characterMapper::toDetailedCharacterView)
+				.orElseThrow(() -> new CharacterNotFoundException(userId));
+	}
+
+	@Transactional
+	public DetailedCharacterWithSkillsView getDetailedCharacterWithSkillsViewByUserId(long userId) {
+		return characterRepository.findWithActiveClassArmyAndSkillsByUserId(userId)
+				.map(characterMapper::toDetailedCharacterWithSkillsView)
 				.orElseThrow(() -> new CharacterNotFoundException(userId));
 	}
 
@@ -69,24 +81,22 @@ public class CharacterService {
 		characterEntity.setName(characterRequest.getName());
 		characterEntity.setUserId(characterRequest.getUserId());
 		characterEntity.setGender(characterRequest.getGender());
-		characterEntity.setActiveClassDictionaryId(activeClassId);
 		characterRepository.saveAndFlush(characterEntity);
 
 		classes.values()
-				.forEach(classDictionary -> saveCharacterClass(characterEntity, classDictionary.id()));
+				.forEach(classDictionary -> saveCharacterClass(characterEntity, classDictionary, activeClassId));
 		armies.values()
-				.forEach(armyDictionary -> saveCharacterArmy(characterEntity, armyDictionary.id()));
+				.forEach(armyDictionary -> saveCharacterArmy(characterEntity, armyDictionary, DEFAULT_ACTIVE_ARMY_ID));
 		log.info("Character has been successfully registered");
 	}
 
 	@Transactional
 	public boolean updateCharacterActiveClass(long userId, String className) {
-		int classId = classService.getClassIdByName(className);
-		CharacterEntity characterEntity = characterRepository.findByUserId(userId)
-				.orElseThrow(() -> new CharacterNotFoundException(userId));
-		if (characterEntity.getActiveClassDictionaryId() != classId) {
-			characterEntity.setActiveClassDictionaryId(classId);
-			characterRepository.saveAndFlush(characterEntity);
+		CharacterClassEntity characterClassEntity = characterClassRepository.findByClassIdAndCharacterId(userId, className)
+				.orElseThrow(() -> new CharacterClassNotFoundException(userId, className));
+		if (!characterClassEntity.getIsActive()) {
+			characterClassEntity.setIsActive(true);
+			characterClassRepository.saveAndFlush(characterClassEntity);
 			return true;
 		}
 		return false;
@@ -94,28 +104,31 @@ public class CharacterService {
 
 	@Transactional
 	public boolean updateCharacterActiveArmy(long userId, String armyName) {
-		int armyId = armyService.getArmyIdByName(armyName);
-		CharacterEntity characterEntity = characterRepository.findByUserId(userId)
-				.orElseThrow(() -> new CharacterNotFoundException(userId));
-		if (characterEntity.getActiveArmyDictionaryId() != armyId) {
-			characterEntity.setActiveArmyDictionaryId(armyId);
-			characterRepository.saveAndFlush(characterEntity);
+		CharacterClassEntity characterClassEntity = characterClassRepository.findByClassIdAndCharacterId(userId, armyName)
+				.orElseThrow(() -> new CharacterArmyNotFoundException(userId, armyName));
+		if (!characterClassEntity.getIsActive()) {
+			characterClassEntity.setIsActive(true);
+			characterClassRepository.saveAndFlush(characterClassEntity);
 			return true;
 		}
 		return false;
 	}
 
-	private void saveCharacterClass(CharacterEntity characterEntity, int classId) {
+	private void saveCharacterClass(CharacterEntity characterEntity, ClassDictionary classDictionary, int activeClassId) {
 		CharacterClassEntity characterClassEntity = new CharacterClassEntity();
 		characterClassEntity.setCharacter(characterEntity);
-		characterClassEntity.setClassDictionaryId(classId);
-		characterClassRepository.saveAndFlush(characterClassEntity);
+		characterClassEntity.setClassDictionaryId(classDictionary.id());
+		characterClassEntity.setIsActive(classDictionary.id() == activeClassId);
+		CharacterClassEntity savedCharacterClass = characterClassRepository.saveAndFlush(characterClassEntity);
+		skillService.saveDefaultCharacterClassSkills(classDictionary, savedCharacterClass.getId());
 	}
 
-	private void saveCharacterArmy(CharacterEntity characterEntity, int armyId) {
+	private void saveCharacterArmy(CharacterEntity characterEntity, ArmyDictionary armyDictionary, int activeArmyId) {
 		CharacterArmyEntity characterArmyEntity = new CharacterArmyEntity();
 		characterArmyEntity.setCharacter(characterEntity);
-		characterArmyEntity.setArmyDictionaryId(armyId);
-		characterArmyRepository.saveAndFlush(characterArmyEntity);
+		characterArmyEntity.setArmyDictionaryId(armyDictionary.id());
+		characterArmyEntity.setIsActive(armyDictionary.id() == activeArmyId);
+		CharacterArmyEntity savedCharacterArmy = characterArmyRepository.saveAndFlush(characterArmyEntity);
+		skillService.saveDefaultCharacterArmySkills(armyDictionary, savedCharacterArmy.getId());
 	}
 }

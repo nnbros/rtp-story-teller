@@ -32,19 +32,13 @@ public class CharacterEntity {
 	@Column(name = "updated_at", nullable = false, insertable = false, updatable = false)
 	private LocalDateTime updatedAt;
 
-	@Column(name = "active_class_id", nullable = false)
-	private Integer activeClassDictionaryId;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id", referencedColumnName = "character_id", nullable = false, insertable = false, updatable = false)
+	private ActiveCharacterClassViewEntity activeClass;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "active_class_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-	private ClassDictionaryEntity activeClassDictionary;
-
-	@Column(name = "active_army_id", nullable = false, insertable = false)
-	private Integer activeArmyDictionaryId;
-
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "active_army_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-	private ArmyDictionaryEntity activeArmyDictionary;
+	@JoinColumn(name = "id", referencedColumnName = "character_id", nullable = false, insertable = false, updatable = false)
+	private ActiveCharacterArmyViewEntity activeArmy;
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "character_id", referencedColumnName = "id")
@@ -53,5 +47,9 @@ public class CharacterEntity {
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(name = "character_id", referencedColumnName = "id")
 	private List<CharacterArmyEntity> armies;
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "character_id", referencedColumnName = "id")
+	private List<ActiveCharacterSkillViewEntity> activeSkills;
 }
 

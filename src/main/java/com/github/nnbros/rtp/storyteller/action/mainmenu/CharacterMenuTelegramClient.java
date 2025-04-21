@@ -50,11 +50,11 @@ public class CharacterMenuTelegramClient extends AbstractTelegramClient {
 		log.debug("Sending character class menu to the user [{}]...", actionContext.userId());
 		String activeClass;
 		String data = actionContext.data();
-		Character character = characterService.getByUserId(actionContext.userId());
+		DetailedCharacterView character = characterService.getDetailedCharacterViewByUserId(actionContext.userId());
 		if (Objects.nonNull(data)) {
 			activeClass = data;
 		} else {
-			activeClass = character.activeClassDictionary().name();
+			activeClass = character.getActiveClass().name();
 		}
 
 		String confirmationEmojiText = buildText(confirmationEmoji);

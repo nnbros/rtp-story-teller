@@ -33,3 +33,4 @@ storyteller:
         base-url: "/api/v1"
         actions-endpoint-prefix: "/actions"
         cache-endpoint-prefix: "/cache"
+        user-endpoint-prefix: "/user"

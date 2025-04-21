@@ -10,8 +10,20 @@ import java.util.Optional;
 @Repository
 public interface CharacterRepository extends JpaRepository<CharacterEntity, Integer> {
 
-	@Query("select ce from CharacterEntity ce join fetch ce.activeClassDictionary join fetch ce.activeArmyDictionary where ce.userId=:userId")
-	Optional<CharacterEntity> findWithActiveClassDictionaryByUserId(long userId);
-
 	Optional<CharacterEntity> findByUserId(long userId);
+
+	@Query("""
+			select ce from CharacterEntity ce \
+			join fetch ce.activeClass ac \
+			join fetch ce.activeArmy aa \
+			where ce.userId=:userId""")
+	Optional<CharacterEntity> findWithActiveClassAndArmyByUserId(long userId);
+
+	@Query("""
+			select ce from CharacterEntity ce \
+			join fetch ce.activeClass ac \
+			join fetch ce.activeArmy aa \
+			join fetch ce.activeSkills as \
+			where ce.userId=:userId""")
+	Optional<CharacterEntity> findWithActiveClassArmyAndSkillsByUserId(long userId);
 }

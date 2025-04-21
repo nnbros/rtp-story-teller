@@ -6,7 +6,6 @@ import com.github.nnbros.rtp.storyteller.action.ActionContext;
 import com.github.nnbros.rtp.storyteller.character.CharacterParameter;
 import com.github.nnbros.rtp.storyteller.action.registration.CharacterRequest;
 import com.github.nnbros.rtp.storyteller.character.*;
-import com.github.nnbros.rtp.storyteller.character.Character;
 import com.github.nnbros.rtp.storyteller.configuration.Localization;
 import com.github.nnbros.rtp.storyteller.telegram.UpdateType;
 import com.github.nnbros.rtp.storyteller.telegram.ui.DefaultParameter;
@@ -21,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import static com.github.nnbros.rtp.storyteller.character.Archetype.*;
 
 public class BotTestUtils {
 	public static final String TEST_ACTION_NAME = "test_action";
@@ -47,9 +48,12 @@ public class BotTestUtils {
 	public static final String TEST_CLASS_NAME_1 = "testClassName1";
 	public static final String TEST_CLASS_NAME_2 = "testClassName2";
 	public static final String TEST_CLASS_NAME_3 = "testClassName3";
-	public static final ClassDictionary TEST_CLASS_POJO_1 = new ClassDictionary(1, TEST_CLASS_1, 1, 1, 1);
-	public static final ClassDictionary TEST_CLASS_POJO_2 = new ClassDictionary(2, TEST_CLASS_2, 2, 2, 2);
-	public static final ClassDictionary TEST_CLASS_POJO_3 = new ClassDictionary(3, TEST_CLASS_3, 3, 3, 3);
+	public static final ClassDictionary TEST_CLASS_POJO_1 = new ClassDictionary(1, SWORDSMAN, TEST_CLASS_1, 1, 1, 1, 0.25f);
+	public static final ClassDictionary TEST_CLASS_POJO_2 = new ClassDictionary(2, NEUTRAL, TEST_CLASS_2, 2, 2, 2, 0.25f);
+	public static final ClassDictionary TEST_CLASS_POJO_3 = new ClassDictionary(3, SPEARMAN, TEST_CLASS_3, 3, 3, 3, 0.25f);
+	public static final ActiveCharacterClass TEST_ACTIVE_CLASS_POJO_1 = new ActiveCharacterClass(1, 1, 1, SWORDSMAN, TEST_CLASS_1, 1, 1, 1, 0.25f, 0L);
+	public static final ActiveCharacterClass TEST_ACTIVE_CLASS_POJO_2 = new ActiveCharacterClass(2, 2, 2, NEUTRAL, TEST_CLASS_2, 2, 2, 2, 0.25f, 0L);
+	public static final ActiveCharacterClass TEST_ACTIVE_CLASS_POJO_3 = new ActiveCharacterClass(3, 3, 3, SPEARMAN, TEST_CLASS_3, 3, 3, 3, 0.25f, 0L);
 
 	public static final String TEST_SKILL_1 = "testSkill1";
 	public static final String TEST_SKILL_2 = "testSkill2";
@@ -57,9 +61,9 @@ public class BotTestUtils {
 	public static final String TEST_SKILL_NAME_1 = "testSkillName1";
 	public static final String TEST_SKILL_NAME_2 = "testSkillName2";
 	public static final String TEST_SKILL_NAME_3 = "testSkillName3";
-	public static final SkillDictionary TEST_SKILL_POJO_1 = new SkillDictionary(TEST_SKILL_1, SkillType.BASIC_CHARACTER);
-	public static final SkillDictionary TEST_SKILL_POJO_2 = new SkillDictionary(TEST_SKILL_2, SkillType.BASIC_CHARACTER);
-	public static final SkillDictionary TEST_SKILL_POJO_3 = new SkillDictionary(TEST_SKILL_3, SkillType.BASIC_CHARACTER);
+	public static final SkillDictionary TEST_SKILL_POJO_1 = new SkillDictionary(TEST_SKILL_1, SkillType.BASIC_CHARACTER, SWORDSMAN);
+	public static final SkillDictionary TEST_SKILL_POJO_2 = new SkillDictionary(TEST_SKILL_2, SkillType.BASIC_CHARACTER, NEUTRAL);
+	public static final SkillDictionary TEST_SKILL_POJO_3 = new SkillDictionary(TEST_SKILL_3, SkillType.BASIC_CHARACTER, SPEARMAN);
 
 	public static final String TEST_ARMY_1 = "seekers";
 	public static final String TEST_ARMY_2 = "scouts";
@@ -70,9 +74,12 @@ public class BotTestUtils {
 	public static final String TEST_ARMY_TYPE_1 = "testArmyType1";
 	public static final String TEST_ARMY_TYPE_2 = "testArmyType2";
 	public static final String TEST_ARMY_TYPE_3 = "testArmyType3";
-	public static final ArmyDictionary TEST_ARMY_POJO_1 = new ArmyDictionary(1, TEST_ARMY_1, ArmyType.SWORDSMAN, 1, 1, 1, 1);
-	public static final ArmyDictionary TEST_ARMY_POJO_2 = new ArmyDictionary(2, TEST_ARMY_2, ArmyType.CAVALRY, 2, 2, 2, 2);
-	public static final ArmyDictionary TEST_ARMY_POJO_3 = new ArmyDictionary(3, TEST_ARMY_3, ArmyType.SPEARMAN, 3, 3, 3, 3);
+	public static final ArmyDictionary TEST_ARMY_POJO_1 = new ArmyDictionary(1, TEST_ARMY_1, SWORDSMAN, 1, 1, 1, 1, 0.25f);
+	public static final ArmyDictionary TEST_ARMY_POJO_2 = new ArmyDictionary(2, TEST_ARMY_2, CAVALRY, 2, 2, 2, 2, 0.25f);
+	public static final ArmyDictionary TEST_ARMY_POJO_3 = new ArmyDictionary(3, TEST_ARMY_3, SPEARMAN, 3, 3, 3, 3, 0.25f);
+	public static final ActiveCharacterArmy TEST_ACTIVE_ARMY_POJO_1 = new ActiveCharacterArmy(1, 1, 1, TEST_ARMY_1, SWORDSMAN, 1, 1, 1, 1, 0.25f, 1, 1);
+	public static final ActiveCharacterArmy TEST_ACTIVE_ARMY_POJO_2 = new ActiveCharacterArmy(2, 1, 1, TEST_ARMY_2, CAVALRY, 2, 2, 2, 2, 0.25f, 1, 1);
+	public static final ActiveCharacterArmy TEST_ACTIVE_ARMY_POJO_3 = new ActiveCharacterArmy(3, 1, 1, TEST_ARMY_3, SPEARMAN, 3, 3, 3, 3, 0.25f, 1, 1);
 
 	public static final String TEST_CONFIRMATION_EMOJI = ":)";
 	public static final String TEST_CONFIRMATION_CLASS_PARAM = TEST_CONFIRMATION_EMOJI + TEST_CLASS_NAME_1;
@@ -186,7 +193,7 @@ public class BotTestUtils {
 	}
 
 	public static ClassDictionary createTestClassDictionary(String className) {
-		return new ClassDictionary(1, className, 1, 1, 1);
+		return new ClassDictionary(1, SWORDSMAN, className, 1, 1, 1, 0.25f);
 	}
 
 	public static List<CharacterClass> createTestCharClasses() {
@@ -196,8 +203,12 @@ public class BotTestUtils {
 		);
 	}
 
-	public static Character createTestCharacter() {
-		return new Character(TEST_CHARACTER_NAME, TEST_CLASS_POJO_1, TEST_ARMY_POJO_1);
+	public static DetailedCharacterView createTestDetailedCharacterView() {
+		DetailedCharacterView detailedCharacterView = new DetailedCharacterView();
+		detailedCharacterView.setName(TEST_CHARACTER_NAME);
+		detailedCharacterView.setActiveClass(TEST_ACTIVE_CLASS_POJO_1);
+		detailedCharacterView.setActiveArmy(TEST_ACTIVE_ARMY_POJO_1);
+		return detailedCharacterView;
 	}
 
 	public static Localization createTestLocalization() {

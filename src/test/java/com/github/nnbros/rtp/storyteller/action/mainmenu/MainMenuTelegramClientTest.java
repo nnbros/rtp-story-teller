@@ -9,7 +9,6 @@ import com.github.nnbros.rtp.storyteller.BotTestUtils;
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
 import com.github.nnbros.rtp.storyteller.character.*;
-import com.github.nnbros.rtp.storyteller.character.Character;
 import com.github.nnbros.rtp.storyteller.configuration.Localization;
 import com.github.nnbros.rtp.storyteller.telegram.ui.DefaultParameter;
 import com.github.nnbros.rtp.storyteller.telegram.ui.ParameterService;
@@ -36,7 +35,7 @@ import static com.github.nnbros.rtp.storyteller.telegram.AbstractTelegramClient.
 import static org.mockito.Mockito.*;
 
 public class MainMenuTelegramClientTest extends StorytellerTest {
-	public static final Character TEST_CHARACTER = createTestCharacter();
+	public static final DetailedCharacterView TEST_DETAILED_CHARACTER_VIEW = createTestDetailedCharacterView();
 
 	@Mock
 	private TelegramClient telegramClient;
@@ -56,7 +55,7 @@ public class MainMenuTelegramClientTest extends StorytellerTest {
 
 	@BeforeEach
 	public void init() {
-		when(characterService.getByUserId(TEST_USER_ID)).thenReturn(TEST_CHARACTER);
+		when(characterService.getDetailedCharacterViewByUserId(TEST_USER_ID)).thenReturn(TEST_DETAILED_CHARACTER_VIEW);
 	}
 
 	@Test
@@ -64,7 +63,7 @@ public class MainMenuTelegramClientTest extends StorytellerTest {
 		ActionContext testActionContext = createTestActionContext();
 		SendMessage mockMessage = mock(SendMessage.class);
 		Map<String, String> parameters = buildTestCharacterBaseParameters(testActionContext);
-		when(parameterService.buildCharacterBaseParameters(testActionContext, TEST_CHARACTER)).thenReturn(parameters);
+		when(parameterService.buildCharacterBaseParameters(testActionContext, TEST_DETAILED_CHARACTER_VIEW)).thenReturn(parameters);
 		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(MainMenuElement.MAIN_MENU_GROUP_NAME, MainMenuElement.main.name(), parameters);
 
 		mainMenuTelegramClient.sendMainMenu(testActionContext);
@@ -77,7 +76,7 @@ public class MainMenuTelegramClientTest extends StorytellerTest {
 		ActionContext testActionContext = createTestActionContext();
 		SendMessage mockMessage = mock(SendMessage.class);
 		Map<String, String> parameters = buildTestCharacterBaseParameters(testActionContext);
-		when(parameterService.buildCharacterBaseParameters(testActionContext, TEST_CHARACTER)).thenReturn(parameters);
+		when(parameterService.buildCharacterBaseParameters(testActionContext, TEST_DETAILED_CHARACTER_VIEW)).thenReturn(parameters);
 		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(MainMenuElement.MAIN_MENU_GROUP_NAME, MainMenuElement.character.name(), parameters);
 
 		mainMenuTelegramClient.sendCharacterMenu(testActionContext);
@@ -90,7 +89,7 @@ public class MainMenuTelegramClientTest extends StorytellerTest {
 	@ValueSource(strings = TEST_ARMY_1)
 	public void sendCharacterClassMenu(String data) throws TelegramApiException, ElementNotFoundException {
 		ActionContext testActionContext = BotTestUtils.createTestActionContext(data);
-		when(characterService.getByUserId(TEST_USER_ID)).thenReturn(createTestCharacter());
+		when(characterService.getDetailedCharacterViewByUserId(TEST_USER_ID)).thenReturn(createTestDetailedCharacterView());
 		List<ArmyDictionary> armies = List.of(TEST_ARMY_POJO_1, TEST_ARMY_POJO_2, TEST_ARMY_POJO_3);
 		when(armyService.getAllArmies()).thenReturn(armies);
 		when(elementRegistry.buildElement(confirmationEmoji.getGroupName(), confirmationEmoji.name(), Collections.emptyMap(), String.class))
@@ -101,7 +100,7 @@ public class MainMenuTelegramClientTest extends StorytellerTest {
 		dynamicParams.add(TEST_ARMY_NAME_2, CALLBACK_DATA_TEMPLATE.formatted(ARMY.getActionName(), TEST_ARMY_2));
 		dynamicParams.add(TEST_ARMY_NAME_3, CALLBACK_DATA_TEMPLATE.formatted(ARMY.getActionName(), TEST_ARMY_3));
 		Map<String, String> params = createTestCharacterBaseParameters();
-		when(parameterService.buildCharacterBaseParameters(eq(testActionContext), eq(TEST_CHARACTER))).thenReturn(params);
+		when(parameterService.buildCharacterBaseParameters(eq(testActionContext), eq(TEST_DETAILED_CHARACTER_VIEW))).thenReturn(params);
 
 		SendMessage mockMessage = mock(SendMessage.class);
 		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(MainMenuElement.army.getGroupName(),
@@ -117,8 +116,8 @@ public class MainMenuTelegramClientTest extends StorytellerTest {
 	private Map<String, String> buildTestCharacterBaseParameters(ActionContext actionContext) {
 		return Parameters.buildParameters(
 				Parameter.of(DefaultParameter.CHAT_ID, actionContext.userId()),
-				Parameter.of(CharacterParameter.CHAR_NAME, MainMenuTelegramClientTest.TEST_CHARACTER.name()),
-				Parameter.of(CharacterParameter.CHAR_CLASS, MainMenuTelegramClientTest.TEST_CHARACTER.activeClassDictionary().name())
+				Parameter.of(CharacterParameter.CHAR_NAME, MainMenuTelegramClientTest.TEST_DETAILED_CHARACTER_VIEW.getName()),
+				Parameter.of(CharacterParameter.CHAR_CLASS, MainMenuTelegramClientTest.TEST_DETAILED_CHARACTER_VIEW.getActiveClass().name())
 		);
 	}
 }

@@ -1,7 +1,7 @@
 package com.github.nnbros.rtp.storyteller.api.controller;
 
 import com.github.nnbros.rtp.storyteller.action.ActionService;
-import com.github.nnbros.rtp.storyteller.api.model.ErrorResponse;
+import com.github.nnbros.rtp.storyteller.api.view.ErrorResponse;
 import com.github.nnbros.rtp.storyteller.exception.StoryTellerException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -23,8 +23,8 @@ public class ActionController {
 
 	@PostMapping("/{action}")
 	public ResponseEntity<?> processAction(@NotNull @PathVariable String action,
-													@Valid @RequestBody Update update,
-													@RequestParam(required = false) String data) {
+										   @Valid @RequestBody Update update,
+										   @RequestParam(required = false) String data) {
 		try {
 			actionService.process(action, update, data);
 			return ResponseEntity.noContent().build();

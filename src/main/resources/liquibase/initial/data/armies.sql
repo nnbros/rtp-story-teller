@@ -1,8 +1,8 @@
 --liquibase formatted sql
 
---changeset guronas:init-21
-insert into army_dictionary (name, type, base_hp, base_count, base_atk, base_def, tier)
+--changeset guronas:init-27
+insert into army_dictionary (name, type, base_hp, base_quantity, base_atk, base_def, tier, advantage_bonus)
 values
-('seekers', 'SWORDSMAN', 100, 100, 100, 100, 1),
-('scouts', 'CAVALRY', 59, 59, 59, 59, 1),
-('peasants', 'SPEARMAN', 30, 30, 30, 30, 1)
+('seekers', 'SWORDSMAN', 100, 3, 50, 50, 1, 0.25),
+('scouts', 'CAVALRY', 80, 3, 60, 40, 1, 0.25),
+('peasants', 'SPEARMAN', 120, 3, 40, 60, 1, 0.25)

@@ -13,7 +13,7 @@ import org.mockito.Spy;
 import java.util.Map;
 
 import static com.github.nnbros.rtp.storyteller.BotTestUtils.*;
-import static com.github.nnbros.rtp.storyteller.action.mainmenu.MainMenuTelegramClientTest.TEST_CHARACTER;
+import static com.github.nnbros.rtp.storyteller.action.mainmenu.MainMenuTelegramClientTest.TEST_DETAILED_CHARACTER_VIEW;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -32,9 +32,9 @@ public class ParameterServiceTest extends StorytellerTest {
 		ActionContext testActionContext = createTestActionContext();
 		Parameter additionalParameter = Parameter.of("testParam1", "testValue1");
 		Map<String, String> testParameters = createTestCharacterBaseParameters(additionalParameter);
-		when(characterService.getByUserId(TEST_USER_ID)).thenReturn(createTestCharacter());
+		when(characterService.getDetailedCharacterViewByUserId(TEST_USER_ID)).thenReturn(createTestDetailedCharacterView());
 
-		Map<String, String> parameters = parameterService.buildCharacterBaseParameters(testActionContext, TEST_CHARACTER, additionalParameter);
+		Map<String, String> parameters = parameterService.buildCharacterBaseParameters(testActionContext, TEST_DETAILED_CHARACTER_VIEW, additionalParameter);
 
 		assertEquals(testParameters, parameters);
 	}
