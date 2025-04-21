@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
---changeset guronas:init-17
+--changeset guronas:init-23
 create table if not exists storyteller.character_army_skill (
     id integer generated always as identity primary key,
     character_army_id integer not null,
@@ -12,7 +12,7 @@ create table if not exists storyteller.character_army_skill (
     constraint unique_character_army_skill unique (character_army_id, skill_id)
 );
 
---changeset guronas:init-18
+--changeset guronas:init-24
 create trigger update_timestamp_trigger
 before update on storyteller.character_army_skill
 for each row

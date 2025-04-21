@@ -27,7 +27,7 @@ import java.util.Map;
 
 import static com.github.nnbros.rtp.storyteller.BotTestUtils.*;
 import static com.github.nnbros.rtp.storyteller.action.mainmenu.CharacterMenuAction.CLASS;
-import static com.github.nnbros.rtp.storyteller.action.mainmenu.MainMenuTelegramClientTest.TEST_CHARACTER;
+import static com.github.nnbros.rtp.storyteller.action.mainmenu.MainMenuTelegramClientTest.TEST_DETAILED_CHARACTER_VIEW;
 import static com.github.nnbros.rtp.storyteller.action.registration.RegistrationElement.confirmationEmoji;
 import static com.github.nnbros.rtp.storyteller.telegram.AbstractTelegramClient.CALLBACK_DATA_TEMPLATE;
 import static org.mockito.Mockito.*;
@@ -55,7 +55,7 @@ public class CharacterMenuTelegramClientTest extends StorytellerTest {
 	@ValueSource(strings = TEST_CLASS_1)
 	public void sendCharacterClassMenu(String data) throws TelegramApiException, ElementNotFoundException {
 		ActionContext testActionContext = BotTestUtils.createTestActionContext(data);
-		when(characterService.getByUserId(TEST_USER_ID)).thenReturn(createTestCharacter());
+		when(characterService.getDetailedCharacterViewByUserId(TEST_USER_ID)).thenReturn(createTestDetailedCharacterView());
 		List<ClassDictionary> classes = List.of(TEST_CLASS_POJO_1, TEST_CLASS_POJO_2, TEST_CLASS_POJO_3);
 		when(classService.getAllClasses()).thenReturn(classes);
 		when(elementRegistry.buildElement(confirmationEmoji.getGroupName(), confirmationEmoji.name(), Collections.emptyMap(), String.class))
@@ -66,7 +66,7 @@ public class CharacterMenuTelegramClientTest extends StorytellerTest {
 		dynamicParams.add(TEST_CLASS_NAME_2, CALLBACK_DATA_TEMPLATE.formatted(CLASS.getActionName(), TEST_CLASS_2));
 		dynamicParams.add(TEST_CLASS_NAME_3, CALLBACK_DATA_TEMPLATE.formatted(CLASS.getActionName(), TEST_CLASS_3));
 		Map<String, String> params = createTestCharacterBaseParameters();
-		when(parameterService.buildCharacterBaseParameters(eq(testActionContext), eq(TEST_CHARACTER))).thenReturn(params);
+		when(parameterService.buildCharacterBaseParameters(eq(testActionContext), eq(TEST_DETAILED_CHARACTER_VIEW))).thenReturn(params);
 
 		SendMessage mockMessage = mock(SendMessage.class);
 		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(MainMenuElement.charClass.getGroupName(),

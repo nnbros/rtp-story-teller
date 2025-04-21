@@ -40,7 +40,7 @@ public class MainMenuTelegramClient extends AbstractTelegramClient {
 	public void sendMainMenu(ActionContext actionContext) {
 		Long userId = actionContext.userId();
 		log.debug("Sending main menu to the user [{}]...", userId);
-		Character character = characterService.getByUserId(userId);
+		DetailedCharacterView character = characterService.getDetailedCharacterViewByUserId(userId);
 		Map<String, String> params = parameterService.buildCharacterBaseParameters(actionContext, character);
 		BotApiMethod<?> message = buildBotApiMethod(MainMenuElement.MAIN_MENU_GROUP_NAME, MainMenuElement.main.name(), params);
 		execute(message);
@@ -54,7 +54,7 @@ public class MainMenuTelegramClient extends AbstractTelegramClient {
 	public void sendCharacterMenu(ActionContext actionContext) {
 		Long userId = actionContext.userId();
 		log.debug("Sending character menu to the user [{}]...", actionContext.userId());
-		Character character = characterService.getByUserId(userId);
+		DetailedCharacterView character = characterService.getDetailedCharacterViewByUserId(userId);
 		Map<String, String> params = parameterService.buildCharacterBaseParameters(actionContext, character);
 		BotApiMethod<?> message = buildBotApiMethod(MainMenuElement.MAIN_MENU_GROUP_NAME, MainMenuElement.character.name(), params);
 		execute(message);
@@ -65,11 +65,11 @@ public class MainMenuTelegramClient extends AbstractTelegramClient {
 		log.debug("Sending character army menu to the user [{}]...", actionContext.userId());
 		String activeArmy;
 		String data = actionContext.data();
-		Character character = characterService.getByUserId(actionContext.userId());
+		DetailedCharacterView character = characterService.getDetailedCharacterViewByUserId(actionContext.userId());
 		if (Objects.nonNull(data)) {
 			activeArmy = data;
 		} else {
-			activeArmy = character.activeArmyDictionary().name();
+			activeArmy = character.getActiveArmy().name();
 		}
 
 		String confirmationEmojiText = buildText(confirmationEmoji);

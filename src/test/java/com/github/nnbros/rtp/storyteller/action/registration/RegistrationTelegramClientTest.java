@@ -98,15 +98,15 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 	@Test
 	public void sendClassDescription() throws TelegramApiException, ElementNotFoundException {
 		CharacterRequest characterRequest = createTestCharacterRequest();
-		characterRequest.setClassName(TEST_CLASS_POJO_1.name());
+		characterRequest.setClassName(TEST_ACTIVE_CLASS_POJO_1.name());
 		List<ClassDictionary> classes = List.of(TEST_CLASS_POJO_1, TEST_CLASS_POJO_2, TEST_CLASS_POJO_3);
 		when(classService.getAllClasses()).thenReturn(classes);
-		when(classService.getClassIdByName(TEST_CLASS_POJO_1.name())).thenReturn(TEST_CLASS_POJO_1.id());
+		when(classService.getClassIdByName(TEST_ACTIVE_CLASS_POJO_1.name())).thenReturn(TEST_CLASS_POJO_1.id());
 
-		SkillDictionary testSkill1 = new SkillDictionary("testSkill1", SkillType.BASIC_CHARACTER);
-		SkillDictionary testSkill2 = new SkillDictionary("testSkill2", SkillType.BASIC_CHARACTER);
+		SkillDictionary testSkill1 = new SkillDictionary("testSkill1", SkillType.BASIC_CHARACTER, Archetype.SWORDSMAN);
+		SkillDictionary testSkill2 = new SkillDictionary("testSkill2", SkillType.BASIC_CHARACTER, Archetype.SWORDSMAN);
 		List<SkillDictionary> skills = List.of(testSkill1, testSkill2);
-		when(skillService.getAllSkillsByClassName(TEST_CLASS_POJO_1.name())).thenReturn(skills);
+		when(skillService.getAllSkillsByClassName(TEST_ACTIVE_CLASS_POJO_1.name())).thenReturn(skills);
 
 		SendMessage mockMessage = mock(SendMessage.class);
 		Parameter classDescription = Parameter.of(RegistrationParameter.SKILLS_DESCRIPTION, TEST_SKILLS_DESCRIPTION);

@@ -1,9 +1,21 @@
 --liquibase formatted sql
 
---changeset guronas:init-19
-insert into skill_dictionary (name, type, hero_atk, hero_def, army_atk, army_def, hero_split, army_split)
+--changeset guronas:init-25
+insert into skill_dictionary (name, type, effective_against)
 values
-('sunder', 'WARRIOR', 1, 1, 1, 1, 1, 1),
-('riposte', 'WARRIOR', 1, 1, 1, 1, 1, 1),
-('pierce', 'ROGUE', 1, 1, 1, 1, 1, 1),
-('annihilation', 'ROGUE', 1, 1, 1, 1, 1, 1);
+('reckless_attack', 'BASIC_CHARACTER', null),
+('assault', 'BASIC_CHARACTER', null),
+('defense', 'BASIC_CHARACTER', null),
+('full_defense', 'BASIC_CHARACTER', null),
+('lead', 'BASIC_CHARACTER', null),
+('battle_readiness', 'BASIC_CHARACTER', null),
+('duel', 'WARRIOR', 'SPEARMAN'),
+('cleave', 'WARRIOR', 'SPEARMAN'),
+('elimination', 'ROGUE', null),
+('fire_bomb', 'ROGUE', null),
+('onslaught', 'CAVALRY', 'SWORDSMAN'),
+('raid', 'SCOUTS', 'SWORDSMAN'),
+('iron_tide', 'SWORDSMAN', 'SPEARMAN'),
+('unearth', 'SEEKERS', 'SPEARMAN'),
+('hold_the_line', 'SPEARMAN', 'CAVALRY'),
+('make_the_way', 'PEASANTS', 'CAVALRY')

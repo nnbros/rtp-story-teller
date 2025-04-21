@@ -16,12 +16,18 @@ public class CharacterArmySkillEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
+	@Column(name = "character_army_id", nullable = false)
+	private Integer characterArmyId;
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "character_army_id", referencedColumnName = "id", nullable = false)
-	private CharacterArmyEntity characterArmycharacterClass;
+	@JoinColumn(name = "character_army_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+	private CharacterArmyEntity characterArmyCharacterClass;
+
+	@Column(name = "skill_id", nullable = false)
+	private Integer skillId;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "skill_id", referencedColumnName = "id", nullable = false)
+	@JoinColumn(name = "skill_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
 	private SkillDictionaryEntity skill;
 
 	@Column(name = "created_at", nullable = false, insertable = false, updatable = false)
