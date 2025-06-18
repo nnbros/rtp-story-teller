@@ -29,9 +29,6 @@ public class ArmyDictionaryEntity {
 	@Column(name = "base_hp", nullable = false, insertable = false, updatable = false)
 	private Integer baseHp;
 
-	@Column(name = "base_hp", nullable = false, insertable = false, updatable = false)
-	private Integer baseCount;
-
 	@Column(name = "base_atk", nullable = false, insertable = false, updatable = false)
 	private Integer baseAtk;
 
