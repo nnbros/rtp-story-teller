@@ -10,7 +10,7 @@
   </parent>
   <groupId>com.github.nnbros.rtp</groupId>
   <artifactId>story-teller</artifactId>
-  <version>0.3.1</version>
+  <version>0.3.2</version>
   <name>StoryTeller</name>
   <description>A Storyteller service for Rise to Power</description>
   <properties>
