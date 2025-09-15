@@ -104,11 +104,11 @@ public class CharacterService {
 
 	@Transactional
 	public boolean updateCharacterActiveArmy(long userId, String armyName) {
-		CharacterClassEntity characterClassEntity = characterClassRepository.findByClassIdAndCharacterId(userId, armyName)
+		CharacterArmyEntity characterArmyEntity = characterArmyRepository.findByClassIdAndCharacterId(userId, armyName)
 				.orElseThrow(() -> new CharacterArmyNotFoundException(userId, armyName));
-		if (!characterClassEntity.getIsActive()) {
-			characterClassEntity.setIsActive(true);
-			characterClassRepository.saveAndFlush(characterClassEntity);
+		if (!characterArmyEntity.getIsActive()) {
+			characterArmyEntity.setIsActive(true);
+			characterArmyRepository.saveAndFlush(characterArmyEntity);
 			return true;
 		}
 		return false;
