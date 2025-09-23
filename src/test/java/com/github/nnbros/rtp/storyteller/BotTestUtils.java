@@ -3,12 +3,13 @@ package com.github.nnbros.rtp.storyteller;
 import com.github.guronas.telegram.bot.elements.parameter.Parameter;
 import com.github.guronas.telegram.bot.elements.parameter.Parameters;
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
-import com.github.nnbros.rtp.storyteller.character.CharacterParameter;
 import com.github.nnbros.rtp.storyteller.action.registration.CharacterRequest;
 import com.github.nnbros.rtp.storyteller.character.*;
 import com.github.nnbros.rtp.storyteller.configuration.Localization;
 import com.github.nnbros.rtp.storyteller.telegram.UpdateType;
 import com.github.nnbros.rtp.storyteller.telegram.ui.DefaultParameter;
+import com.github.nnbros.rtp.storyteller.character.CharacterParameter;
+import com.github.nnbros.rtp.storyteller.jpa.character.SkillDictionaryEntity;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -196,13 +197,6 @@ public class BotTestUtils {
 		return new ClassDictionary(1, SWORDSMAN, className, 1, 1, 1, 0.25f);
 	}
 
-	public static List<CharacterClass> createTestCharClasses() {
-		return List.of(
-				new CharacterClass(createTestClassDictionary(TEST_CLASS_1), 0L),
-				new CharacterClass(createTestClassDictionary(TEST_CLASS_2), 0L)
-		);
-	}
-
 	public static DetailedCharacterView createTestDetailedCharacterView() {
 		DetailedCharacterView detailedCharacterView = new DetailedCharacterView();
 		detailedCharacterView.setName(TEST_CHARACTER_NAME);
@@ -251,5 +245,23 @@ public class BotTestUtils {
 		parameters.add(Parameter.of(CharacterParameter.CHAR_ARMY_DEF, 1));
 		parameters.addAll(Arrays.asList(additionalParams));
 		return Parameters.buildParameters(parameters);
+	}
+
+	public static ArmyDictionary createTestArmyDictionary() {
+		return new ArmyDictionary(1, TEST_ARMY_1, SWORDSMAN, 1, 1, 1, 1, 0.25f);
+	}
+
+	public static SkillDictionary createTestSkillDictionary(String name, SkillType type, Archetype effectiveAgainst) {
+		return new SkillDictionary(name, type, effectiveAgainst);
+	}
+
+	public static SkillDictionaryEntity createTestSkillDictionaryEntity(int id, String name, SkillType type,
+																		Archetype effectiveAgainst) {
+		SkillDictionaryEntity skillDictionaryEntity = new SkillDictionaryEntity();
+		skillDictionaryEntity.setId(id);
+		skillDictionaryEntity.setName(name);
+		skillDictionaryEntity.setType(type);
+		skillDictionaryEntity.setEffectiveAgainst(effectiveAgainst);
+		return skillDictionaryEntity;
 	}
 }
