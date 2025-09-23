@@ -64,8 +64,7 @@ public class SkillService {
 
 	private Set<SkillType> getAllowedClassSkillTypes(ClassDictionary classDictionary) {
 		SkillType classSkillType = SkillType.valueOf(classDictionary.name().toUpperCase());
-		SkillType archetypeSkillType = SkillType.valueOf(classDictionary.type().name());
-		return EnumSet.of(BASIC_CHARACTER, classSkillType, archetypeSkillType);
+		return EnumSet.of(BASIC_CHARACTER, classSkillType);
 	}
 
 	private Set<SkillType> getAllowedArmySkillTypes(ArmyDictionary armyDictionary) {
