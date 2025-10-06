@@ -2,6 +2,7 @@ package com.github.nnbros.rtp.storyteller.action.registration;
 
 import com.github.guronas.telegram.bot.elements.TelegramElementRegistry;
 import com.github.guronas.telegram.bot.elements.exception.ElementNotFoundException;
+import com.github.guronas.telegram.bot.elements.parameter.InlineKeyboardButtonParameters;
 import com.github.guronas.telegram.bot.elements.parameter.Parameter;
 import com.github.guronas.telegram.bot.elements.parameter.Parameters;
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
@@ -24,7 +25,9 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 import java.util.*;
 
 import static com.github.nnbros.rtp.storyteller.BotTestUtils.*;
+import static com.github.nnbros.rtp.storyteller.action.registration.CharacterAction.CLASS_SELECTION;
 import static com.github.nnbros.rtp.storyteller.action.registration.RegistrationElement.*;
+import static com.github.nnbros.rtp.storyteller.telegram.AbstractTelegramClient.CALLBACK_DATA_TEMPLATE;
 import static org.mockito.Mockito.*;
 
 public class RegistrationTelegramClientTest extends StorytellerTest {
@@ -85,10 +88,15 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 		when(classService.getAllClasses()).thenReturn(classes);
 		SendMessage mockMessage = mock(SendMessage.class);
 		Parameter classesDescription = Parameter.of(RegistrationParameter.CLASSES_DESCRIPTION, TEST_CLASSES_DESCRIPTION);
-		Parameter warriorClassParameter = Parameter.of(RegistrationParameter.WARRIOR_CLASS_TEXT, TEST_CLASS_NAME_1);
-		Parameter rogueClassParameter = Parameter.of(RegistrationParameter.ROGUE_CLASS_TEXT, TEST_CLASS_NAME_2);
-		Map<String, String> params = buildTestRegistrationParameters(characterRequest, classesDescription, warriorClassParameter, rogueClassParameter);
-		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(charClassSelection.getGroupName(), charClassSelection.name(), params);
+		Map<String, String> params = buildTestRegistrationParameters(characterRequest, classesDescription);
+
+		InlineKeyboardButtonParameters dynamicParams = new InlineKeyboardButtonParameters();
+		dynamicParams.add(TEST_CLASS_NAME_1, CALLBACK_DATA_TEMPLATE.formatted(CLASS_SELECTION.getActionName(), TEST_CLASS_1));
+		dynamicParams.add(TEST_CLASS_NAME_2, CALLBACK_DATA_TEMPLATE.formatted(CLASS_SELECTION.getActionName(), TEST_CLASS_2));
+		dynamicParams.add(TEST_CLASS_NAME_3, CALLBACK_DATA_TEMPLATE.formatted(CLASS_SELECTION.getActionName(), TEST_CLASS_3));
+
+		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(charClassSelection.getGroupName(), charClassSelection.name(), params,
+				Map.of(RegistrationParameter.CLASSES.getKey(), dynamicParams));
 
 		registrationTelegramClient.sendClassOptions(characterRequest);
 
@@ -110,10 +118,15 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 
 		SendMessage mockMessage = mock(SendMessage.class);
 		Parameter classDescription = Parameter.of(RegistrationParameter.SKILLS_DESCRIPTION, TEST_SKILLS_DESCRIPTION);
-		Parameter classConfirmationParam = Parameter.of(RegistrationParameter.WARRIOR_CLASS_TEXT, TEST_CONFIRMATION_CLASS_PARAM);
-		Parameter rogueClassParameter = Parameter.of(RegistrationParameter.ROGUE_CLASS_TEXT, TEST_CLASS_NAME_2);
-		Map<String, String> params = buildTestRegistrationParameters(characterRequest, classDescription, rogueClassParameter, classConfirmationParam);
-		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(charClassConfirmation.getGroupName(), charClassConfirmation.name(), params);
+		Map<String, String> params = buildTestRegistrationParameters(characterRequest, classDescription);
+
+		InlineKeyboardButtonParameters dynamicParams = new InlineKeyboardButtonParameters();
+		dynamicParams.add(TEST_CONFIRMATION_CLASS_PARAM, CALLBACK_DATA_TEMPLATE.formatted(CLASS_SELECTION.getActionName(), TEST_CLASS_1));
+		dynamicParams.add(TEST_CLASS_NAME_2, CALLBACK_DATA_TEMPLATE.formatted(CLASS_SELECTION.getActionName(), TEST_CLASS_2));
+		dynamicParams.add(TEST_CLASS_NAME_3, CALLBACK_DATA_TEMPLATE.formatted(CLASS_SELECTION.getActionName(), TEST_CLASS_3));
+
+		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(charClassConfirmation.getGroupName(), charClassConfirmation.name(), params,
+				Map.of(RegistrationParameter.CLASSES.getKey(), dynamicParams));
 		when(elementRegistry.buildElement(confirmationEmoji.getGroupName(), confirmationEmoji.name(), Collections.emptyMap(), String.class))
 				.thenReturn(TEST_CONFIRMATION_EMOJI);
 
