@@ -66,6 +66,10 @@ public abstract class AbstractTelegramClient {
 		return buildBotApiMethod(element.getGroupName(), element.name(), params);
 	}
 
+	protected BotApiMethod<?> buildBotApiMethod(Element element, Map<String, String> params, Map<String, DynamicParameters> dynamicParams) {
+		return buildBotApiMethod(element.getGroupName(), element.name(), params, dynamicParams);
+	}
+
 	protected BotApiObject buildBotApiObject(Element element, Map<String, String> params) {
 		return buildBotApiObject(element.getGroupName(), element.name(), params);
 	}

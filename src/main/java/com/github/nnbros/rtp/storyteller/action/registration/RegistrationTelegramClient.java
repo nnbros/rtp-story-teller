@@ -1,6 +1,7 @@
 package com.github.nnbros.rtp.storyteller.action.registration;
 
 import com.github.guronas.telegram.bot.elements.TelegramElementRegistry;
+import com.github.guronas.telegram.bot.elements.parameter.InlineKeyboardButtonParameters;
 import com.github.guronas.telegram.bot.elements.parameter.Parameter;
 import com.github.guronas.telegram.bot.elements.parameter.Parameters;
 import com.github.nnbros.rtp.storyteller.action.ActionContext;
@@ -17,6 +18,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.util.*;
 
+import static com.github.nnbros.rtp.storyteller.action.registration.CharacterAction.CLASS_SELECTION;
 import static com.github.nnbros.rtp.storyteller.action.registration.RegistrationElement.*;
 
 @Slf4j
@@ -60,61 +62,46 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 		log.debug("Sending character class options to the user [{}]...", characterRequest.getUserId());
 		Collection<ClassDictionary> classes = classService.getAllClasses();
 		StringBuilder classesDescription = new StringBuilder();
-		Map<String, Localization.Clazz> localizedClasses = localization.getClasses();
+		InlineKeyboardButtonParameters dynamicParameters = new InlineKeyboardButtonParameters();
 		classes.stream()
 				.map(ClassDictionary::name)
-				.map(localizedClasses::get)
-				.forEach(clazz ->
-						classesDescription.append(DESCRIPTION_TEMPLATE.formatted(clazz.getName(), clazz.getDescription())));
+				.forEach(className -> addClassParameters(className, dynamicParameters, classesDescription));
+
 		Parameter classesDescriptionParameter = Parameter.of(RegistrationParameter.CLASSES_DESCRIPTION, classesDescription);
+		Map<String, String> parameters = buildRegistrationParameters(characterRequest, classesDescriptionParameter);
 
-		//TODO remove after dynamic params are implemented
-		String warriorLocalizedClassName = localizedClasses.get(RegistrationParameter.WARRIOR.getKey()).getName();
-		Parameter warriorClassParameter = Parameter.of(RegistrationParameter.WARRIOR_CLASS_TEXT, warriorLocalizedClassName);
-		String rogueLocalizedClassName = localizedClasses.get(RegistrationParameter.ROGUE.getKey()).getName();
-		Parameter rogueClassParameter = Parameter.of(RegistrationParameter.ROGUE_CLASS_TEXT, rogueLocalizedClassName);
-
-		Map<String, String> parameters = buildRegistrationParameters(
-				characterRequest,
-				classesDescriptionParameter,
-				warriorClassParameter,
-				rogueClassParameter);
-
-		BotApiMethod<?> classOptionsMessage = buildBotApiMethod(charClassSelection, parameters);
+		BotApiMethod<?> classOptionsMessage = buildBotApiMethod(charClassSelection,
+				parameters,
+				Map.of(RegistrationParameter.CLASSES.getKey(), dynamicParameters));
 		execute(classOptionsMessage);
 		log.debug("Class options have been sent successfully");
 	}
 
 	public void sendClassDescription(CharacterRequest characterRequest) {
 		log.debug("Sending character class description to the user [{}]...", characterRequest.getUserId());
-		String className = characterRequest.getClassName();
+		String selectedClass = characterRequest.getClassName();
 		String confirmationEmojiText = buildText(confirmationEmoji);
 
-		//TODO remove after dynamic params are implemented
-		Map<String, Localization.Clazz> localizedClasses = localization.getClasses();
-		String warriorLocalizedClassName = localizedClasses.get(RegistrationParameter.WARRIOR.getKey()).getName();
-		Parameter warriorClassParameter = Parameter.of(RegistrationParameter.WARRIOR_CLASS_TEXT, warriorLocalizedClassName);
-		String rogueLocalizedClassName = localizedClasses.get(RegistrationParameter.ROGUE.getKey()).getName();
-		Parameter rogueClassParameter = Parameter.of(RegistrationParameter.ROGUE_CLASS_TEXT, rogueLocalizedClassName);
-		String localizedClassName = localizedClasses.get(className).getName();
-		String confirmedClassButtonText = CONFIRMED_OPTION_TEMPLATE.formatted(confirmationEmojiText, localizedClassName);
-		if (className.equals(RegistrationParameter.WARRIOR.getKey())) {
-			warriorClassParameter = Parameter.of(RegistrationParameter.WARRIOR_CLASS_TEXT, confirmedClassButtonText);
-		} else {
-			rogueClassParameter = Parameter.of(RegistrationParameter.ROGUE_CLASS_TEXT, confirmedClassButtonText);
-		}
+		InlineKeyboardButtonParameters dynamicParameters = new InlineKeyboardButtonParameters();
+		classService.getAllClasses()
+				.stream()
+				.map(ClassDictionary::name)
+				.forEach(className -> addClassDynamicParameters(dynamicParameters, className, className.equals(selectedClass), confirmationEmojiText));
 
 		//TODO caching
-		Collection<SkillDictionary> skills = skillService.getAllSkillsByClassName(className);
+		Collection<SkillDictionary> skills = skillService.getAllSkillsByClassName(selectedClass);
 		StringBuilder classDescriptionsText = new StringBuilder();
 		skills.stream()
 				.map(SkillDictionary::name)
 				.map(skill -> localization.getSkills().get(skill))
 				.forEach(skill -> classDescriptionsText.append(DESCRIPTION_TEMPLATE.formatted(skill.getName(), skill.getDescription())));
 		Parameter classesDescriptionParameter = Parameter.of(RegistrationParameter.SKILLS_DESCRIPTION, classDescriptionsText);
-		Map<String, String> parameters = buildRegistrationParameters(characterRequest, classesDescriptionParameter, warriorClassParameter, rogueClassParameter);
+		Map<String, String> parameters = buildRegistrationParameters(characterRequest, classesDescriptionParameter);
 
-		BotApiMethod<?> classDescriptionMessage = buildBotApiMethod(REGISTRATION_GROUP_NAME, charClassConfirmation.name(), parameters);
+		BotApiMethod<?> classDescriptionMessage = buildBotApiMethod(REGISTRATION_GROUP_NAME,
+				charClassConfirmation.name(),
+				parameters,
+				Map.of(RegistrationParameter.CLASSES.getKey(), dynamicParameters));
 		execute(classDescriptionMessage);
 		log.debug("Character class description has been sent successfully");
 	}
@@ -175,5 +162,30 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 
 	private String buildGender(CharacterRequest characterRequest) {
 		return buildText(REGISTRATION_GROUP_NAME, characterRequest.getGender().getElementName(), Collections.emptyMap());
+	}
+
+	private void addClassParameters(String className, InlineKeyboardButtonParameters dynamicParameters, StringBuilder classesDescription) {
+		Localization.Clazz clazz = localization.getClasses().get(className);
+		String localizedClassName = clazz.getName();
+		String classDescription = clazz.getDescription();
+		addClassDynamicParameters(dynamicParameters, className, localizedClassName);
+		classesDescription.append(DESCRIPTION_TEMPLATE.formatted(localizedClassName, classDescription));
+	}
+
+	private void addClassDynamicParameters(InlineKeyboardButtonParameters parameters,
+										   String className,
+										   boolean isClassActive,
+										   String confirmationEmoji) {
+		String localizedClassName = localization.getClasses()
+				.get(className)
+				.getName();
+		String finalText = isClassActive ? CONFIRMED_OPTION_TEMPLATE.formatted(confirmationEmoji, localizedClassName) : localizedClassName;
+		addClassDynamicParameters(parameters, className, finalText);
+	}
+
+	private void addClassDynamicParameters(InlineKeyboardButtonParameters parameters,
+										   String className,
+										   String finalText) {
+		parameters.add(finalText, CALLBACK_DATA_TEMPLATE.formatted(CLASS_SELECTION.getActionName(), className));
 	}
 }

@@ -47,14 +47,9 @@ registration:
             В дальнейшем вы сможете открыть любое количество новых классов.\n${classesDescription}"
             replyKeyboard:
                 inlineKeyboard:
+                    dynamicRows:
+                        id: classes
                     rows:
-                        -   inlineKeyboardRow:
-                                -   inlineKeyboardButton:
-                                        text: "${warriorClassText}"
-                                        callbackData: "storyteller_create_char_class_selection:warrior"
-                                -   inlineKeyboardButton:
-                                        text: "${rogueClassText}"
-                                        callbackData: "storyteller_create_char_class_selection:rogue"
                         -   inlineKeyboardRow:
                                 -   inlineKeyboardButton:
                                         text: "Подтвердить выбор"
@@ -65,14 +60,9 @@ registration:
             text: "${genderText}\n${charNameText}\n${charClassText}\n\n${startingSkillsText}\n${skillsDescription}"
             replyKeyboard:
                 inlineKeyboard:
+                    dynamicRows:
+                        id: classes
                     rows:
-                        -   inlineKeyboardRow:
-                                -   inlineKeyboardButton:
-                                        text: "${warriorClassText}"
-                                        callbackData: "storyteller_create_char_class_selection:warrior"
-                                -   inlineKeyboardButton:
-                                        text: "${rogueClassText}"
-                                        callbackData: "storyteller_create_char_class_selection:rogue"
                         -   inlineKeyboardRow:
                                 -   inlineKeyboardButton:
                                         text: "Подтвердить выбор"
