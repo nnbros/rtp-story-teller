@@ -1,14 +1,14 @@
 package com.github.nnbros.rtp.storyteller.action.registration;
 
-import com.github.nnbros.rtp.storyteller.action.ActionContext;
-import com.github.nnbros.rtp.storyteller.action.ActionResult;
-import com.github.nnbros.rtp.storyteller.character.Gender;
+import com.github.nnbros.rtp.common.action.ActionContext;
+import com.github.nnbros.rtp.common.action.ActionResult;
+import com.github.nnbros.rtp.common.api.dto.character.Gender;
+import com.github.nnbros.rtp.common.telegram.UpdateType;
 import com.github.nnbros.rtp.storyteller.character.CharacterService;
 import com.github.nnbros.rtp.storyteller.configuration.StoryTellerProperties;
 import com.github.nnbros.rtp.storyteller.exception.CharacterNotFoundException;
 import com.github.nnbros.rtp.storyteller.exception.StoryTellerRuntimeException;
 import com.github.nnbros.rtp.storyteller.character.ClassService;
-import com.github.nnbros.rtp.storyteller.telegram.UpdateType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,25 +36,25 @@ public class RegistrationService {
 		log.debug("Character request has been added in cache");
 	}
 
-	public CharacterRequest addGender(ActionContext actionContext) {
+	public ActionResult<CharacterRequest> addGender(ActionContext actionContext) {
 		Long userId = actionContext.userId();
 		log.debug("Add gender request has been received for the user [{}]", userId);
-		CharacterRequest characterRequest = getCharacterRequest(userId, actionContext.messageId());
+		CharacterRequest characterRequest = getCharacterRequest(userId);
 
-		Gender gender = Optional.ofNullable(actionContext.data())
+		Gender gender = Optional.ofNullable(actionContext.actionData())
 				.map(String::toUpperCase)
 				.map(Gender::valueOf)
 				.orElseThrow(() -> new StoryTellerRuntimeException("Character gender cannot be empty"));
 
 		characterRequest.setGender(gender);
 		log.debug("Gender {} has been added successfully", gender);
-		return characterRequest;
+		return new ActionResult<>(actionContext, characterRequest);
 	}
 
 	public ActionResult<CharacterRequest> addName(ActionContext actionContext) {
 		Long userId = actionContext.userId();
 		log.debug("Add name request has been received for the user [{}]", userId);
-		CharacterRequest characterRequest = getCharacterRequest(userId, actionContext.messageId());
+		CharacterRequest characterRequest = getCharacterRequest(userId);
 		UpdateType updateType = actionContext.updateType();
 		if (!(updateType == UpdateType.MESSAGE || updateType == UpdateType.EDITED_MESSAGE)) {
 			throw new StoryTellerRuntimeException("Wrong update type: [%s]", updateType);
@@ -68,39 +68,40 @@ public class RegistrationService {
 		} else {
 			log.debug("Name {} is illegal", name);
 		}
-		return new ActionResult<>(characterRequest, characterNameValid);
+		return new ActionResult<>(actionContext, characterNameValid, characterRequest);
 	}
 
 	public ActionResult<CharacterRequest> addClass(ActionContext actionContext) {
 		Long userId = actionContext.userId();
 		log.debug("Add class request has been received for the user [{}]", userId);
-		CharacterRequest characterRequest = getCharacterRequest(userId, actionContext.messageId());
+		CharacterRequest characterRequest = getCharacterRequest(userId);
 
 		//TODO caching
-		String className = Optional.ofNullable(actionContext.data())
+		String className = Optional.ofNullable(actionContext.actionData())
 				.filter(classService::containsByName)
 				.orElseThrow(() -> new StoryTellerRuntimeException("Character class cannot be empty and must exist"));
 		if (className.equals(characterRequest.getClassName())) {
 			log.debug("The same class name has been received. This action will be ignored.");
-			return new ActionResult<>(characterRequest, false);
+			return new ActionResult<>(actionContext, false, characterRequest);
 		} else {
 			characterRequest.setClassName(className);
 			log.debug("Class {} has been added successfully", className);
-			return new ActionResult<>(characterRequest, true);
+			return new ActionResult<>(actionContext, true, characterRequest);
 		}
 	}
 
 	public void register(ActionContext actionContext) {
 		Long userId = actionContext.userId();
 		log.info("Registration request has been received for the user [{}]", userId);
-		CharacterRequest characterRequest = getCharacterRequest(userId, actionContext.messageId());
+		CharacterRequest characterRequest = getCharacterRequest(userId);
 		characterService.register(characterRequest);
 		log.info("Character [{}] has been registered successfully", characterRequest);
 	}
 
-	public CharacterRequest getCharacterRequest(ActionContext actionContext) {
+	public ActionResult<CharacterRequest> getCharacterRequest(ActionContext actionContext) {
 		Long userId = actionContext.userId();
-		return getCharacterRequest(userId, actionContext.messageId());
+		CharacterRequest characterRequest = getCharacterRequest(userId);
+		return new ActionResult<>(actionContext, characterRequest);
 	}
 
 	public void clearCharacterCache(Set<Long> userIds) {
@@ -113,11 +114,9 @@ public class RegistrationService {
 		log.debug("Character cache has been cleared successfully");
 	}
 
-	private CharacterRequest getCharacterRequest(long userId, Integer lastMessageId) {
-		CharacterRequest characterRequest = Optional.ofNullable(characterCache.get(userId))
+	private CharacterRequest getCharacterRequest(long userId) {
+		return Optional.ofNullable(characterCache.get(userId))
 				.orElseThrow(() -> new CharacterNotFoundException(userId));
-		characterRequest.setLastMessageId(lastMessageId);
-		return characterRequest;
 	}
 
 	private boolean isCharacterNameValid(String name) {

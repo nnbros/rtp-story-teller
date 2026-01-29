@@ -1,9 +1,9 @@
 package com.github.nnbros.rtp.storyteller.action.registration;
 
+import com.github.nnbros.rtp.common.action.ActionContext;
+import com.github.nnbros.rtp.common.action.ActionPipeline;
+import com.github.nnbros.rtp.common.action.ActionResult;
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
-import com.github.nnbros.rtp.storyteller.action.ActionContext;
-import com.github.nnbros.rtp.storyteller.action.ActionPipeline;
-import com.github.nnbros.rtp.storyteller.action.ActionResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,8 +12,7 @@ import org.mockito.Mock;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static com.github.nnbros.rtp.storyteller.BotTestUtils.TEST_USER_ID;
-import static com.github.nnbros.rtp.storyteller.BotTestUtils.createTestActionContext;
+import static com.github.nnbros.rtp.storyteller.BotTestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
@@ -55,55 +54,57 @@ public class RegistrationActionRegistrarTest extends StorytellerTest {
 	@Test
 	public void executeCharGenderPipeline() {
 		ActionPipeline actionPipeline = actionPipelines.get(CharacterAction.CREATE_GENDER.getActionName());
-		ActionContext testActionContext = createTestActionContext();
 		CharacterRequest characterRequest = new CharacterRequest(TEST_USER_ID);
-		when(registrationService.addGender(testActionContext)).thenReturn(characterRequest);
+		ActionResult<CharacterRequest> testActionResult = createTestActionResultWithValue(characterRequest);
+		ActionContext testActionContext = testActionResult.getActionContext();
+		when(registrationService.addGender(testActionContext)).thenReturn(testActionResult);
 
 		actionPipeline.execute(testActionContext);
 
 		verify(registrationService, times(1)).addGender(testActionContext);
-		verify(telegramClient, times(1)).requestName(characterRequest);
+		verify(telegramClient, times(1)).requestName(testActionResult);
 	}
 
 	@Test
 	public void executeValidCharNamePipeline() {
 		ActionPipeline actionPipeline = actionPipelines.get(CharacterAction.CREATE_NAME.getActionName());
-		ActionContext testActionContext = createTestActionContext();
 		CharacterRequest characterRequest = new CharacterRequest(TEST_USER_ID);
-		ActionResult<CharacterRequest> actionResult = new ActionResult<>(characterRequest, true);
-		when(registrationService.addName(testActionContext)).thenReturn(actionResult);
+		ActionResult<CharacterRequest> testActionResult = createTestActionResultWithValue(characterRequest);
+		ActionContext testActionContext = testActionResult.getActionContext();
+		when(registrationService.addName(testActionContext)).thenReturn(testActionResult);
 
 		actionPipeline.execute(testActionContext);
 
 		verify(registrationService, times(1)).addName(testActionContext);
-		verify(telegramClient, times(1)).sendClassOptions(characterRequest);
+		verify(telegramClient, times(1)).sendClassOptions(testActionResult);
 	}
 
 	@Test
 	public void executeIllegalCharNamePipeline() {
 		ActionPipeline actionPipeline = actionPipelines.get(CharacterAction.CREATE_NAME.getActionName());
-		ActionContext testActionContext = createTestActionContext();
 		CharacterRequest characterRequest = new CharacterRequest(TEST_USER_ID);
-		ActionResult<CharacterRequest> actionResult = new ActionResult<>(characterRequest, false);
-		when(registrationService.addName(testActionContext)).thenReturn(actionResult);
+		ActionResult<CharacterRequest> testActionResult = createTestActionResultWithValue(characterRequest, false);
+		ActionContext testActionContext = testActionResult.getActionContext();
+		when(registrationService.addName(testActionContext)).thenReturn(testActionResult);
 
 		actionPipeline.execute(testActionContext);
 
 		verify(registrationService, times(1)).addName(testActionContext);
-		verify(telegramClient, times(1)).resendCharacterNameRequest(characterRequest);
+		verify(telegramClient, times(1)).resendCharacterNameRequest(testActionResult);
 	}
 
 	@Test
 	public void executeClassSelectionPipeline() {
 		ActionPipeline actionPipeline = actionPipelines.get(CharacterAction.CLASS_SELECTION.getActionName());
-		ActionContext testActionContext = createTestActionContext();
 		CharacterRequest characterRequest = new CharacterRequest(TEST_USER_ID);
-		when(registrationService.addClass(testActionContext)).thenReturn(new ActionResult<>(characterRequest, true));
+		ActionResult<CharacterRequest> testActionResult = createTestActionResultWithValue(characterRequest);
+		ActionContext testActionContext = testActionResult.getActionContext();
+		when(registrationService.addClass(testActionContext)).thenReturn(testActionResult);
 
 		actionPipeline.execute(testActionContext);
 
 		verify(registrationService, times(1)).addClass(testActionContext);
-		verify(telegramClient, times(1)).sendClassDescription(characterRequest);
+		verify(telegramClient, times(1)).sendClassDescription(testActionResult);
 	}
 
 	@Test
@@ -121,14 +122,15 @@ public class RegistrationActionRegistrarTest extends StorytellerTest {
 	@Test
 	public void executeClassConfirmationPipeline() {
 		ActionPipeline actionPipeline = actionPipelines.get(CharacterAction.CLASS_CONFIRMATION.getActionName());
-		ActionContext testActionContext = createTestActionContext();
 		CharacterRequest characterRequest = new CharacterRequest(TEST_USER_ID);
-		when(registrationService.getCharacterRequest(testActionContext)).thenReturn(characterRequest);
+		ActionResult<CharacterRequest> testActionResult = createTestActionResultWithValue(characterRequest);
+		ActionContext testActionContext = testActionResult.getActionContext();
+		when(registrationService.getCharacterRequest(testActionContext)).thenReturn(testActionResult);
 
 		actionPipeline.execute(testActionContext);
 
 		verify(registrationService, times(1)).getCharacterRequest(testActionContext);
-		verify(telegramClient, times(1)).sendRegistrationRequest(characterRequest);
+		verify(telegramClient, times(1)).sendRegistrationRequest(testActionResult);
 	}
 
 	@Test

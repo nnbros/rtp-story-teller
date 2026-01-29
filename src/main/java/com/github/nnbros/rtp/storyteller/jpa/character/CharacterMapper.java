@@ -1,8 +1,7 @@
 package com.github.nnbros.rtp.storyteller.jpa.character;
 
-import com.github.nnbros.rtp.storyteller.character.Character;
-import com.github.nnbros.rtp.storyteller.character.DetailedCharacterView;
-import com.github.nnbros.rtp.storyteller.character.DetailedCharacterWithSkillsView;
+import com.github.nnbros.rtp.common.api.dto.character.DetailedCharacterView;
+import com.github.nnbros.rtp.common.api.dto.character.DetailedCharacterWithSkillsView;
 import org.mapstruct.Mapper;
 
 @Mapper

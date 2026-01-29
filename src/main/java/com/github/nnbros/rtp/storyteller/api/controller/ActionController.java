@@ -1,7 +1,7 @@
 package com.github.nnbros.rtp.storyteller.api.controller;
 
+import com.github.nnbros.rtp.common.api.dto.error.ErrorResponse;
 import com.github.nnbros.rtp.storyteller.action.ActionService;
-import com.github.nnbros.rtp.storyteller.api.view.ErrorResponse;
 import com.github.nnbros.rtp.storyteller.exception.StoryTellerException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -37,7 +37,7 @@ public class ActionController {
 
 	private ResponseEntity<?> createErrorResponse(Exception e, HttpStatus status, String action) {
 		log.error("Failed to process the action [{}]", action, e);
-		ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), status, Instant.now());
+		ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), Instant.now());
 		return ResponseEntity.status(status.value()).body(errorResponse);
 	}
 }

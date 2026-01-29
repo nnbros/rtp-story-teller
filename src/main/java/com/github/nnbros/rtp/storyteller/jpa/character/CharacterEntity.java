@@ -1,6 +1,6 @@
 package com.github.nnbros.rtp.storyteller.jpa.character;
 
-import com.github.nnbros.rtp.storyteller.character.Gender;
+import com.github.nnbros.rtp.common.api.dto.character.Gender;
 import jakarta.persistence.*;
 import lombok.Data;
 

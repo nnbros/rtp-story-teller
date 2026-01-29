@@ -1,9 +1,9 @@
 package com.github.nnbros.rtp.storyteller.action.mainmenu;
 
+import com.github.nnbros.rtp.common.action.ActionContext;
+import com.github.nnbros.rtp.common.action.ActionPipeline;
+import com.github.nnbros.rtp.common.action.ActionResult;
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
-import com.github.nnbros.rtp.storyteller.action.ActionContext;
-import com.github.nnbros.rtp.storyteller.action.ActionPipeline;
-import com.github.nnbros.rtp.storyteller.action.ActionResult;
 import com.github.nnbros.rtp.storyteller.character.CharacterService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import static com.github.nnbros.rtp.storyteller.BotTestUtils.createTestActionContext;
+import static com.github.nnbros.rtp.storyteller.BotTestUtils.createTestActionResult;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
@@ -81,22 +82,22 @@ public class MainMenuActionRegistrarTest extends StorytellerTest {
 	@Test
 	public void executeArmyPipelineWhenActiveArmyIsUpdated() {
 		ActionPipeline actionPipeline = actionPipelines.get(MainMenuAction.ARMY.getActionName());
+		ActionResult<?> testActionResult = createTestActionResult();
 		ActionContext testActionContext = createTestActionContext();
-		ActionResult<ActionContext> actionResult = new ActionResult<>(testActionContext, true);
-		when(characterProcessor.updateActiveArmy(testActionContext)).thenReturn(actionResult);
+		doReturn(testActionResult).when(characterProcessor).updateActiveArmy(testActionContext);
 
 		actionPipeline.execute(testActionContext);
 
 		verify(characterProcessor, times(1)).updateActiveArmy(testActionContext);
-		verify(telegramClient, times(1)).sendArmyMenu(testActionContext);
+		verify(telegramClient, times(1)).sendArmyMenu(testActionResult);
 	}
 
 	@Test
 	public void executeArmyPipelineWhenActiveArmyIsNotUpdated() {
 		ActionPipeline actionPipeline = actionPipelines.get(MainMenuAction.ARMY.getActionName());
-		ActionContext testActionContext = createTestActionContext();
-		ActionResult<ActionContext> actionResult = new ActionResult<>(testActionContext, false);
-		when(characterProcessor.updateActiveArmy(testActionContext)).thenReturn(actionResult);
+		ActionResult<?> testActionResult = createTestActionResult(false);
+		ActionContext testActionContext = testActionResult.getActionContext();
+		doReturn(testActionResult).when(characterProcessor).updateActiveArmy(testActionContext);
 
 		actionPipeline.execute(testActionContext);
 

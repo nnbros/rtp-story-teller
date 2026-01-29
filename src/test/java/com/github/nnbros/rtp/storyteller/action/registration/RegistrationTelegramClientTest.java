@@ -5,13 +5,17 @@ import com.github.guronas.telegram.bot.elements.exception.ElementNotFoundExcepti
 import com.github.guronas.telegram.bot.elements.parameter.InlineKeyboardButtonParameters;
 import com.github.guronas.telegram.bot.elements.parameter.Parameter;
 import com.github.guronas.telegram.bot.elements.parameter.Parameters;
+import com.github.nnbros.rtp.common.action.ActionContext;
+import com.github.nnbros.rtp.common.action.ActionResult;
+import com.github.nnbros.rtp.common.api.dto.character.Archetype;
+import com.github.nnbros.rtp.common.api.dto.character.Gender;
+import com.github.nnbros.rtp.common.api.dto.character.SkillType;
+import com.github.nnbros.rtp.common.telegram.ui.CharacterParameter;
+import com.github.nnbros.rtp.common.telegram.ui.DefaultParameter;
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
-import com.github.nnbros.rtp.storyteller.action.ActionContext;
-import com.github.nnbros.rtp.storyteller.character.CharacterParameter;
 import com.github.nnbros.rtp.storyteller.action.mainmenu.MainMenuTelegramClient;
 import com.github.nnbros.rtp.storyteller.character.*;
 import com.github.nnbros.rtp.storyteller.configuration.Localization;
-import com.github.nnbros.rtp.storyteller.telegram.ui.DefaultParameter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -24,10 +28,10 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.util.*;
 
+import static com.github.nnbros.rtp.common.telegram.AbstractTelegramClient.CALLBACK_DATA_TEMPLATE;
 import static com.github.nnbros.rtp.storyteller.BotTestUtils.*;
 import static com.github.nnbros.rtp.storyteller.action.registration.CharacterAction.CLASS_SELECTION;
 import static com.github.nnbros.rtp.storyteller.action.registration.RegistrationElement.*;
-import static com.github.nnbros.rtp.storyteller.telegram.AbstractTelegramClient.CALLBACK_DATA_TEMPLATE;
 import static org.mockito.Mockito.*;
 
 public class RegistrationTelegramClientTest extends StorytellerTest {
@@ -72,11 +76,13 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 	@Test
 	public void requestName() throws TelegramApiException, ElementNotFoundException {
 		CharacterRequest characterRequest = createTestCharacterRequest();
+		ActionResult<CharacterRequest> testActionResult = createTestActionResultWithValue(characterRequest);
+		ActionContext actionContext = testActionResult.getActionContext();
 		SendMessage mockMessage = mock(SendMessage.class);
-		Map<String, String> params = buildTestRegistrationParameters(characterRequest);
+		Map<String, String> params = buildTestRegistrationParameters(actionContext.messageId(), characterRequest);
 		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(createCharName.getGroupName(), createCharName.name(), params);
 
-		registrationTelegramClient.requestName(characterRequest);
+		registrationTelegramClient.requestName(testActionResult);
 
 		verify(telegramClient, times(1)).execute(mockMessage);
 	}
@@ -84,11 +90,13 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 	@Test
 	public void sendClassOptions() throws TelegramApiException, ElementNotFoundException {
 		CharacterRequest characterRequest = createTestCharacterRequest();
+		ActionResult<CharacterRequest> testActionResult = createTestActionResultWithValue(characterRequest);
+		ActionContext actionContext = testActionResult.getActionContext();
 		List<ClassDictionary> classes = List.of(TEST_CLASS_POJO_1, TEST_CLASS_POJO_2, TEST_CLASS_POJO_3);
 		when(classService.getAllClasses()).thenReturn(classes);
 		SendMessage mockMessage = mock(SendMessage.class);
 		Parameter classesDescription = Parameter.of(RegistrationParameter.CLASSES_DESCRIPTION, TEST_CLASSES_DESCRIPTION);
-		Map<String, String> params = buildTestRegistrationParameters(characterRequest, classesDescription);
+		Map<String, String> params = buildTestRegistrationParameters(actionContext.messageId(), characterRequest, classesDescription);
 
 		InlineKeyboardButtonParameters dynamicParams = new InlineKeyboardButtonParameters();
 		dynamicParams.add(TEST_CLASS_NAME_1, CALLBACK_DATA_TEMPLATE.formatted(CLASS_SELECTION.getActionName(), TEST_CLASS_1));
@@ -98,7 +106,7 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(charClassSelection.getGroupName(), charClassSelection.name(), params,
 				Map.of(RegistrationParameter.CLASSES.getKey(), dynamicParams));
 
-		registrationTelegramClient.sendClassOptions(characterRequest);
+		registrationTelegramClient.sendClassOptions(testActionResult);
 
 		verify(telegramClient, times(1)).execute(mockMessage);
 	}
@@ -107,6 +115,8 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 	public void sendClassDescription() throws TelegramApiException, ElementNotFoundException {
 		CharacterRequest characterRequest = createTestCharacterRequest();
 		characterRequest.setClassName(TEST_ACTIVE_CLASS_POJO_1.name());
+		ActionResult<CharacterRequest> testActionResult = createTestActionResultWithValue(characterRequest);
+		ActionContext actionContext = testActionResult.getActionContext();
 		List<ClassDictionary> classes = List.of(TEST_CLASS_POJO_1, TEST_CLASS_POJO_2, TEST_CLASS_POJO_3);
 		when(classService.getAllClasses()).thenReturn(classes);
 		when(classService.getClassIdByName(TEST_ACTIVE_CLASS_POJO_1.name())).thenReturn(TEST_CLASS_POJO_1.id());
@@ -118,7 +128,7 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 
 		SendMessage mockMessage = mock(SendMessage.class);
 		Parameter classDescription = Parameter.of(RegistrationParameter.SKILLS_DESCRIPTION, TEST_SKILLS_DESCRIPTION);
-		Map<String, String> params = buildTestRegistrationParameters(characterRequest, classDescription);
+		Map<String, String> params = buildTestRegistrationParameters(actionContext.messageId(), characterRequest, classDescription);
 
 		InlineKeyboardButtonParameters dynamicParams = new InlineKeyboardButtonParameters();
 		dynamicParams.add(TEST_CONFIRMATION_CLASS_PARAM, CALLBACK_DATA_TEMPLATE.formatted(CLASS_SELECTION.getActionName(), TEST_CLASS_1));
@@ -130,7 +140,7 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 		when(elementRegistry.buildElement(confirmationEmoji.getGroupName(), confirmationEmoji.name(), Collections.emptyMap(), String.class))
 				.thenReturn(TEST_CONFIRMATION_EMOJI);
 
-		registrationTelegramClient.sendClassDescription(characterRequest);
+		registrationTelegramClient.sendClassDescription(testActionResult);
 
 		verify(telegramClient, times(1)).execute(mockMessage);
 	}
@@ -138,11 +148,13 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 	@Test
 	public void sendRegistrationRequest() throws TelegramApiException, ElementNotFoundException {
 		CharacterRequest characterRequest = createTestCharacterRequest();
+		ActionResult<CharacterRequest> testActionResult = createTestActionResultWithValue(characterRequest);
+		ActionContext actionContext = testActionResult.getActionContext();
 		SendMessage mockMessage = mock(SendMessage.class);
-		Map<String, String> params = buildTestRegistrationParameters(characterRequest);
+		Map<String, String> params = buildTestRegistrationParameters(actionContext.messageId(), characterRequest);
 		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(charRegistration.getGroupName(), charRegistration.name(), params);
 
-		registrationTelegramClient.sendRegistrationRequest(characterRequest);
+		registrationTelegramClient.sendRegistrationRequest(testActionResult);
 
 		verify(telegramClient, times(1)).execute(mockMessage);
 	}
@@ -166,6 +178,7 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 	@Test
 	public void resendCharacterNameRequest() throws TelegramApiException, ElementNotFoundException {
 		CharacterRequest characterRequest = createTestCharacterRequest();
+		ActionResult<CharacterRequest> testActionResult = createTestActionResultWithValue(characterRequest);
 		SendMessage mockMessage = mock(SendMessage.class);
 		Map<String, String> params = Parameters.buildParameters(
 				Parameter.of(DefaultParameter.CHAT_ID, characterRequest.getUserId()),
@@ -173,15 +186,15 @@ public class RegistrationTelegramClientTest extends StorytellerTest {
 		);
 		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(invalidCharName.getGroupName(), invalidCharName.name(), params);
 
-		registrationTelegramClient.resendCharacterNameRequest(characterRequest);
+		registrationTelegramClient.resendCharacterNameRequest(testActionResult);
 
 		verify(telegramClient, times(1)).execute(mockMessage);
 	}
 
-	private Map<String, String> buildTestRegistrationParameters(CharacterRequest characterRequest, Parameter... additionalParams) {
+	private Map<String, String> buildTestRegistrationParameters(int lastMessageId, CharacterRequest characterRequest, Parameter... additionalParams) {
 		ArrayList<Parameter> params = new ArrayList<>();
 		params.add(Parameter.of(DefaultParameter.CHAT_ID, characterRequest.getUserId()));
-		params.add(Parameter.of(DefaultParameter.MESSAGE_ID, characterRequest.getLastMessageId()));
+		params.add(Parameter.of(DefaultParameter.MESSAGE_ID, lastMessageId));
 		params.add(Parameter.of(CharacterParameter.CHAR_GENDER, TEST_GENDER));
 		params.add(Parameter.of(CharacterParameter.CHAR_NAME, characterRequest.getName()));
 		params.add(Parameter.of(CharacterParameter.CHAR_CLASS, localization.getClasses().get(characterRequest.getClassName()).getName()));

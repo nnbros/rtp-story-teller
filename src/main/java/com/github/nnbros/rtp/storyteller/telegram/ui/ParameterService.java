@@ -2,8 +2,12 @@ package com.github.nnbros.rtp.storyteller.telegram.ui;
 
 import com.github.guronas.telegram.bot.elements.parameter.Parameter;
 import com.github.guronas.telegram.bot.elements.parameter.Parameters;
-import com.github.nnbros.rtp.storyteller.action.ActionContext;
-import com.github.nnbros.rtp.storyteller.character.*;
+import com.github.nnbros.rtp.common.action.ActionContext;
+import com.github.nnbros.rtp.common.api.dto.character.ActiveCharacterArmy;
+import com.github.nnbros.rtp.common.api.dto.character.ActiveCharacterClass;
+import com.github.nnbros.rtp.common.api.dto.character.DetailedCharacterView;
+import com.github.nnbros.rtp.common.telegram.ui.CharacterParameter;
+import com.github.nnbros.rtp.common.telegram.ui.DefaultParameter;
 import com.github.nnbros.rtp.storyteller.configuration.Localization;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

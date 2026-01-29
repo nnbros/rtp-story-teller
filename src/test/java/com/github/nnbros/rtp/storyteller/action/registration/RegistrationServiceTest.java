@@ -1,15 +1,15 @@
 package com.github.nnbros.rtp.storyteller.action.registration;
 
+import com.github.nnbros.rtp.common.action.ActionContext;
+import com.github.nnbros.rtp.common.action.ActionResult;
+import com.github.nnbros.rtp.common.api.dto.character.Gender;
+import com.github.nnbros.rtp.common.telegram.UpdateType;
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
-import com.github.nnbros.rtp.storyteller.action.ActionContext;
-import com.github.nnbros.rtp.storyteller.action.ActionResult;
-import com.github.nnbros.rtp.storyteller.character.Gender;
 import com.github.nnbros.rtp.storyteller.configuration.StoryTellerProperties;
 import com.github.nnbros.rtp.storyteller.exception.CharacterNotFoundException;
 import com.github.nnbros.rtp.storyteller.exception.StoryTellerRuntimeException;
 import com.github.nnbros.rtp.storyteller.character.CharacterService;
 import com.github.nnbros.rtp.storyteller.character.ClassService;
-import com.github.nnbros.rtp.storyteller.telegram.UpdateType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -48,7 +48,8 @@ public class RegistrationServiceTest extends StorytellerTest {
 
 		registrationService.createCharacter(testActionContext);
 
-		CharacterRequest characterRequest = registrationService.getCharacterRequest(testActionContext);
+		ActionResult<CharacterRequest> actionResult = registrationService.getCharacterRequest(testActionContext);
+		CharacterRequest characterRequest = actionResult.getValue();
 		assertNotNull(characterRequest);
 		assertEquals(TEST_USER_ID, characterRequest.getUserId());
 	}
@@ -74,10 +75,12 @@ public class RegistrationServiceTest extends StorytellerTest {
 				TEST_USER_ID, UpdateType.CALLBACK_QUERY, createTestEmptyUpdate(), TEST_MESSAGE_ID, gender);
 
 		registrationService.createCharacter(testActionContext);
-		CharacterRequest result = registrationService.addGender(testActionContext);
+		ActionResult<CharacterRequest> genderActionResult = registrationService.addGender(testActionContext);
+		CharacterRequest genderCharacterRequest = genderActionResult.getValue();
+		ActionResult<CharacterRequest> actionResult = registrationService.getCharacterRequest(testActionContext);
+		CharacterRequest characterRequest = actionResult.getValue();
 
-		CharacterRequest characterRequest = registrationService.getCharacterRequest(testActionContext);
-		assertEquals(result, characterRequest);
+		assertEquals(genderCharacterRequest, characterRequest);
 		assertNotNull(characterRequest);
 		assertEquals(TEST_USER_ID, characterRequest.getUserId());
 		assertEquals(expectedGender, characterRequest.getGender());
@@ -112,7 +115,7 @@ public class RegistrationServiceTest extends StorytellerTest {
 
 		assertNotNull(actionResult);
 		assertTrue(actionResult.isSuccessful());
-		CharacterRequest characterRequest = actionResult.value();
+		CharacterRequest characterRequest = actionResult.getValue();
 		assertNotNull(characterRequest);
 		assertEquals(TEST_USER_ID, characterRequest.getUserId());
 		assertEquals(name, characterRequest.getName());
@@ -139,7 +142,7 @@ public class RegistrationServiceTest extends StorytellerTest {
 
 		assertNotNull(actionResult);
 		assertFalse(actionResult.isSuccessful());
-		CharacterRequest characterRequest = actionResult.value();
+		CharacterRequest characterRequest = actionResult.getValue();
 		assertNotNull(characterRequest);
 		assertEquals(TEST_USER_ID, characterRequest.getUserId());
 	}
@@ -161,11 +164,12 @@ public class RegistrationServiceTest extends StorytellerTest {
 		when(classService.containsByName(TEST_CLASS)).thenReturn(true);
 
 		registrationService.createCharacter(testActionContext);
-		ActionResult<CharacterRequest> result = registrationService.addClass(testActionContext);
+		ActionResult<CharacterRequest> classActionResult = registrationService.addClass(testActionContext);
 
-		assertTrue(result.isSuccessful());
-		CharacterRequest characterRequest = registrationService.getCharacterRequest(testActionContext);
-		assertEquals(result.value(), characterRequest);
+		assertTrue(classActionResult.isSuccessful());
+		ActionResult<CharacterRequest> actionResult = registrationService.getCharacterRequest(testActionContext);
+		CharacterRequest characterRequest = actionResult.getValue();
+		assertEquals(classActionResult.getValue(), characterRequest);
 		assertNotNull(characterRequest);
 		assertEquals(TEST_USER_ID, characterRequest.getUserId());
 		assertEquals(TEST_CLASS, characterRequest.getClassName());
@@ -198,10 +202,11 @@ public class RegistrationServiceTest extends StorytellerTest {
 
 		registrationService.createCharacter(testActionContext);
 		registrationService.addClass(testActionContext);
-		ActionResult<CharacterRequest> result = registrationService.addClass(testActionContext);
+		ActionResult<CharacterRequest> classActionResult = registrationService.addClass(testActionContext);
 
-		assertFalse(result.isSuccessful());
-		CharacterRequest characterRequest = registrationService.getCharacterRequest(testActionContext);
+		assertFalse(classActionResult.isSuccessful());
+		ActionResult<CharacterRequest> actionResult = registrationService.getCharacterRequest(testActionContext);
+		CharacterRequest characterRequest = actionResult.getValue();
 		assertNotNull(characterRequest);
 		assertEquals(TEST_USER_ID, characterRequest.getUserId());
 		assertEquals(TEST_CLASS, characterRequest.getClassName());
@@ -215,7 +220,8 @@ public class RegistrationServiceTest extends StorytellerTest {
 		registrationService.createCharacter(testActionContext);
 		registrationService.register(testActionContext);
 
-		CharacterRequest characterRequest = registrationService.getCharacterRequest(testActionContext);
+		ActionResult<CharacterRequest> actionResult = registrationService.getCharacterRequest(testActionContext);
+		CharacterRequest characterRequest = actionResult.getValue();
 		assertNotNull(characterRequest);
 		verify(characterService, times(1)).register(characterRequest);
 	}

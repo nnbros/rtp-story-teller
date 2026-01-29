@@ -1,10 +1,9 @@
 package com.github.nnbros.rtp.storyteller.api.controller;
 
-import com.github.nnbros.rtp.storyteller.api.view.ErrorResponse;
+import com.github.nnbros.rtp.common.api.dto.error.ErrorResponse;
 import com.github.nnbros.rtp.storyteller.action.registration.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +29,7 @@ public class CacheController {
 			return ResponseEntity.noContent().build();
 		} catch (Exception e) {
 			log.error("Failed to clear character registration cache, for users: {}", userIds, e);
-			ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, Instant.now());
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), Instant.now());
 			return ResponseEntity.internalServerError().body(errorResponse);
 		}
 	}

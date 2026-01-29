@@ -1,5 +1,6 @@
 package com.github.nnbros.rtp.storyteller.character;
 
+import com.github.nnbros.rtp.common.api.dto.character.SkillType;
 import com.github.nnbros.rtp.storyteller.jpa.character.CharacterArmySkillEntity;
 import com.github.nnbros.rtp.storyteller.jpa.character.CharacterClassSkillEntity;
 import com.github.nnbros.rtp.storyteller.jpa.character.SkillDictionaryMapper;
@@ -16,8 +17,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.github.nnbros.rtp.storyteller.character.SkillType.BASIC_ARMY;
-import static com.github.nnbros.rtp.storyteller.character.SkillType.BASIC_CHARACTER;
+import static com.github.nnbros.rtp.common.api.dto.character.SkillType.BASIC_ARMY;
+import static com.github.nnbros.rtp.common.api.dto.character.SkillType.BASIC_CHARACTER;
 
 @Service
 @RequiredArgsConstructor

@@ -2,16 +2,17 @@ package com.github.nnbros.rtp.storyteller;
 
 import com.github.guronas.telegram.bot.elements.parameter.Parameter;
 import com.github.guronas.telegram.bot.elements.parameter.Parameters;
-import com.github.nnbros.rtp.storyteller.action.ActionContext;
+import com.github.nnbros.rtp.common.action.ActionContext;
+import com.github.nnbros.rtp.common.action.ActionResult;
+import com.github.nnbros.rtp.common.api.dto.character.*;
+import com.github.nnbros.rtp.common.telegram.UpdateType;
+import com.github.nnbros.rtp.common.telegram.ui.CharacterParameter;
+import com.github.nnbros.rtp.common.telegram.ui.DefaultParameter;
 import com.github.nnbros.rtp.storyteller.action.registration.CharacterRequest;
 import com.github.nnbros.rtp.storyteller.character.*;
 import com.github.nnbros.rtp.storyteller.configuration.Localization;
-import com.github.nnbros.rtp.storyteller.telegram.UpdateType;
-import com.github.nnbros.rtp.storyteller.telegram.ui.DefaultParameter;
-import com.github.nnbros.rtp.storyteller.character.CharacterParameter;
 import com.github.nnbros.rtp.storyteller.jpa.character.SkillDictionaryEntity;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.chat.Chat;
@@ -22,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.nnbros.rtp.storyteller.character.Archetype.*;
+import static com.github.nnbros.rtp.common.api.dto.character.Archetype.*;
 
 public class BotTestUtils {
 	public static final String TEST_ACTION_NAME = "test_action";
@@ -32,7 +33,6 @@ public class BotTestUtils {
 	public static final long TEST_USER_ID = 123L;
 	public static final int TEST_MESSAGE_ID = 12345;
 	public static final String CHAT_PRIVATE_TYPE = "private";
-	public static final String COMMAND_MESSAGE_TYPE = "bot_command";
 	public static final String TEST_CALLBACK_DATA = "test_data";
 	public static final String TEST_CHARACTER_NAME = "testCharacterName";
 
@@ -52,9 +52,9 @@ public class BotTestUtils {
 	public static final ClassDictionary TEST_CLASS_POJO_1 = new ClassDictionary(1, SWORDSMAN, TEST_CLASS_1, 1, 1, 1, 0.25f);
 	public static final ClassDictionary TEST_CLASS_POJO_2 = new ClassDictionary(2, NEUTRAL, TEST_CLASS_2, 2, 2, 2, 0.25f);
 	public static final ClassDictionary TEST_CLASS_POJO_3 = new ClassDictionary(3, SPEARMAN, TEST_CLASS_3, 3, 3, 3, 0.25f);
-	public static final ActiveCharacterClass TEST_ACTIVE_CLASS_POJO_1 = new ActiveCharacterClass(1, 1, 1, SWORDSMAN, TEST_CLASS_1, 1, 1, 1, 0.25f, 0L);
-	public static final ActiveCharacterClass TEST_ACTIVE_CLASS_POJO_2 = new ActiveCharacterClass(2, 2, 2, NEUTRAL, TEST_CLASS_2, 2, 2, 2, 0.25f, 0L);
-	public static final ActiveCharacterClass TEST_ACTIVE_CLASS_POJO_3 = new ActiveCharacterClass(3, 3, 3, SPEARMAN, TEST_CLASS_3, 3, 3, 3, 0.25f, 0L);
+	public static final ActiveCharacterClass TEST_ACTIVE_CLASS_POJO_1 = new ActiveCharacterClass(SWORDSMAN, TEST_CLASS_1, 1, 1, 1, 0.25f, 0L);
+	public static final ActiveCharacterClass TEST_ACTIVE_CLASS_POJO_2 = new ActiveCharacterClass(NEUTRAL, TEST_CLASS_2, 2, 2, 2, 0.25f, 0L);
+	public static final ActiveCharacterClass TEST_ACTIVE_CLASS_POJO_3 = new ActiveCharacterClass(SPEARMAN, TEST_CLASS_3, 3, 3, 3, 0.25f, 0L);
 
 	public static final String TEST_SKILL_1 = "testSkill1";
 	public static final String TEST_SKILL_2 = "testSkill2";
@@ -78,9 +78,9 @@ public class BotTestUtils {
 	public static final ArmyDictionary TEST_ARMY_POJO_1 = new ArmyDictionary(1, TEST_ARMY_1, SWORDSMAN, 1, 1, 1, 1, 0.25f);
 	public static final ArmyDictionary TEST_ARMY_POJO_2 = new ArmyDictionary(2, TEST_ARMY_2, CAVALRY, 2, 2, 2, 2, 0.25f);
 	public static final ArmyDictionary TEST_ARMY_POJO_3 = new ArmyDictionary(3, TEST_ARMY_3, SPEARMAN, 3, 3, 3, 3, 0.25f);
-	public static final ActiveCharacterArmy TEST_ACTIVE_ARMY_POJO_1 = new ActiveCharacterArmy(1, 1, 1, TEST_ARMY_1, SWORDSMAN, 1, 1, 1, 1, 0.25f, 1, 1);
-	public static final ActiveCharacterArmy TEST_ACTIVE_ARMY_POJO_2 = new ActiveCharacterArmy(2, 1, 1, TEST_ARMY_2, CAVALRY, 2, 2, 2, 2, 0.25f, 1, 1);
-	public static final ActiveCharacterArmy TEST_ACTIVE_ARMY_POJO_3 = new ActiveCharacterArmy(3, 1, 1, TEST_ARMY_3, SPEARMAN, 3, 3, 3, 3, 0.25f, 1, 1);
+	public static final ActiveCharacterArmy TEST_ACTIVE_ARMY_POJO_1 = new ActiveCharacterArmy(TEST_ARMY_1, SWORDSMAN, 1, 1, 1, 1, 0.25f, 1, 1);
+	public static final ActiveCharacterArmy TEST_ACTIVE_ARMY_POJO_2 = new ActiveCharacterArmy(TEST_ARMY_2, CAVALRY, 2, 2, 2, 2, 0.25f, 1, 1);
+	public static final ActiveCharacterArmy TEST_ACTIVE_ARMY_POJO_3 = new ActiveCharacterArmy(TEST_ARMY_3, SPEARMAN, 3, 3, 3, 3, 0.25f, 1, 1);
 
 	public static final String TEST_CONFIRMATION_EMOJI = ":)";
 	public static final String TEST_CONFIRMATION_CLASS_PARAM = TEST_CONFIRMATION_EMOJI + TEST_CLASS_NAME_1;
@@ -112,17 +112,6 @@ public class BotTestUtils {
 				.build();
 	}
 
-	public static Message createTestCommandMessage(String text) {
-		MessageEntity messageEntity = MessageEntity.builder()
-				.length(1)
-				.offset(0)
-				.type(COMMAND_MESSAGE_TYPE)
-				.build();
-		Message message = createTestMessage(text);
-		message.setEntities(List.of(messageEntity));
-		return message;
-	}
-
 	public static CallbackQuery createTestCallbackQuery(String data) {
 		CallbackQuery callbackQuery = new CallbackQuery();
 		callbackQuery.setFrom(createTestUser());
@@ -150,17 +139,6 @@ public class BotTestUtils {
 		return update;
 	}
 
-	public static Update createTestEditedMessageUpdate() {
-		return createTestEditedMessageUpdate(createTestMessage());
-	}
-
-	public static Update createTestEditedMessageUpdate(Message message) {
-		Update update = new Update();
-		update.setEditedMessage(message);
-		update.setUpdateId(TEST_UPDATE_ID);
-		return update;
-	}
-
 	public static Update createTestCallbackQueryUpdate() {
 		return createTestCallbackQueryUpdate(TEST_CALLBACK_DATA);
 	}
@@ -170,6 +148,27 @@ public class BotTestUtils {
 		update.setCallbackQuery(createTestCallbackQuery(data));
 		update.setUpdateId(TEST_UPDATE_ID);
 		return update;
+	}
+
+	public static <T> ActionResult<T> createTestActionResultWithValue(T value) {
+		return new ActionResult<>(createTestActionContext(), value);
+	}
+
+	public static <T> ActionResult<T> createTestActionResultWithValue(T value, boolean isSuccessful) {
+		return new ActionResult<>(createTestActionContext(), isSuccessful, value);
+	}
+
+	public static ActionResult<?> createTestActionResult() {
+		return new ActionResult<>(createTestActionContext());
+	}
+
+	public static ActionResult<?> createTestActionResult(boolean isSuccessful) {
+		return new ActionResult<>(createTestActionContext(), isSuccessful);
+	}
+
+	public static ActionResult<?> createTestActionResult(String data) {
+		ActionContext actionContext = createTestActionContext(data);
+		return new ActionResult<>(actionContext);
 	}
 
 	public static ActionContext createTestActionContext() {
@@ -185,7 +184,6 @@ public class BotTestUtils {
 		characterRequest.setName(TEST_CHARACTER_NAME);
 		characterRequest.setGender(Gender.MALE);
 		characterRequest.setClassName(TEST_CLASS_1);
-		characterRequest.setLastMessageId(TEST_MESSAGE_ID);
 		return characterRequest;
 	}
 

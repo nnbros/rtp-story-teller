@@ -5,12 +5,14 @@ import com.github.guronas.telegram.bot.elements.exception.ElementNotFoundExcepti
 import com.github.guronas.telegram.bot.elements.parameter.InlineKeyboardButtonParameters;
 import com.github.guronas.telegram.bot.elements.parameter.Parameter;
 import com.github.guronas.telegram.bot.elements.parameter.Parameters;
-import com.github.nnbros.rtp.storyteller.BotTestUtils;
+import com.github.nnbros.rtp.common.action.ActionContext;
+import com.github.nnbros.rtp.common.action.ActionResult;
+import com.github.nnbros.rtp.common.api.dto.character.DetailedCharacterView;
+import com.github.nnbros.rtp.common.telegram.ui.CharacterParameter;
+import com.github.nnbros.rtp.common.telegram.ui.DefaultParameter;
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
-import com.github.nnbros.rtp.storyteller.action.ActionContext;
 import com.github.nnbros.rtp.storyteller.character.*;
 import com.github.nnbros.rtp.storyteller.configuration.Localization;
-import com.github.nnbros.rtp.storyteller.telegram.ui.DefaultParameter;
 import com.github.nnbros.rtp.storyteller.telegram.ui.ParameterService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,10 +30,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.nnbros.rtp.common.telegram.AbstractTelegramClient.CALLBACK_DATA_TEMPLATE;
 import static com.github.nnbros.rtp.storyteller.BotTestUtils.*;
 import static com.github.nnbros.rtp.storyteller.action.mainmenu.MainMenuAction.ARMY;
 import static com.github.nnbros.rtp.storyteller.action.registration.RegistrationElement.confirmationEmoji;
-import static com.github.nnbros.rtp.storyteller.telegram.AbstractTelegramClient.CALLBACK_DATA_TEMPLATE;
 import static org.mockito.Mockito.*;
 
 public class MainMenuTelegramClientTest extends StorytellerTest {
@@ -88,7 +90,8 @@ public class MainMenuTelegramClientTest extends StorytellerTest {
 	@NullSource
 	@ValueSource(strings = TEST_ARMY_1)
 	public void sendCharacterClassMenu(String data) throws TelegramApiException, ElementNotFoundException {
-		ActionContext testActionContext = BotTestUtils.createTestActionContext(data);
+		ActionResult<?> testActionResult = createTestActionResult(data);
+		ActionContext testActionContext = testActionResult.getActionContext();
 		when(characterService.getDetailedCharacterViewByUserId(TEST_USER_ID)).thenReturn(createTestDetailedCharacterView());
 		List<ArmyDictionary> armies = List.of(TEST_ARMY_POJO_1, TEST_ARMY_POJO_2, TEST_ARMY_POJO_3);
 		when(armyService.getAllArmies()).thenReturn(armies);
@@ -108,7 +111,7 @@ public class MainMenuTelegramClientTest extends StorytellerTest {
 				params,
 				Map.of(MainMenuParameter.ARMIES.getKey(), dynamicParams));
 
-		mainMenuTelegramClient.sendArmyMenu(testActionContext);
+		mainMenuTelegramClient.sendArmyMenu(testActionResult);
 
 		verify(telegramClient, times(1)).execute(mockMessage);
 	}

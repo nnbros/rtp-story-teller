@@ -21,7 +21,7 @@ spring:
     autoconfigure.exclude:
     - org.springframework.cloud.openfeign.FeignAutoConfiguration
 
-elements.working-directory: "classpath:/config/ui/test"
+telegram.elements.working-directory: "classpath:/config/ui/test"
 
 storyteller:
     action-processor-thread-pool:

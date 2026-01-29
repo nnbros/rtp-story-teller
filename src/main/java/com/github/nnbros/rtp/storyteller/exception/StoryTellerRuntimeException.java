@@ -1,15 +1,17 @@
 package com.github.nnbros.rtp.storyteller.exception;
 
-public class StoryTellerRuntimeException extends RuntimeException {
+import com.github.nnbros.rtp.common.exception.RtpRuntimeException;
+
+public class StoryTellerRuntimeException extends RtpRuntimeException {
 	public StoryTellerRuntimeException() {
 	}
 
 	public StoryTellerRuntimeException(String message, Object... params) {
-		super(message.formatted(params));
+		super(message, params);
 	}
 
 	public StoryTellerRuntimeException(String message, Throwable cause, Object... params) {
-		super(message.formatted(params), cause);
+		super(message, cause, params);
 	}
 
 	public StoryTellerRuntimeException(Throwable cause) {

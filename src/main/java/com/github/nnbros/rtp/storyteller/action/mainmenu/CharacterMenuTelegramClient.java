@@ -2,11 +2,12 @@ package com.github.nnbros.rtp.storyteller.action.mainmenu;
 
 import com.github.guronas.telegram.bot.elements.TelegramElementRegistry;
 import com.github.guronas.telegram.bot.elements.parameter.InlineKeyboardButtonParameters;
-import com.github.nnbros.rtp.storyteller.action.ActionContext;
+import com.github.nnbros.rtp.common.action.ActionContext;
+import com.github.nnbros.rtp.common.action.ActionResult;
+import com.github.nnbros.rtp.common.api.dto.character.DetailedCharacterView;
+import com.github.nnbros.rtp.common.telegram.AbstractTelegramClient;
 import com.github.nnbros.rtp.storyteller.character.*;
-import com.github.nnbros.rtp.storyteller.character.Character;
 import com.github.nnbros.rtp.storyteller.configuration.Localization;
-import com.github.nnbros.rtp.storyteller.telegram.AbstractTelegramClient;
 import com.github.nnbros.rtp.storyteller.telegram.ui.ParameterService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,10 +47,11 @@ public class CharacterMenuTelegramClient extends AbstractTelegramClient {
 		log.warn("Deck builder has not been implemented yet");
 	}
 
-	public void sendCharacterClassMenu(ActionContext actionContext) {
+	public void sendCharacterClassMenu(ActionResult<?> actionResult) {
+		ActionContext actionContext = actionResult.getActionContext();
 		log.debug("Sending character class menu to the user [{}]...", actionContext.userId());
 		String activeClass;
-		String data = actionContext.data();
+		String data = actionContext.actionData();
 		DetailedCharacterView character = characterService.getDetailedCharacterViewByUserId(actionContext.userId());
 		if (Objects.nonNull(data)) {
 			activeClass = data;

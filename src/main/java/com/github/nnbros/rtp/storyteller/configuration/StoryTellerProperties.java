@@ -17,8 +17,6 @@ public class StoryTellerProperties {
 	@NotNull
 	private Api api = new Api();
 	@NotNull
-	private RTPBot rtpBot = new RTPBot();
-	@NotNull
 	private ThreadPool actionProcessorThreadPool = new ThreadPool();
 	@NotBlank
 	private String characterNamePattern = "^[A-Za-zА-Яа-я0-9_]{4,32}$";
@@ -46,12 +44,5 @@ public class StoryTellerProperties {
 		private String actionsEndpointPrefix = "/actions";
 		@URL
 		private String cacheEndpointPrefix = "/cache";
-	}
-
-	@Setter
-	@Getter
-	public static class RTPBot {
-		@NotBlank
-		private String token;
 	}
 }

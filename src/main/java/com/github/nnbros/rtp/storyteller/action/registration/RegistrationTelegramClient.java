@@ -4,13 +4,14 @@ import com.github.guronas.telegram.bot.elements.TelegramElementRegistry;
 import com.github.guronas.telegram.bot.elements.parameter.InlineKeyboardButtonParameters;
 import com.github.guronas.telegram.bot.elements.parameter.Parameter;
 import com.github.guronas.telegram.bot.elements.parameter.Parameters;
-import com.github.nnbros.rtp.storyteller.action.ActionContext;
-import com.github.nnbros.rtp.storyteller.character.CharacterParameter;
+import com.github.nnbros.rtp.common.action.ActionContext;
+import com.github.nnbros.rtp.common.action.ActionResult;
+import com.github.nnbros.rtp.common.telegram.AbstractTelegramClient;
+import com.github.nnbros.rtp.common.telegram.ui.CharacterParameter;
+import com.github.nnbros.rtp.common.telegram.ui.DefaultParameter;
 import com.github.nnbros.rtp.storyteller.action.mainmenu.MainMenuTelegramClient;
 import com.github.nnbros.rtp.storyteller.character.*;
 import com.github.nnbros.rtp.storyteller.configuration.Localization;
-import com.github.nnbros.rtp.storyteller.telegram.AbstractTelegramClient;
-import com.github.nnbros.rtp.storyteller.telegram.ui.DefaultParameter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethod;
@@ -50,15 +51,19 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 		log.debug("Character gender request has been sent successfully");
 	}
 
-	public void requestName(CharacterRequest characterRequest) {
+	public void requestName(ActionResult<CharacterRequest> actionResult) {
+		CharacterRequest characterRequest = actionResult.getValue();
+		Objects.requireNonNull(characterRequest);
 		log.debug("Sending character name request to the user [{}]...", characterRequest.getUserId());
-		Map<String, String> parameters = buildRegistrationParameters(characterRequest);
+		Map<String, String> parameters = buildRegistrationParameters(actionResult.getActionContext().messageId(), characterRequest);
 		BotApiMethod<?> nameMessage = buildBotApiMethod(createCharName, parameters);
 		execute(nameMessage);
 		log.debug("Character name request has been sent successfully");
 	}
 
-	public void sendClassOptions(CharacterRequest characterRequest) {
+	public void sendClassOptions(ActionResult<CharacterRequest> actionResult) {
+		CharacterRequest characterRequest = actionResult.getValue();
+		Objects.requireNonNull(characterRequest);
 		log.debug("Sending character class options to the user [{}]...", characterRequest.getUserId());
 		Collection<ClassDictionary> classes = classService.getAllClasses();
 		StringBuilder classesDescription = new StringBuilder();
@@ -68,7 +73,8 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 				.forEach(className -> addClassParameters(className, dynamicParameters, classesDescription));
 
 		Parameter classesDescriptionParameter = Parameter.of(RegistrationParameter.CLASSES_DESCRIPTION, classesDescription);
-		Map<String, String> parameters = buildRegistrationParameters(characterRequest, classesDescriptionParameter);
+		ActionContext actionContext = actionResult.getActionContext();
+		Map<String, String> parameters = buildRegistrationParameters(actionContext.messageId(), characterRequest, classesDescriptionParameter);
 
 		BotApiMethod<?> classOptionsMessage = buildBotApiMethod(charClassSelection,
 				parameters,
@@ -77,7 +83,9 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 		log.debug("Class options have been sent successfully");
 	}
 
-	public void sendClassDescription(CharacterRequest characterRequest) {
+	public void sendClassDescription(ActionResult<CharacterRequest> actionResult) {
+		CharacterRequest characterRequest = actionResult.getValue();
+		Objects.requireNonNull(characterRequest);
 		log.debug("Sending character class description to the user [{}]...", characterRequest.getUserId());
 		String selectedClass = characterRequest.getClassName();
 		String confirmationEmojiText = buildText(confirmationEmoji);
@@ -96,7 +104,8 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 				.map(skill -> localization.getSkills().get(skill))
 				.forEach(skill -> classDescriptionsText.append(DESCRIPTION_TEMPLATE.formatted(skill.getName(), skill.getDescription())));
 		Parameter classesDescriptionParameter = Parameter.of(RegistrationParameter.SKILLS_DESCRIPTION, classDescriptionsText);
-		Map<String, String> parameters = buildRegistrationParameters(characterRequest, classesDescriptionParameter);
+		ActionContext actionContext = actionResult.getActionContext();
+		Map<String, String> parameters = buildRegistrationParameters(actionContext.messageId(), characterRequest, classesDescriptionParameter);
 
 		BotApiMethod<?> classDescriptionMessage = buildBotApiMethod(REGISTRATION_GROUP_NAME,
 				charClassConfirmation.name(),
@@ -106,9 +115,11 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 		log.debug("Character class description has been sent successfully");
 	}
 
-	public void sendRegistrationRequest(CharacterRequest characterRequest) {
+	public void sendRegistrationRequest(ActionResult<CharacterRequest> actionResult) {
+		CharacterRequest characterRequest = actionResult.getValue();
+		Objects.requireNonNull(characterRequest);
 		log.debug("Sending registration request to the user [{}]...", characterRequest.getUserId());
-		Map<String, String> parameters = buildRegistrationParameters(characterRequest);
+		Map<String, String> parameters = buildRegistrationParameters(actionResult.getActionContext().messageId(), characterRequest);
 		BotApiMethod<?> registrationRequestMessage = buildBotApiMethod(charRegistration, parameters);
 		execute(registrationRequestMessage);
 		log.debug("Character registration request has been sent successfully");
@@ -126,7 +137,9 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 		log.debug("Character registration confirmation message has been sent successfully");
 	}
 
-	public void resendCharacterNameRequest(CharacterRequest characterRequest) {
+	public void resendCharacterNameRequest(ActionResult<CharacterRequest> actionResult) {
+		CharacterRequest characterRequest = actionResult.getValue();
+		Objects.requireNonNull(characterRequest);
 		log.debug("Resending character name request to user [{}] due to invalid name received.", characterRequest.getUserId());
 		String gender = buildGender(characterRequest);
 		Map<String, String> parameters = Parameters.buildParameters(
@@ -139,10 +152,10 @@ public class RegistrationTelegramClient extends AbstractTelegramClient {
 		log.debug("Character name request for invalid name sent successfully.");
 	}
 
-	private Map<String, String> buildRegistrationParameters(CharacterRequest characterRequest, Parameter... additionalParams) {
+	private Map<String, String> buildRegistrationParameters(Integer lastMessageId, CharacterRequest characterRequest, Parameter... additionalParams) {
 		List<Parameter> parameters = new ArrayList<>();
 		parameters.add(Parameter.of(DefaultParameter.CHAT_ID, characterRequest.getUserId()));
-		parameters.add(Parameter.of(DefaultParameter.MESSAGE_ID, characterRequest.getLastMessageId()));
+		parameters.add(Parameter.of(DefaultParameter.MESSAGE_ID, lastMessageId));
 		if (Objects.nonNull(characterRequest.getGender())) {
 			parameters.add(Parameter.of(CharacterParameter.CHAR_GENDER, buildGender(characterRequest)));
 		}

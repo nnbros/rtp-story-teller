@@ -1,9 +1,9 @@
 package com.github.nnbros.rtp.storyteller.action.mainmenu;
 
+import com.github.nnbros.rtp.common.action.ActionContext;
+import com.github.nnbros.rtp.common.action.ActionPipeline;
+import com.github.nnbros.rtp.common.action.ActionResult;
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
-import com.github.nnbros.rtp.storyteller.action.ActionContext;
-import com.github.nnbros.rtp.storyteller.action.ActionPipeline;
-import com.github.nnbros.rtp.storyteller.action.ActionResult;
 import com.github.nnbros.rtp.storyteller.character.CharacterService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ public class CharacterMenuActionRegistrarTest extends StorytellerTest {
 	private CharacterService characterService;
 
 	@Mock
-    CharacterProcessor characterProcessor;
+	CharacterProcessor characterProcessor;
 
 	@Mock
 	private CharacterMenuTelegramClient telegramClient;
@@ -62,13 +62,13 @@ public class CharacterMenuActionRegistrarTest extends StorytellerTest {
 	public void executeCharacterClassPipelineWhenActiveClassIsUpdated() {
 		ActionPipeline actionPipeline = actionPipelines.get(CharacterMenuAction.CLASS.getActionName());
 		ActionContext testActionContext = createTestActionContext();
-		ActionResult<ActionContext> actionResult = new ActionResult<>(testActionContext, true);
-		when(characterProcessor.updateActiveClass(testActionContext)).thenReturn(actionResult);
+		ActionResult<?> actionResult = new ActionResult<>(testActionContext, true);
+		doReturn(actionResult).when(characterProcessor).updateActiveClass(testActionContext);
 
 		actionPipeline.execute(testActionContext);
 
 		verify(characterProcessor, times(1)).updateActiveClass(testActionContext);
-		verify(telegramClient, times(1)).sendCharacterClassMenu(testActionContext);
+		verify(telegramClient, times(1)).sendCharacterClassMenu(actionResult);
 	}
 
 	@Test
@@ -76,7 +76,7 @@ public class CharacterMenuActionRegistrarTest extends StorytellerTest {
 		ActionPipeline actionPipeline = actionPipelines.get(CharacterMenuAction.CLASS.getActionName());
 		ActionContext testActionContext = createTestActionContext();
 		ActionResult<ActionContext> actionResult = new ActionResult<>(testActionContext, false);
-		when(characterProcessor.updateActiveClass(testActionContext)).thenReturn(actionResult);
+		doReturn(actionResult).when(characterProcessor).updateActiveClass(testActionContext);
 
 		actionPipeline.execute(testActionContext);
 
