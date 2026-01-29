@@ -1,5 +1,7 @@
 package com.github.nnbros.rtp.storyteller.character;
 
+import com.github.nnbros.rtp.common.api.dto.character.Archetype;
+import com.github.nnbros.rtp.common.api.dto.character.SkillType;
 import com.github.nnbros.rtp.storyteller.BotTestUtils;
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
 import com.github.nnbros.rtp.storyteller.jpa.character.CharacterArmySkillEntity;
@@ -20,8 +22,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.github.nnbros.rtp.common.api.dto.character.SkillType.*;
 import static com.github.nnbros.rtp.storyteller.BotTestUtils.*;
-import static com.github.nnbros.rtp.storyteller.character.SkillType.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyCollection;

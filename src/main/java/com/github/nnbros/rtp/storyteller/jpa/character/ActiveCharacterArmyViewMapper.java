@@ -1,6 +1,6 @@
 package com.github.nnbros.rtp.storyteller.jpa.character;
 
-import com.github.nnbros.rtp.storyteller.character.ActiveCharacterArmy;
+import com.github.nnbros.rtp.common.api.dto.character.ActiveCharacterArmy;
 import org.mapstruct.Mapper;
 
 @Mapper

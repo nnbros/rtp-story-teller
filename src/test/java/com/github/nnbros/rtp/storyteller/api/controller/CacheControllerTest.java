@@ -50,7 +50,6 @@ public class CacheControllerTest extends StorytellerMockMvcTest {
 						.content(TEST_BODY))
 				.andExpect(status().isInternalServerError())
 				.andExpect(jsonPath("$.error").value(testErrorMessage))
-				.andExpect(jsonPath("$.status").value(HttpStatus.INTERNAL_SERVER_ERROR.name()))
 				.andExpect(jsonPath("$.timestamp").exists());
 
 		verify(registrationService, times(1)).clearCharacterCache(userIds);

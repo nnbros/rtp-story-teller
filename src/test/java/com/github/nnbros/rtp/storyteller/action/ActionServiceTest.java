@@ -1,5 +1,8 @@
 package com.github.nnbros.rtp.storyteller.action;
 
+import com.github.nnbros.rtp.common.action.ActionContext;
+import com.github.nnbros.rtp.common.action.ActionErrorProcessor;
+import com.github.nnbros.rtp.common.telegram.UpdateType;
 import com.github.nnbros.rtp.storyteller.StorytellerSpringBootTest;
 import com.github.nnbros.rtp.storyteller.action.registration.CharacterAction;
 import com.github.nnbros.rtp.storyteller.exception.ActionNotFoundException;
@@ -8,7 +11,6 @@ import com.github.nnbros.rtp.storyteller.exception.StoryTellerRuntimeException;
 import com.github.nnbros.rtp.storyteller.gateway.GatewayClient;
 import com.github.nnbros.rtp.storyteller.action.registration.RegistrationService;
 import com.github.nnbros.rtp.storyteller.action.registration.RegistrationTelegramClient;
-import com.github.nnbros.rtp.storyteller.telegram.UpdateType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -53,27 +55,6 @@ public class ActionServiceTest extends StorytellerSpringBootTest {
 
 		assertEquals(ACTIONS_COUNT, testMap.size());
 	}
-
-	//TODO fix it
-//	@Test
-//	public void process() throws StoryTellerException, InterruptedException {
-//		String actionName = CharacterAction.CREATE_START.getActionName();
-//		Update update = createTestCallbackQueryUpdate();
-//		ActionContext actionContext = new ActionContext(actionName, TEST_USER_ID, UpdateType.CALLBACK_QUERY, update, TEST_ACTION_DATA);
-//
-//		CountDownLatch countDownLatch = new CountDownLatch(1);
-//		doAnswer(invocation -> {
-//			countDownLatch.countDown();
-//			return null;
-//		}).when(registrationService).createCharacter(actionContext);
-//		actionService.process(actionName, update, TEST_ACTION_DATA);
-//		countDownLatch.await();
-//
-//		verify(registrationService, times(1)).createCharacter(actionContext);
-//		verify(registrationTelegramClient, times(1)).sendGenderOptions(actionContext);
-//		verify(actionPipelineExecutor, times(1)).submitCompletable(any(Runnable.class));
-//		verify(gatewayClient, times(1)).releaseUserLock(TEST_USER_ID);
-//	}
 
 	@Test
 	public void actionPipelineNotFound() {

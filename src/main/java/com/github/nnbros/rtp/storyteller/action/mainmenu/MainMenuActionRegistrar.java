@@ -1,16 +1,15 @@
 package com.github.nnbros.rtp.storyteller.action.mainmenu;
 
-import com.github.nnbros.rtp.storyteller.action.ActionPipeline;
-import com.github.nnbros.rtp.storyteller.action.ActionRegistrar;
+import com.github.nnbros.rtp.common.action.ActionPipeline;
+import com.github.nnbros.rtp.common.action.ActionRegistrar;
 import com.github.nnbros.rtp.storyteller.character.CharacterService;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-import static com.github.nnbros.rtp.storyteller.action.ActionPipelines.create;
+import static com.github.nnbros.rtp.common.action.ActionPipelines.*;
 import static com.github.nnbros.rtp.storyteller.action.mainmenu.MainMenuAction.*;
-import static com.github.nnbros.rtp.storyteller.util.StorytellerUtils.emptyConsumer;
 
 @Getter
 @Component

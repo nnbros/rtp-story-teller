@@ -1,9 +1,9 @@
 package com.github.nnbros.rtp.storyteller.action.mainmenu;
 
+import com.github.nnbros.rtp.common.action.ActionContext;
+import com.github.nnbros.rtp.common.action.ActionResult;
 import com.github.nnbros.rtp.storyteller.BotTestUtils;
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
-import com.github.nnbros.rtp.storyteller.action.ActionContext;
-import com.github.nnbros.rtp.storyteller.action.ActionResult;
 import com.github.nnbros.rtp.storyteller.character.CharacterService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -27,10 +27,10 @@ public class CharacterProcessorTest extends StorytellerTest {
 		ActionContext testActionContext = BotTestUtils.createTestActionContext(TEST_CLASS_1);
 		when(characterService.updateCharacterActiveClass(TEST_USER_ID, TEST_CLASS_1)).thenReturn(true);
 
-		ActionResult<ActionContext> result = characterProcessor.updateActiveClass(testActionContext);
+		ActionResult<?> result = characterProcessor.updateActiveClass(testActionContext);
 
 		assertTrue(result.isSuccessful());
-		assertEquals(testActionContext, result.value());
+		assertEquals(testActionContext, result.getActionContext());
 		verify(characterService, times(1)).validateCharacter(testActionContext);
 		verify(characterService, times(1)).updateCharacterActiveClass(TEST_USER_ID, TEST_CLASS_1);
 	}
@@ -39,10 +39,10 @@ public class CharacterProcessorTest extends StorytellerTest {
 	void updateActiveClassNoDataReceived() {
 		ActionContext testActionContext = BotTestUtils.createTestActionContext(null);
 
-		ActionResult<ActionContext> result = characterProcessor.updateActiveClass(testActionContext);
+		ActionResult<?> result = characterProcessor.updateActiveClass(testActionContext);
 
 		assertTrue(result.isSuccessful());
-		assertEquals(testActionContext, result.value());
+		assertEquals(testActionContext, result.getActionContext());
 		verify(characterService, times(1)).validateCharacter(testActionContext);
 		verifyNoMoreInteractions(characterService);
 	}
@@ -52,10 +52,10 @@ public class CharacterProcessorTest extends StorytellerTest {
 		ActionContext testActionContext = BotTestUtils.createTestActionContext(TEST_CLASS_1);
 		when(characterService.updateCharacterActiveClass(TEST_USER_ID, TEST_CLASS_1)).thenReturn(false);
 
-		ActionResult<ActionContext> result = characterProcessor.updateActiveClass(testActionContext);
+		ActionResult<?> result = characterProcessor.updateActiveClass(testActionContext);
 
 		assertFalse(result.isSuccessful());
-		assertEquals(testActionContext, result.value());
+		assertEquals(testActionContext, result.getActionContext());
 		verify(characterService, times(1)).validateCharacter(testActionContext);
 		verify(characterService, times(1)).updateCharacterActiveClass(TEST_USER_ID, TEST_CLASS_1);
 	}

@@ -1,6 +1,6 @@
 package com.github.nnbros.rtp.storyteller.repository;
 
-import com.github.nnbros.rtp.storyteller.character.SkillType;
+import com.github.nnbros.rtp.common.api.dto.character.SkillType;
 import com.github.nnbros.rtp.storyteller.jpa.character.SkillDictionaryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

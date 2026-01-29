@@ -1,6 +1,8 @@
 package com.github.nnbros.rtp.storyteller.character;
 
-import com.github.nnbros.rtp.storyteller.action.ActionContext;
+import com.github.nnbros.rtp.common.action.ActionContext;
+import com.github.nnbros.rtp.common.api.dto.character.DetailedCharacterView;
+import com.github.nnbros.rtp.common.api.dto.character.DetailedCharacterWithSkillsView;
 import com.github.nnbros.rtp.storyteller.action.registration.CharacterRequest;
 import com.github.nnbros.rtp.storyteller.exception.CharacterArmyNotFoundException;
 import com.github.nnbros.rtp.storyteller.exception.CharacterClassNotFoundException;

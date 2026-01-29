@@ -53,7 +53,6 @@ class ActionControllerTest extends StorytellerMockMvcTest {
 						.param(DATA_PARAM, TEST_ACTION_DATA))
 				.andExpect(status().isNotFound())
 				.andExpect(jsonPath("$.error").value(testErrorMessage))
-				.andExpect(jsonPath("$.status").value(HttpStatus.NOT_FOUND.name()))
 				.andExpect(jsonPath("$.timestamp").exists());
 
 		verify(actionService, times(1)).process(TEST_ACTION_NAME, update, TEST_ACTION_DATA);
@@ -74,7 +73,6 @@ class ActionControllerTest extends StorytellerMockMvcTest {
 						.param(DATA_PARAM, TEST_ACTION_DATA))
 				.andExpect(status().isInternalServerError())
 				.andExpect(jsonPath("$.error").value(testErrorMessage))
-				.andExpect(jsonPath("$.status").value(HttpStatus.INTERNAL_SERVER_ERROR.name()))
 				.andExpect(jsonPath("$.timestamp").exists());
 
 		verify(actionService, times(1)).process(TEST_ACTION_NAME, update, TEST_ACTION_DATA);

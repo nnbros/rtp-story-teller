@@ -3,9 +3,9 @@ package com.github.nnbros.rtp.storyteller.action.mainmenu;
 import com.github.guronas.telegram.bot.elements.TelegramElementRegistry;
 import com.github.guronas.telegram.bot.elements.exception.ElementNotFoundException;
 import com.github.guronas.telegram.bot.elements.parameter.InlineKeyboardButtonParameters;
+import com.github.nnbros.rtp.common.action.ActionResult;
 import com.github.nnbros.rtp.storyteller.BotTestUtils;
 import com.github.nnbros.rtp.storyteller.StorytellerTest;
-import com.github.nnbros.rtp.storyteller.action.ActionContext;
 import com.github.nnbros.rtp.storyteller.character.CharacterService;
 import com.github.nnbros.rtp.storyteller.character.ClassDictionary;
 import com.github.nnbros.rtp.storyteller.character.ClassService;
@@ -25,11 +25,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.nnbros.rtp.common.telegram.AbstractTelegramClient.CALLBACK_DATA_TEMPLATE;
 import static com.github.nnbros.rtp.storyteller.BotTestUtils.*;
 import static com.github.nnbros.rtp.storyteller.action.mainmenu.CharacterMenuAction.CLASS;
 import static com.github.nnbros.rtp.storyteller.action.mainmenu.MainMenuTelegramClientTest.TEST_DETAILED_CHARACTER_VIEW;
 import static com.github.nnbros.rtp.storyteller.action.registration.RegistrationElement.confirmationEmoji;
-import static com.github.nnbros.rtp.storyteller.telegram.AbstractTelegramClient.CALLBACK_DATA_TEMPLATE;
 import static org.mockito.Mockito.*;
 
 public class CharacterMenuTelegramClientTest extends StorytellerTest {
@@ -54,7 +54,7 @@ public class CharacterMenuTelegramClientTest extends StorytellerTest {
 	@NullSource
 	@ValueSource(strings = TEST_CLASS_1)
 	public void sendCharacterClassMenu(String data) throws TelegramApiException, ElementNotFoundException {
-		ActionContext testActionContext = BotTestUtils.createTestActionContext(data);
+		ActionResult<?> testActionResult = BotTestUtils.createTestActionResult(data);
 		when(characterService.getDetailedCharacterViewByUserId(TEST_USER_ID)).thenReturn(createTestDetailedCharacterView());
 		List<ClassDictionary> classes = List.of(TEST_CLASS_POJO_1, TEST_CLASS_POJO_2, TEST_CLASS_POJO_3);
 		when(classService.getAllClasses()).thenReturn(classes);
@@ -66,7 +66,7 @@ public class CharacterMenuTelegramClientTest extends StorytellerTest {
 		dynamicParams.add(TEST_CLASS_NAME_2, CALLBACK_DATA_TEMPLATE.formatted(CLASS.getActionName(), TEST_CLASS_2));
 		dynamicParams.add(TEST_CLASS_NAME_3, CALLBACK_DATA_TEMPLATE.formatted(CLASS.getActionName(), TEST_CLASS_3));
 		Map<String, String> params = createTestCharacterBaseParameters();
-		when(parameterService.buildCharacterBaseParameters(eq(testActionContext), eq(TEST_DETAILED_CHARACTER_VIEW))).thenReturn(params);
+		when(parameterService.buildCharacterBaseParameters(testActionResult.getActionContext(), TEST_DETAILED_CHARACTER_VIEW)).thenReturn(params);
 
 		SendMessage mockMessage = mock(SendMessage.class);
 		doReturn(mockMessage).when(elementRegistry).buildBotApiMethod(MainMenuElement.charClass.getGroupName(),
@@ -74,7 +74,7 @@ public class CharacterMenuTelegramClientTest extends StorytellerTest {
 				params,
 				Map.of(MainMenuParameter.CLASSES.getKey(), dynamicParams));
 
-		characterMenuTelegramClient.sendCharacterClassMenu(testActionContext);
+		characterMenuTelegramClient.sendCharacterClassMenu(testActionResult);
 
 		verify(telegramClient, times(1)).execute(mockMessage);
 	}
